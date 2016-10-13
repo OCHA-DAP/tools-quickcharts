@@ -1,0 +1,29 @@
+<div class="container">
+  <div  class="bites-title">
+    <span>
+      HXL Bites
+    </span>
+    <span class="bites-actions pull-right">
+      <i
+        class="glyphicon glyphicon-edit"
+        *ngIf="!editMode"
+        (click)="editMode=true;"
+      ></i>
+      <i
+        class="glyphicon glyphicon-ok"
+        style="color: green;"
+        *ngIf="editMode"
+        (click)="editMode=false; biteList.save($event);"
+      ></i>
+      <i
+        class="glyphicon glyphicon-remove"
+        style="color: red;"
+        *ngIf="editMode"
+        (click)="editMode=false; biteList.reset($event);"
+      ></i>
+    </span>
+  </div>
+  <hxl-bite-list #biteList [edit]="editMode"></hxl-bite-list>
+
+</div>
+

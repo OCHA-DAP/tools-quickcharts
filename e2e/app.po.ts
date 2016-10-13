@@ -6,6 +6,6 @@ export class HxlBitesPage {
   }
 
   getParagraphText() {
-    return element(by.css('app-root h1')).getText();
+    return element(by.css('hxl-root h1')).getText();
   }
 }

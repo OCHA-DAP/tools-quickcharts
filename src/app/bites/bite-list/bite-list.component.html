@@ -1,0 +1,32 @@
+<div
+  [sortablejs]="biteList"
+  [sortablejsOptions]="sortableMain"
+  class="row"
+>
+  <div
+    class="col-xs-4"
+    *ngFor="let bite of biteList"
+  >
+    <hxl-bite [bite]="bite" [edit]="edit" (onDelete)="deleteBite($event)"></hxl-bite>
+  </div>
+</div>
+
+<div
+  class="row available-bites"
+
+>
+  <div class="col-xs-12" *ngIf="edit">
+    <h2>Available bites:</h2>
+    <div
+      class="row"
+      style="margin-top: 30px;"
+    >
+      <div
+        class="col-xs-3"
+        *ngFor="let bite of availableBites"
+      >
+        <hxl-bite [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>
+      </div>
+    </div>
+  </div>
+</div>

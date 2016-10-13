@@ -1,0 +1,32 @@
+<div
+  class="hxl-bite"
+  [class.hxl-bite-small]="add"
+>
+  <div class="title">
+    <i *ngIf="edit" class="glyphicon glyphicon-move drag-handle"></i>
+    <span>{{ bite.title }}</span>
+
+    <span class="pull-right">
+      <i
+        *ngIf="add"
+        style="color: green;"
+        class="glyphicon glyphicon-plus"
+        (click)="addBite($event);"
+      ></i>
+      <i
+        *ngIf="edit"
+        class="glyphicon glyphicon-cog"
+      ></i>
+      <i
+        *ngIf="edit"
+        style="color: red;"
+        class="glyphicon glyphicon-remove"
+        (click)="deleteBite($event);"
+      ></i>
+    </span>
+  </div>
+  <div class="content" [ngSwitch]="bite.type">
+    <hxl-content-topline *ngSwitchCase="classTypes.ToplineBite" [bite]="bite"></hxl-content-topline>
+    <hxl-content-chart *ngSwitchCase="classTypes.ChartBite" [bite]="bite"></hxl-content-chart>
+  </div>
+</div>
