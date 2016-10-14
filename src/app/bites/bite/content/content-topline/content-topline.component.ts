@@ -10,6 +10,8 @@ import {ToplineBite} from "../../types/topline-bite";
 export class ContentToplineComponent implements OnInit {
   @Input()
   bite: ToplineBite;
+  @Input()
+  edit: boolean;
 
   constructor() { }
 

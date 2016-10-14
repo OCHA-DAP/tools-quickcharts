@@ -26,10 +26,18 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       let chart = c3.generate({
         bindto: this.elementRef.nativeElement,
         data:{
-          columns: [this.bite.values]
+          columns: [this.bite.values],
+          type: 'bar'
         },
         size: {
-          height: 185
+          height: 190
+        },
+        axis: {
+          rotated: true,
+          x: {
+            type: 'category',
+            categories: this.bite.categories
+          }
         }
       });
     }

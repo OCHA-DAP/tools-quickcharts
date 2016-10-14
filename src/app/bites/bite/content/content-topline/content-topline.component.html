@@ -1,8 +1,25 @@
-<div class="row">
-  <div class="col-xs-12">
-    <h3>Value</h3>
+<div
+  class="bite-content"
+  [class.bite-init]="!bite.init"
+>
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="title" [attr.contenteditable]="edit">
+        {{bite.dataTitle}}
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="value">
+        <span class="pre-value" [attr.contenteditable]="edit">{{ bite.init ? bite.preText : "#"}}</span>
+        {{bite.init ? bite.value : "XY.ZW"}}
+        <span class="post-value" [attr.contenteditable]="edit">{{bite.init ? bite.postText : ""}}</span>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="description" [attr.contenteditable]="edit">
+        {{bite.init ? bite.description : "Values are calculated when bite is added to list"}}
+      </div>
+    </div>
   </div>
-  <div class="col-xs-12">
-    <h2>{{bite.value}}</h2>
-  </div>
+
 </div>

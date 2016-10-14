@@ -1,8 +1,11 @@
-<div class="row">
-  <div class="col-xs-12">
-    <h3>Value List:</h3>
-  </div>
-  <div class="col-xs-12">
-    <span style="margin-right: 5px;" *ngFor="let v of bite.values">{{v}}</span>
+<div class="chart-content">
+  <div class="placeholder">
+    <div class="title">Chart of <span class="data-title">{{bite.dataTitle}}</span></div>
+    <div class="placeholder-content">
+      <i class="glyphicon glyphicon-align-left"></i>
+      <div class="description">
+        The actual Chart is rendered when the bite is added to list
+      </div>
+    </div>
   </div>
 </div>

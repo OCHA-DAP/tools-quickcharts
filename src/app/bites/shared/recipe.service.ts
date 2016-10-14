@@ -18,11 +18,14 @@ export class RecipeService {
       case ChartBite.type():
         let chartBite: ChartBite = <ChartBite>bite;
         chartBite.values = [];
+        chartBite.values.push(chartBite.dataTitle);
         for (let i = 0; i < 5; i++){
           chartBite.values.push(Math.round(Math.random()*100));
         }
+        chartBite.categories = ["Manabi", "Napo", "Guayas", "El Oro", "Galapagos"];
         break;
     }
+    bite.init = true;
     return Promise.resolve(bite);
   }
 
@@ -31,7 +34,7 @@ export class RecipeService {
     switch (bite.type){
       case ToplineBite.type():
         let toplineBite: ToplineBite = <ToplineBite>bite;
-        newBite = new ToplineBite(toplineBite.title);
+        newBite = new ToplineBite(toplineBite.title, toplineBite.column);
         break;
       case ChartBite.type():
         let chartBite: ChartBite = <ChartBite>bite;

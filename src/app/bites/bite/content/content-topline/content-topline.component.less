@@ -1,0 +1,54 @@
+.bite-content {
+  padding: 10px;
+
+  @titleSize: 26px;
+  @valueSize: 48px;
+  @preSize: 32px;
+  @postSize: 24px;
+  @descriptionSize: 12px;
+
+  &.bite-init{
+    @shrinkRatio: 3/4;
+    .title{
+      font-size: @titleSize*@shrinkRatio;
+    }
+    .value {
+      font-size: @valueSize*@shrinkRatio;
+      .pre-value{
+        font-size: @preSize*@shrinkRatio;
+      }
+      .post-value{
+        font-size: @postSize*@shrinkRatio;
+      }
+    }
+    .description {
+      font-size: @descriptionSize*@shrinkRatio;
+    }
+  }
+
+  .title{
+    font-size: @titleSize;
+    font-weight: 100;
+  }
+
+  .value {
+    margin-top: 15px;
+    font-weight: 300;
+    font-size: @valueSize;
+
+    .pre-value{
+      font-size: @preSize;
+      font-weight: 100;
+    }
+    .post-value{
+      font-size: @postSize;
+      font-weight: 100;
+    }
+  }
+
+  .description {
+    margin-top: 10px;
+    font-size: @descriptionSize;
+    font-weight: 100;
+  }
+}

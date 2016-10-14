@@ -14,14 +14,20 @@ export class BiteService {
 
   private init() {
     this.savedBites = [
-      new ToplineBite("Deaths topline"),
-      new ChartBite("Evolution of new cases"),
-      new ToplineBite("People in need")
+      new ToplineBite("Total affected", "#total+affected", "Affected people", "", "K", "Thousands of people affected by the crisis. This number is an estimate based on the field data."),
+      new ToplineBite("Aid budget", "#cash+sum", "#cash+sum", "$", "mil", "Total sum of the allocated budget for treating the crisis."),
+      new ChartBite("Evolution of deaths", "#affected+deaths"),
     ];
 
     this.availableBites = [
-      new ToplineBite("New cases"),
-      new ChartBite("Evolution of deaths")
+      new ChartBite("Missing", "#affected+missing"),
+      new ToplineBite("People in need", "#people+sum"),
+      new ToplineBite("Deaths topline", "#deaths+sum"),
+      new ToplineBite("New cases", "#cases+max"),
+      new ChartBite("Wounded", "#affected+wounded"),
+      new ChartBite("In Shelters", "#affected+inshelter"),
+      new ChartBite("Buildings destroyed", "#affected+buildings+destroyed"),
+      new ChartBite("Buildings affected", "#affected+buildings+partially")
     ]
   }
 
