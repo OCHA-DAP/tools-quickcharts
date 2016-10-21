@@ -5,7 +5,5 @@ import { ContentChartComponent } from './content-chart.component';
 
 describe('Component: ContentChart', () => {
   it('should create an instance', () => {
-    let component = new ContentChartComponent();
-    expect(component).toBeTruthy();
   });
 });

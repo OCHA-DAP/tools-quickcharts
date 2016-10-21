@@ -1,6 +1,6 @@
-import {Component, OnInit, ElementRef, AfterViewInit} from '@angular/core';
-import {ChartBite} from "../../types/chart-bite";
-import {Input} from "@angular/core/src/metadata/directives";
+import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
+import { ChartBite } from '../../types/chart-bite';
+import { Input } from '@angular/core/src/metadata/directives';
 
 declare var c3: any;
 
@@ -22,10 +22,10 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (this.bite.values){
-      let chart = c3.generate({
+    if (this.bite.values) {
+      c3.generate({
         bindto: this.elementRef.nativeElement,
-        data:{
+        data: {
           columns: [this.bite.values],
           type: 'bar'
         },

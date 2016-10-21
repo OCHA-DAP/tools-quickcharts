@@ -1,8 +1,8 @@
 import {Component, OnInit, EventEmitter} from '@angular/core';
-import {Input, Output} from "@angular/core/src/metadata/directives";
-import {Bite} from "./types/bite";
-import {ToplineBite} from "./types/topline-bite";
-import {ChartBite} from "./types/chart-bite";
+import {Input, Output} from '@angular/core/src/metadata/directives';
+import { Bite } from './types/bite';
+import { ToplineBite } from './types/topline-bite';
+import { ChartBite } from './types/chart-bite';
 
 @Component({
   selector: 'hxl-bite',
@@ -20,22 +20,21 @@ export class BiteComponent implements OnInit {
   onAdd = new EventEmitter<Bite>();
   @Output()
   onDelete = new EventEmitter<Bite>();
-  classTypes:any = {};
+  classTypes: any = {};
 
   constructor() {
     this.classTypes.ToplineBite = ToplineBite.type();
     this.classTypes.ChartBite = ChartBite.type();
-
   }
 
   ngOnInit() {
   }
 
-  addBite(){
+  addBite() {
     this.onAdd.emit(this.bite);
   }
 
-  deleteBite(){
+  deleteBite() {
     this.onDelete.emit(this.bite);
   }
 }

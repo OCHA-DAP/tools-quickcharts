@@ -1,4 +1,4 @@
-import {Bite} from "./bite";
+import { Bite } from './bite';
 export class ToplineBite extends Bite {
   public value: number;
   public column: string;
@@ -7,19 +7,20 @@ export class ToplineBite extends Bite {
   public postText: string;
   public description: string;
 
+  static type(): string {
+    return 'topline';
+  }
+
   constructor(title: string, column: string, dataTitle?: string, preText?: string, postText?: string, description?: string) {
     super(title, ToplineBite.type());
     this.column = column;
     this.dataTitle = column;
 
-    if (dataTitle)
+    if (dataTitle) {
       this.dataTitle = dataTitle;
+    }
     this.preText = preText;
     this.postText = postText;
     this.description = description;
-  }
-
-  static type(): string {
-    return "topline";
   }
 }
