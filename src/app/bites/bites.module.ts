@@ -9,6 +9,7 @@ import { ContentChartComponent } from './bite/content/content-chart/content-char
 import {BiteService} from "./shared/bite.service";
 import {SortablejsModule} from "angular-sortablejs";
 import {RecipeService} from "./shared/recipe.service";
+import {HxlproxyService} from "./shared/hxlproxy.service";
 
 @NgModule({
   imports: [
@@ -20,6 +21,6 @@ import {RecipeService} from "./shared/recipe.service";
     BitesComponent
   ],
   declarations: [BitesComponent, BiteListComponent, BiteComponent, ContentToplineComponent, ContentChartComponent],
-  providers: [BiteService, RecipeService]
+  providers: [BiteService, RecipeService, HxlproxyService]
 })
 export class BitesModule { }
