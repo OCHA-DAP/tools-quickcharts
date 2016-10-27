@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Bite } from '../bite/types/bite';
-import { ToplineBite } from '../bite/types/topline-bite';
+import { KeyFigureBite } from '../bite/types/key-figure-bite';
 import { ChartBite } from '../bite/types/chart-bite';
 
 @Injectable()
@@ -11,8 +11,8 @@ export class RecipeService {
   processBite(bite: Bite): Promise<Bite> {
     // TODO: refactor to separate processors
     switch (bite.type) {
-      case ToplineBite.type():
-        let toplineBite: ToplineBite = <ToplineBite>bite;
+      case KeyFigureBite.type():
+        let toplineBite: KeyFigureBite = <KeyFigureBite>bite;
         toplineBite.value = Math.round(Math.random() * 10000) / 100;
         break;
       case ChartBite.type():
@@ -32,9 +32,9 @@ export class RecipeService {
   resetBite(bite: Bite): Bite {
     let newBite: Bite;
     switch (bite.type) {
-      case ToplineBite.type():
-        let toplineBite: ToplineBite = <ToplineBite>bite;
-        newBite = new ToplineBite(toplineBite.title, toplineBite.column);
+      case KeyFigureBite.type():
+        let toplineBite: KeyFigureBite = <KeyFigureBite>bite;
+        newBite = new KeyFigureBite(toplineBite.title);
         break;
       case ChartBite.type():
         let chartBite: ChartBite = <ChartBite>bite;

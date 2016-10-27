@@ -1,9 +1,10 @@
 import {Bite} from './bite';
 
 export class ChartBite extends Bite {
+  // HXL Proxy generated: values
   public values: any[];
+  // HXL Proxy generated: categories
   public categories: string[];
-  public dataTitle: string;
 
   static type(): string {
     return 'chart';

@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Key Figures: Sum items for a tag",
+    "description": "",
+    "type": "key figure",
+    "ingredients": {
+      "valueColumns":[
+        "#affected",
+        "#inneed",
+        "#reached",
+        "#targeted"
+      ]
+    }
+  }
+]

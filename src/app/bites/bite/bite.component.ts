@@ -1,7 +1,7 @@
 import {Component, OnInit, EventEmitter} from '@angular/core';
 import {Input, Output} from '@angular/core/src/metadata/directives';
 import { Bite } from './types/bite';
-import { ToplineBite } from './types/topline-bite';
+import { KeyFigureBite } from './types/key-figure-bite';
 import { ChartBite } from './types/chart-bite';
 
 @Component({
@@ -23,7 +23,7 @@ export class BiteComponent implements OnInit {
   classTypes: any = {};
 
   constructor() {
-    this.classTypes.ToplineBite = ToplineBite.type();
+    this.classTypes.ToplineBite = KeyFigureBite.type();
     this.classTypes.ChartBite = ChartBite.type();
   }
 

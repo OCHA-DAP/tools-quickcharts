@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Input } from '@angular/core/src/metadata/directives';
-import { ToplineBite } from '../../types/topline-bite';
+import { KeyFigureBite } from '../../types/key-figure-bite';
 
 @Component({
   selector: 'hxl-content-topline',
@@ -9,7 +9,7 @@ import { ToplineBite } from '../../types/topline-bite';
 })
 export class ContentToplineComponent implements OnInit {
   @Input()
-  bite: ToplineBite;
+  bite: KeyFigureBite;
   @Input()
   edit: boolean;
 
