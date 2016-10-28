@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import {Logger} from 'angular2-logger/core';
-import {Http, Response} from '@angular/http';
-import 'rxjs/add/operator/map';
-import {Observable, AsyncSubject} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {BiteInfo, AbstractHxlTransformer} from './hxlproxy-transformers/abstract-hxl-transformer';
-import {ChartTransformer} from './hxlproxy-transformers/chart-transformer';
+import { Logger } from 'angular2-logger/core';
+import { Http, Response } from '@angular/http';
+import 'rxjs/add/operator/mergeMap';
+import { Observable, AsyncSubject } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { ChartTransformer } from './hxlproxy-transformers/chart-transformer';
+import { Bite } from '../bite/types/bite';
+import { AbstractHxlTransformer } from './hxlproxy-transformers/abstract-hxl-transformer';
 
 @Injectable()
 export class HxlproxyService {
 
+  private tagToTitleMap;
   private metaRows: string[][];
   private hxlFileUrl: string;
 
@@ -21,9 +23,9 @@ export class HxlproxyService {
     // this.getDataForBite({type: 'chart', groupByTags: ['#adm1+name', '#adm1+code'], valueTag: '#affected+buildings+partially'});
   // }
 
-  getMetaRows(hxlFileUrl: string): Observable<string [][]> {
+  fetchMetaRows(hxlFileUrl: string): Observable<string [][]> {
     this.hxlFileUrl = hxlFileUrl;
-    let url = `${environment.hxlProxy}?url=${encodeURIComponent(hxlFileUrl)}`;
+
     let myObservable: Observable<string[][]>;
     if (this.metaRows) {
       this.logger.log('Using cached metarows');
@@ -32,49 +34,67 @@ export class HxlproxyService {
       mySubject.complete();
       myObservable = mySubject;
     } else {
-      myObservable = this.http.get(url).map(this.processMetaRowResponse.bind(this)).catch(err => this.handleError(err));
+      myObservable = this.makeCallToHxlProxy<string[][]>([{key: 'max-rows', value: '0'}], this.processMetaRowResponse);
     }
     return myObservable;
   }
 
-  getDataForBite(biteInfo: BiteInfo): Observable<any[][]> {
-    let transformer: AbstractHxlTransformer;
-    switch (biteInfo.type) {
-      default:
-        transformer = new ChartTransformer(biteInfo);
-        break;
-    }
-    let recipesStr = transformer.buildRecipes();
-    this.logger.log(recipesStr);
+  populateBite(bite: Bite, hxlFileUrl: string): Observable<any> {
+    return this.fetchMetaRows(hxlFileUrl).flatMap(
+      (metarows: string[][]) => {
+        let transformer: AbstractHxlTransformer;
+        switch (bite.type) {
+          default:
+            transformer = new ChartTransformer(bite);
+            break;
+        }
+        let recipesStr = transformer.buildRecipes();
+        this.logger.log(recipesStr);
 
-    return this.makeCallToHxlProxy([{key: 'recipe', value: recipesStr}], null);
+        return this.makeCallToHxlProxy<Bite>([{key: 'recipe', value: recipesStr}],
+          (response: Response) => bite.populateWithHxlProxyInfo(response.json(), this.tagToTitleMap)
+        );
+      }
+    );
   }
 
-  private makeCallToHxlProxy(params: {key: string, value: string}[],
-                             mapFunction: (response: Response) => any[][]): Observable<any [][]> {
 
-    let myMapFunction: (response: Response) => any[][];
-    if (mapFunction) {
-      myMapFunction = mapFunction;
-    } else {
-      myMapFunction = (response: Response) => response.json();
-    }
+  private makeCallToHxlProxy<T>(params: {key: string, value: string}[],
+                             mapFunction: (response: Response) => T): Observable<T> {
+
+    // let myMapFunction: (response: Response) => T;
+    // if (mapFunction) {
+    //   myMapFunction = mapFunction;
+    // } else {
+    //   myMapFunction = (response: Response) => response.json();
+    // }
 
     let url = `${environment.hxlProxy}?url=${encodeURIComponent(this.hxlFileUrl)}`;
-    for (let i = 0; i < params.length; i++) {
-      url += '&' + params[i].key + '=' + encodeURIComponent(params[i].value);
+    if (params) {
+      for (let i = 0; i < params.length; i++) {
+        url += '&' + params[i].key + '=' + encodeURIComponent(params[i].value);
+      }
     }
     this.logger.log('The call will be made to: ', url);
-    return this.http.get(url).map(myMapFunction.bind(this)).catch(err => this.handleError(err));
+    return this.http.get(url).map(mapFunction.bind(this)).catch(err => this.handleError(err));
   }
 
   private processMetaRowResponse(response: Response): string[][] {
-    let json = response.json();
+    let ret = response.json();
 
-    let ret = [json[0], json[1]];
+    // let ret = [json[0], json[1]];
     this.logger.log('Response is: ' + ret);
-
     this.metaRows = ret;
+
+    this.tagToTitleMap = {};
+    if (ret.length === 2) {
+      for (let i = 0; i < ret[1].length; i++) {
+        this.tagToTitleMap[ret[1][i]] = ret[0][i];
+      }
+    } else {
+      throw 'There should be 2 meta rows';
+    }
+
     return ret;
   }
 
