@@ -49,9 +49,12 @@ export abstract class AbstractOperation {
 
 export class CountOperation extends AbstractOperation {
   constructor(valueCol: string, aggCols: string[]) {
-    let aggColumns = ['#fake_column'];
+    let aggColumns: any[];
     if ( aggCols && aggCols.length > 0 ) {
-      aggColumns = aggCols;
+      aggColumns = aggCols.filter( (value: string) => Boolean(value) );
+    }
+    if (aggColumns.length === 0) {
+      aggColumns.push('#fake_column');
     }
 
     super(new CountRecipe(aggColumns, valueCol));
@@ -70,7 +73,7 @@ export class CutOperation extends AbstractOperation {
   constructor(valueCol: string, aggCols: string[]) {
     let keepList = [valueCol];
     if (aggCols) {
-      keepList = keepList.concat(aggCols);
+      keepList = keepList.concat(aggCols.filter( (value: string) => Boolean(value) ));
     }
     super(new CutRecipe(keepList));
   }

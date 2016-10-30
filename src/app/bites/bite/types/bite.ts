@@ -16,5 +16,30 @@ export abstract class Bite {
     this.title = title;
     this.type = type;
   }
+
+  public resetBite(): Bite {
+    this.dataTitle = null;
+    return this;
+  }
+
+  public populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): Bite {
+    this.dataTitle = this.ingredient.valueColumn;
+    this.title = tagToTitleMap[this.dataTitle];
+
+    return this;
+  }
+
+  protected findHxlTagIndex(hxlTag: string, hxlData: any[][]): number {
+    if (hxlData && hxlData.length > 2) {
+      for (let i = 0; i < hxlData[1].length; i++) {
+        let currentTag: string = hxlData[1][i];
+        if (currentTag === hxlTag) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+
 }
 
