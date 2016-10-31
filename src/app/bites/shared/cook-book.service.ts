@@ -61,11 +61,11 @@ export class CookBookService {
         switch (biteConfig.type) {
           case ChartBite.type():
             avAggCols.forEach((agg) => {
-              avValCols.forEach(val => observer.next(new ChartBite(biteConfig.name, agg, val)));
+              avValCols.forEach(val => observer.next(new ChartBite(columnNames[availableTags[val]], agg, val)));
             });
             break;
           case KeyFigureBite.type():
-            avValCols.forEach(val => observer.next(new KeyFigureBite(biteConfig.name, val)));
+            avValCols.forEach(val => observer.next(new KeyFigureBite(columnNames[availableTags[val]], val)));
             break;
         }
       });

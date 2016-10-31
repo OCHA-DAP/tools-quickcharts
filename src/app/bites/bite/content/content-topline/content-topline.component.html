@@ -5,7 +5,7 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="title" [attr.contenteditable]="edit">
-        {{bite.dataTitle}}
+        {{ bite.init ? bite.dataTitle : bite.ingredient.valueColumn }}
       </div>
     </div>
     <div class="col-xs-12">

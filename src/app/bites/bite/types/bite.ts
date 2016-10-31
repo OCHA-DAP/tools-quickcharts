@@ -7,6 +7,7 @@ export abstract class Bite {
   public ingredient: Ingredient;
   // HXL Proxy generated: column name
   public title: string;
+  private initialTitle: string;
   // HXL Proxy generated: hxl tag
   public dataTitle: string;
   // internal to know what type of bite we have inside the template :)
@@ -14,18 +15,20 @@ export abstract class Bite {
 
   constructor(title: string, type: string) {
     this.title = title.slice(0, 35) + (title.length > 35 ? '...' : '');
+    this.initialTitle = this.title;
     this.type = type;
   }
 
   public resetBite(): Bite {
     this.dataTitle = null;
+    this.title = this.initialTitle;
+    this.init = false;
     return this;
   }
 
   public populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): Bite {
     this.dataTitle = this.ingredient.valueColumn;
     this.title = tagToTitleMap[this.dataTitle];
-
     return this;
   }
 
