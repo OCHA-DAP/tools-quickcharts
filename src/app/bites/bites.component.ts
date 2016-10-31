@@ -26,8 +26,7 @@ export class BitesComponent implements OnInit {
       (params: Params) => {
         const url = params['url'];
         this.logger.warn('URL is: ' + url);
-        this.biteService.init('https://test-data.humdata.org/dataset/8b154975-4871-4634-b540-f6c77972f538/resource/' +
-          '3630d818-344b-4bee-b5b0-6ddcfdc28fc8/download/eed.csv');
+        this.biteService.init(url);
       }
     );
   }
