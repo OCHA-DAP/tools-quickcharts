@@ -1,4 +1,3 @@
-export interface Ingredient {
-  aggregateColumn: string;
-  valueColumn: string;
+export class Ingredient {
+  constructor(public aggregateColumn: string, public valueColumn: string) { }
 }

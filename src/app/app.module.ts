@@ -5,7 +5,8 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { BitesModule } from './bites/bites.module';
-import {Logger, LOG_LOGGER_PROVIDERS} from "angular2-logger/core";
+import {LOG_LOGGER_PROVIDERS} from "angular2-logger/core";
+import { HxlBitesRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import {Logger, LOG_LOGGER_PROVIDERS} from "angular2-logger/core";
     BrowserModule,
     FormsModule,
     HttpModule,
-    BitesModule
+    BitesModule,
+    HxlBitesRoutingModule
   ],
   providers: [LOG_LOGGER_PROVIDERS],
   bootstrap: [AppComponent]

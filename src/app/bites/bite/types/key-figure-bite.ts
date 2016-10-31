@@ -1,4 +1,5 @@
 import { Bite } from './bite';
+import { Ingredient } from './ingredient';
 export class KeyFigureBite extends Bite {
   // HXL Proxy generated: value
   public value: number;
@@ -17,16 +18,10 @@ export class KeyFigureBite extends Bite {
     return 'key figure';
   }
 
-  constructor(title: string, dataTitle?: string, preText?: string, postText?: string, description?: string) {
+  constructor(title: string, valueColumn: string) {
     super(title, KeyFigureBite.type());
-
-    this.dataTitle = dataTitle;
-    this.preText = preText;
-    this.postText = postText;
-    this.description = description;
-
-    this.ingredient = {aggregateColumn: null, valueColumn: this.dataTitle};
-
+    this.ingredient = new Ingredient(null, valueColumn);
+    this.dataTitle = valueColumn;
   }
 
   public resetBite(): Bite {

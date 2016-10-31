@@ -7,19 +7,19 @@
       <i
         class="glyphicon glyphicon-edit"
         *ngIf="!editMode"
-        (click)="editMode=true;"
+        (click)="editMode=true; biteList.onEdit($event);"
       ></i>
       <i
         class="glyphicon glyphicon-ok"
         style="color: green;"
         *ngIf="editMode"
-        (click)="editMode=false; biteList.save($event);"
+        (click)="editMode=false; biteList.onSave($event);"
       ></i>
       <i
         class="glyphicon glyphicon-remove"
         style="color: red;"
         *ngIf="editMode"
-        (click)="editMode=false; biteList.reset($event);"
+        (click)="editMode=false; biteList.onReset($event);"
       ></i>
     </span>
   </div>

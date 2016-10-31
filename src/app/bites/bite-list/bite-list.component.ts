@@ -10,8 +10,8 @@ import {Logger} from 'angular2-logger/core';
   styleUrls: ['./bite-list.component.less']
 })
 export class BiteListComponent implements OnInit {
-  private biteList: Bite[];
-  private availableBites: Bite[];
+  private biteList: Array<Bite>;
+  private availableBites: Array<Bite>;
   @Input()
   edit: boolean;
   sortableMain: SortablejsOptions = {
@@ -22,24 +22,30 @@ export class BiteListComponent implements OnInit {
 
   constructor(private biteService: BiteService, private logger: Logger) {
     this.biteList = [];
+    this.logger = logger;
   }
 
   ngOnInit() {
+    this.logger.info('BiteListComponent on init');
     this.load();
   }
 
   private load() {
     this.biteService.getBites()
       .then(bites => this.biteList = bites);
-    this.biteService.generateAvailableBites()
-      .then(bites => this.availableBites = bites);
   }
 
 
   addBite(bite: Bite) {
     this.availableBites = this.availableBites.filter(b => b !== bite);
     this.biteService.initBite(bite)
-      .then(b => this.biteList.push(b));
+      .subscribe(
+        b => this.biteList.push(b),
+        err => {
+          this.logger.error('Can\'t process bite due to:' + err);
+          this.availableBites.push(bite);
+        }
+      );
   }
 
   deleteBite(bite: Bite) {
@@ -47,14 +53,24 @@ export class BiteListComponent implements OnInit {
     this.availableBites.push(this.biteService.resetBite(bite));
   }
 
-  save() {
+  onEdit() {
+    if (!this.availableBites) {
+      this.availableBites = [];
+      this.biteService.generateAvailableBites()
+        .subscribe(
+          bite => this.availableBites.push(bite)
+        );
+    }
+  }
+
+  onSave() {
     this.biteService.saveBites(this.biteList);
     // TODO: remove when generating the available bites
     this.biteService.tempPersistAvailable(this.availableBites);
   }
 
-  reset() {
-    this.logger.log('Reset toggled');
-    this.load();
+  onReset() {
+    this.logger.log('Reset toggled ... not doing anything for now');
+    // this.load();
   }
 }

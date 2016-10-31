@@ -1,4 +1,5 @@
 import {Bite} from './bite';
+import { Ingredient } from './ingredient';
 
 export class ChartBite extends Bite {
   // HXL Proxy generated: values
@@ -10,11 +11,10 @@ export class ChartBite extends Bite {
     return 'chart';
   }
 
-  constructor(title: string, dataTitle?: string, aggColumn?: string) {
+  constructor(title: string, aggregateColumn: string, valueColumn: string) {
     super(title, ChartBite.type());
-    this.dataTitle = dataTitle;
-
-    this.ingredient = {aggregateColumn: aggColumn, valueColumn: this.dataTitle};
+    this.ingredient = new Ingredient(aggregateColumn, valueColumn);
+    this.dataTitle = valueColumn;
   }
 
 

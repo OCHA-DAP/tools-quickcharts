@@ -13,7 +13,7 @@ export abstract class Bite {
   public type: string;
 
   constructor(title: string, type: string) {
-    this.title = title;
+    this.title = title.slice(0, 35) + (title.length > 35 ? '...' : '');
     this.type = type;
   }
 
