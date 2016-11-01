@@ -24,7 +24,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     if (this.bite.values) {
       c3.generate({
-        bindto: this.elementRef.nativeElement,
+        bindto: this.elementRef.nativeElement.children[0],
         data: {
           columns: [this.bite.values],
           type: 'bar'
@@ -37,6 +37,11 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
           x: {
             type: 'category',
             categories: this.bite.categories
+          },
+          y: {
+            tick: {
+              rotate: 30
+            }
           }
         }
       });
