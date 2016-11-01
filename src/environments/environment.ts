@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  hxlProxy: 'https://feature-proxy.hxlstandard.org/hxlproxy/data.json'
+  hxlProxy: 'https://feature-data.humdata.org/hxlproxy/data.json'
 };
