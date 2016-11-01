@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  hxlProxy: 'https://feature-proxy.hxlstandard.org/hxlproxy/data.json'
 };
