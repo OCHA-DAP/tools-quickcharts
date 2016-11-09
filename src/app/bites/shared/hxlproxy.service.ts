@@ -3,10 +3,10 @@ import { Logger } from 'angular2-logger/core';
 import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/mergeMap';
 import { Observable, AsyncSubject } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { ChartTransformer } from './hxlproxy-transformers/chart-transformer';
 import { Bite } from '../bite/types/bite';
 import { AbstractHxlTransformer } from './hxlproxy-transformers/abstract-hxl-transformer';
+import { AppConfigService } from '../../shared/app-config.service';
 
 @Injectable()
 export class HxlproxyService {
@@ -15,7 +15,7 @@ export class HxlproxyService {
   private metaRows: string[][];
   private hxlFileUrl: string;
 
-  constructor(private logger: Logger, private http: Http) {}
+  constructor(private logger: Logger, private http: Http, private appConfig: AppConfigService) {}
   // constructor(private logger: Logger, private http: Http) {
     // let observable = this.getMetaRows('https://test-data.humdata.org/dataset/' +
     //   '8b154975-4871-4634-b540-f6c77972f538/resource/3630d818-344b-4bee-b5b0-6ddcfdc28fc8/download/eed.csv');
@@ -69,7 +69,7 @@ export class HxlproxyService {
     //   myMapFunction = (response: Response) => response.json();
     // }
 
-    let url = `${environment.hxlProxy}?url=${encodeURIComponent(this.hxlFileUrl)}`;
+    let url = `${this.appConfig.get('hxlProxy')}?url=${encodeURIComponent(this.hxlFileUrl)}`;
     if (params) {
       for (let i = 0; i < params.length; i++) {
         url += '&' + params[i].key + '=' + encodeURIComponent(params[i].value);
