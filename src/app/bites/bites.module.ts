@@ -11,6 +11,8 @@ import { SortablejsModule } from 'angular-sortablejs';
 import { RecipeService } from './shared/recipe.service';
 import { HxlproxyService } from './shared/hxlproxy.service';
 import { CookBookService } from './shared/cook-book.service';
+import { InlineEditComponent } from './shared/inline-edit/inline-edit.component';
+import { FormsModule } from '@angular/forms';
 import { PersistService } from './shared/persist.service';
 import { HdxPersistService } from './shared/persist/hdx-persist.service';
 
@@ -18,12 +20,14 @@ import { HdxPersistService } from './shared/persist/hdx-persist.service';
   imports: [
     CommonModule,
     BitesRoutingModule,
-    SortablejsModule
+    SortablejsModule,
+    FormsModule
   ],
   exports: [
-    BitesComponent
+    BitesComponent,
+    InlineEditComponent
   ],
-  declarations: [BitesComponent, BiteListComponent, BiteComponent, ContentToplineComponent, ContentChartComponent],
+  declarations: [BitesComponent, BiteListComponent, BiteComponent, ContentToplineComponent, ContentChartComponent, InlineEditComponent],
   providers: [
     BiteService,
     RecipeService,

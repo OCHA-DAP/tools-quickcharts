@@ -4,7 +4,8 @@
 >
   <div class="title">
     <i *ngIf="edit" class="glyphicon glyphicon-move drag-handle"></i>
-    <span [attr.contenteditable]="edit">{{ bite.title }}</span>
+    <!--<span [attr.contenteditable]="edit">{{ bite.title }}</span>-->
+    <hxl-inline-edit [(ngModel)]="bite.title" [editMode]="edit" [placeholder]="'Add Title'"></hxl-inline-edit>
 
     <span class="pull-right">
       <i

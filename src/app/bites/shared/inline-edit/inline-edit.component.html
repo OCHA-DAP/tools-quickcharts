@@ -1,0 +1,27 @@
+<span [hidden]="editMode">{{ value }}</span>
+<a (click)="edit(value)" [hidden]="(editing) || (!editMode)"> {{ value || placeholder }} </a>
+<input
+  #editControl
+  *ngIf="!textArea"
+  [hidden]="(!editing) || (!editMode)"
+  [placeholder]="placeholder"
+  [style.max-width]="maxEditorWidth"
+  [style.width]="maxEditorWidth"
+  [(ngModel)]="value"
+  (blur)="save(value)"
+  (keyup.escape)="cancel()"
+  (keyup.enter)="save(value)"
+  class="edit-control" />
+<textarea
+  #editControl
+  *ngIf="textArea"
+  rows="3"
+  [hidden]="(!editing) || (!editMode)"
+  [placeholder]="placeholder"
+  [style.max-width]="maxEditorWidth"
+  [style.width]="maxEditorWidth"
+  [(ngModel)]="value"
+  (blur)="save(value)"
+  (keyup.escape)="cancel()"
+  class="edit-control"
+></textarea>
