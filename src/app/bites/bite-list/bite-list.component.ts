@@ -31,8 +31,12 @@ export class BiteListComponent implements OnInit {
   }
 
   private load() {
-    this.biteService.getBites()
-      .then(bites => this.biteList = bites);
+    this.biteService.getBites().subscribe(
+      (bite: Bite) => {
+        this.logger.log('Processing bite ' + JSON.stringify(bite));
+        this.biteList.push(bite);
+      }
+    );
   }
 
 

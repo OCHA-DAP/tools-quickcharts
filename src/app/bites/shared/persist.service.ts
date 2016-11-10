@@ -10,17 +10,14 @@ export abstract class PersistService {
   /**
    *
    * @param bites customized bites to save
-   * @param persistanceOptions information needed by the server to store the bites ( For CKAN this would be the resource view id )
    *
    */
-  abstract save(bites: Bite[], persistanceOptions: {}): Observable<boolean>;
+  abstract save(bites: Bite[]): Observable<boolean>;
 
   /**
    *
-   * @param persistanceOptions information needed by the server to load the bites ( For CKAN this would be the resource view id )
-   *
    * @return array of customized bites
    */
-  abstract load(persistanceOptions): Observable<Bite[]>;
+  abstract load(): Observable<Bite[]>;
 
 }

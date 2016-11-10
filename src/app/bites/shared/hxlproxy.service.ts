@@ -7,6 +7,7 @@ import { ChartTransformer } from './hxlproxy-transformers/chart-transformer';
 import { Bite } from '../bite/types/bite';
 import { AbstractHxlTransformer } from './hxlproxy-transformers/abstract-hxl-transformer';
 import { AppConfigService } from '../../shared/app-config.service';
+import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 
 @Injectable()
 export class HxlproxyService {
@@ -49,10 +50,12 @@ export class HxlproxyService {
             break;
         }
         let recipesStr = transformer.buildRecipes();
-        this.logger.log(recipesStr);
+        // this.logger.log(recipesStr);
+
+        let biteLogic = BiteLogicFactory.createBiteLogic(bite);
 
         return this.makeCallToHxlProxy<Bite>([{key: 'recipe', value: recipesStr}],
-          (response: Response) => bite.populateWithHxlProxyInfo(response.json(), this.tagToTitleMap)
+          (response: Response) => biteLogic.populateWithHxlProxyInfo(response.json(), this.tagToTitleMap).getBite()
         );
       }
     );
