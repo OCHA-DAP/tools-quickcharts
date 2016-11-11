@@ -3,6 +3,7 @@ import {Bite} from './bite/types/bite';
 import { Router, RouterState, ActivatedRoute, Params } from '@angular/router';
 import { Logger } from 'angular2-logger/core';
 import { BiteService } from './shared/bite.service';
+import { AppConfigService } from '../shared/app-config.service';
 
 @Component({
   selector: 'hxl-bites',
@@ -13,7 +14,9 @@ export class BitesComponent implements OnInit {
   private editMode: boolean;
   private state: RouterState;
 
-  constructor(router: Router, private logger: Logger, private biteService: BiteService) {
+  constructor(router: Router, private logger: Logger, private biteService: BiteService,
+              private appConfigService: AppConfigService) {
+
     this.editMode = false;
     this.state = router.routerState;
   }
@@ -27,6 +30,7 @@ export class BitesComponent implements OnInit {
         const url = params['url'];
         this.logger.warn('URL is: ' + url);
         this.biteService.init(url);
+        this.appConfigService.init(params);
       }
     );
   }

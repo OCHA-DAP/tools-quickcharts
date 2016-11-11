@@ -5,6 +5,8 @@ import { ChartBite } from '../bite/types/chart-bite';
 import { Observable } from 'rxjs';
 import { HxlproxyService } from './hxlproxy.service';
 import { Logger } from 'angular2-logger/core';
+import { BiteLogic } from '../bite/types/bite-logic';
+import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 
 @Injectable()
 export class RecipeService {
@@ -41,40 +43,14 @@ export class RecipeService {
     return this.hxlProxyService.populateBite(bite, datasetUrl);
   }
 
-  processBite(bite: Bite): Promise<Bite> {
-    // TODO: refactor to separate processors
-    switch (bite.type) {
-      case KeyFigureBite.type():
-        let toplineBite: KeyFigureBite = <KeyFigureBite>bite;
-        toplineBite.value = Math.round(Math.random() * 10000) / 100;
-        break;
-      case ChartBite.type():
-        let chartBite: ChartBite = <ChartBite>bite;
-        chartBite.values = [];
-        chartBite.values.push(chartBite.dataTitle);
-        for (let i = 0; i < 5; i++) {
-          chartBite.values.push(Math.round(Math.random() * 100));
-        }
-        chartBite.categories = ['Manabi', 'Napo', 'Guayas', 'El Oro', 'Galapagos'];
-        break;
-    }
-    bite.init = true;
-    return Promise.resolve(bite);
-  }
-
   resetBite(bite: Bite): Bite {
-    return bite.resetBite();
+    return BiteLogicFactory.createBiteLogic(bite).resetBite().getBite();
   }
 
-  myProcessAll(bites: Bite[], datasetUrl: string): Observable<Bite> {
+  processAll(bites: Bite[], datasetUrl: string): Observable<Bite> {
     let observables: Observable<Bite>[] = bites.map( bite => this.myProcessBite(bite, datasetUrl) );
 
     return Observable.concat(...observables);
-  }
-
-  processAll(bites: Bite[]): Promise<Bite[]> {
-    let processed: Promise<Bite>[] = bites.map(bite => this.processBite(bite));
-    return Promise.all(processed);
   }
 
 }

@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Bite } from '../bite/types/bite';
-import { KeyFigureBite } from '../bite/types/key-figure-bite';
-import { ChartBite } from '../bite/types/chart-bite';
 import { RecipeService } from './recipe.service';
-import { BiteConfig } from '../bite/types/bite-config';
 import { Logger } from 'angular2-logger/core';
 import { CookBookService } from './cook-book.service';
 import { Observable } from 'rxjs';
+import { PersistService } from './persist.service';
 
 @Injectable()
 export class BiteService {
@@ -15,7 +13,7 @@ export class BiteService {
   public url: string;
 
   constructor(private recipeService: RecipeService, private cookBookService: CookBookService,
-              private logger: Logger) { }
+              private logger: Logger, private persistService: PersistService) { }
 
   public init(url: string) {
     this.url = url;
@@ -32,19 +30,27 @@ export class BiteService {
 
   }
 
-  private loadBites(): Promise<Bite[]> {
-    let clone = (JSON.parse(JSON.stringify(this.savedBites)));
-    return Promise.resolve(clone);
+  private loadBites(): Observable<Bite[]> {
+    return this.persistService.load();
   }
 
-  getBites(): Promise<Bite[]> {
-    let self = this;
+  getBites(): Observable<Bite> {
     return this.loadBites()
-      .then(bites => self.recipeService.processAll(bites));
+      .flatMap(
+        (bites: Bite[]) => {
+          this.logger.log('Loaded bites are: ' + JSON.stringify(bites));
+          return this.recipeService.processAll(bites, this.url);
+        }
+      );
   }
 
   saveBites(biteList: Bite[]) {
     this.savedBites = biteList;
+    this.persistService.save(biteList)
+      .subscribe(
+        (successful: boolean) => this.logger.log('Result of bites saved: ' + successful),
+        error => this.logger.error('Save failed: ' + error)
+      );
   }
 
   // TODO: remove :)

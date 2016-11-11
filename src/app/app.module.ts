@@ -5,8 +5,9 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { BitesModule } from './bites/bites.module';
-import {LOG_LOGGER_PROVIDERS} from "angular2-logger/core";
+import {LOG_LOGGER_PROVIDERS} from 'angular2-logger/core';
 import { HxlBitesRoutingModule } from './app-routing.module';
+import { AppConfigService } from './shared/app-config.service';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,7 @@ import { HxlBitesRoutingModule } from './app-routing.module';
     BitesModule,
     HxlBitesRoutingModule
   ],
-  providers: [LOG_LOGGER_PROVIDERS],
+  providers: [LOG_LOGGER_PROVIDERS, AppConfigService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

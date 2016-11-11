@@ -3,10 +3,11 @@ import { Logger } from 'angular2-logger/core';
 import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/mergeMap';
 import { Observable, AsyncSubject } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { ChartTransformer } from './hxlproxy-transformers/chart-transformer';
 import { Bite } from '../bite/types/bite';
 import { AbstractHxlTransformer } from './hxlproxy-transformers/abstract-hxl-transformer';
+import { AppConfigService } from '../../shared/app-config.service';
+import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 
 @Injectable()
 export class HxlproxyService {
@@ -15,7 +16,7 @@ export class HxlproxyService {
   private metaRows: string[][];
   private hxlFileUrl: string;
 
-  constructor(private logger: Logger, private http: Http) {}
+  constructor(private logger: Logger, private http: Http, private appConfig: AppConfigService) {}
   // constructor(private logger: Logger, private http: Http) {
     // let observable = this.getMetaRows('https://test-data.humdata.org/dataset/' +
     //   '8b154975-4871-4634-b540-f6c77972f538/resource/3630d818-344b-4bee-b5b0-6ddcfdc28fc8/download/eed.csv');
@@ -49,10 +50,12 @@ export class HxlproxyService {
             break;
         }
         let recipesStr = transformer.buildRecipes();
-        this.logger.log(recipesStr);
+        // this.logger.log(recipesStr);
+
+        let biteLogic = BiteLogicFactory.createBiteLogic(bite);
 
         return this.makeCallToHxlProxy<Bite>([{key: 'recipe', value: recipesStr}],
-          (response: Response) => bite.populateWithHxlProxyInfo(response.json(), this.tagToTitleMap)
+          (response: Response) => biteLogic.populateWithHxlProxyInfo(response.json(), this.tagToTitleMap).getBite()
         );
       }
     );
@@ -69,7 +72,7 @@ export class HxlproxyService {
     //   myMapFunction = (response: Response) => response.json();
     // }
 
-    let url = `${environment.hxlProxy}?url=${encodeURIComponent(this.hxlFileUrl)}`;
+    let url = `${this.appConfig.get('hxlProxy')}?url=${encodeURIComponent(this.hxlFileUrl)}`;
     if (params) {
       for (let i = 0; i < params.length; i++) {
         url += '&' + params[i].key + '=' + encodeURIComponent(params[i].value);
