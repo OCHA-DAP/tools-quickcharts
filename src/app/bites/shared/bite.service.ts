@@ -8,8 +8,6 @@ import { PersistService } from './persist.service';
 
 @Injectable()
 export class BiteService {
-  private savedBites: Bite[];
-  private availableBites: Bite[];
   public url: string;
 
   constructor(private recipeService: RecipeService, private cookBookService: CookBookService,
@@ -17,17 +15,6 @@ export class BiteService {
 
   public init(url: string) {
     this.url = url;
-
-    this.savedBites = [
-      // new KeyFigureBite('Total affected', 'Affected people', '', 'K',
-      //   'Thousands of people affected by the crisis. This number is an estimate based on the field data.'),
-      // new KeyFigureBite('Aid budget', '#cash+sum', '$', 'mil', 'Total sum of the allocated budget for treating the crisis.'),
-      // new ChartBite('Evolution of deaths', '#affected+deaths')
-    ];
-
-    this.availableBites = [
-    ];
-
   }
 
   private loadBites(): Observable<Bite[]> {
@@ -45,7 +32,7 @@ export class BiteService {
   }
 
   saveBites(biteList: Bite[]) {
-    this.savedBites = biteList;
+    // this.savedBites = biteList;
     this.persistService.save(biteList)
       .subscribe(
         (successful: boolean) => this.logger.log('Result of bites saved: ' + successful),
@@ -53,16 +40,8 @@ export class BiteService {
       );
   }
 
-  // TODO: remove :)
-  tempPersistAvailable(availableBites: Bite[]) {
-    this.availableBites = availableBites;
-  }
-
   generateAvailableBites(): Observable<Bite> {
     return this.cookBookService.load(this.url);
-
-    // let clone = (JSON.parse(JSON.stringify(this.availableBites)));
-    // return Promise.resolve(clone);
   }
 
   initBite(bite: Bite): Observable<Bite> {

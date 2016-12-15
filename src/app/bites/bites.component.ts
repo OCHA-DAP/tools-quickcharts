@@ -28,6 +28,10 @@ export class BitesComponent implements OnInit {
     child.params.subscribe(
       (params: Params) => {
         const url = params['url'];
+        const editMode = params['editMode'];
+        if (editMode) {
+          this.editMode = true;
+        }
         this.logger.warn('URL is: ' + url);
         this.biteService.init(url);
         this.appConfigService.init(params);

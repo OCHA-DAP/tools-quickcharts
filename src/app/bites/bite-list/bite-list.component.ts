@@ -28,6 +28,9 @@ export class BiteListComponent implements OnInit {
   ngOnInit() {
     this.logger.info('BiteListComponent on init');
     this.load();
+    if (this.edit) {
+      this.onEdit();
+    }
   }
 
   private load() {
@@ -69,8 +72,6 @@ export class BiteListComponent implements OnInit {
 
   onSave() {
     this.biteService.saveBites(this.biteList);
-    // TODO: remove when generating the available bites
-    this.biteService.tempPersistAvailable(this.availableBites);
   }
 
   onReset() {
