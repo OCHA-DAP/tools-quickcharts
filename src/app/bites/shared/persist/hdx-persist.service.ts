@@ -30,7 +30,7 @@ export class HdxPersistService extends PersistService {
       return false;
     };
 
-    let neededConfigs = this.getDomainAndViewId();
+    let neededConfigs = this.getDomainAndViewId(true);
 
     let url = neededConfigs.hdxDomain + HdxPersistService.SAVE_PATH;
     this.logger.info('The save url is: ' + url);
@@ -53,18 +53,18 @@ export class HdxPersistService extends PersistService {
       return [];
     };
 
-    let neededConfigs = this.getDomainAndViewId();
+    let neededConfigs = this.getDomainAndViewId(false);
 
     let url = neededConfigs.hdxDomain + HdxPersistService.LOAD_PATH + neededConfigs.resourceViewId;
 
     return this.http.get(url).map(mapFunction.bind(this)).catch(err => this.handleError(err));
   }
 
-  private getDomainAndViewId() {
+  private getDomainAndViewId(isSave) {
     let hdxDomain = this.appConfig.get('hdx_domain');
     let resourceViewId = this.appConfig.get('resource_view_id');
 
-    if (!hdxDomain || !resourceViewId) {
+    if (isSave && (!hdxDomain || !resourceViewId)) {
       throw 'The hdx domain and the resource view need to be specified in order to save the config';
     }
     return {hdxDomain: hdxDomain, resourceViewId: resourceViewId};
