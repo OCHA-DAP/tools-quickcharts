@@ -1,11 +1,17 @@
 <div
   class="hxl-bite"
+  [class.hxl-bite-edit]="edit || add"
   [class.hxl-bite-small]="add"
 >
   <div class="title">
     <i *ngIf="edit" class="glyphicon glyphicon-move drag-handle"></i>
     <!--<span [attr.contenteditable]="edit">{{ bite.title }}</span>-->
-    <hxl-inline-edit [(ngModel)]="bite.title" [editMode]="edit" [placeholder]="'Add Title'"></hxl-inline-edit>
+    <hxl-inline-edit
+      [(ngModel)]="bite.title"
+      [editMode]="edit"
+      [placeholder]="'Add Title'"
+      [maxEditorWidth]="'85%'"
+    ></hxl-inline-edit>
 
     <span class="pull-right">
       <i

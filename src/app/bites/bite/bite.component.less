@@ -1,12 +1,30 @@
+@import "../../../styles.less";
+
 .hxl-bite {
-  border: 1px solid #eee;
   margin-bottom: 30px;
+  border-bottom: 1px solid #eee;
+  @lineHeightValue: 1.42857143;
+  @titleFontSize: 14px;
+  @titleContainerHeight: 2*@lineHeightValue*@titleFontSize;
+
+  &.hxl-bite-edit {
+    border: 1px solid #eee;
+    .title {
+      @editModePaddingSize: 5px;
+      background-color: #eee;
+      padding: @editModePaddingSize;
+      height: @titleContainerHeight + 2*@editModePaddingSize;
+    }
+  }
 
   .title {
-    font-size: 14px;
-    font-weight: 400;
-    background-color: #eee;
-    padding: 5px;
+    .gothamBoldFont(@titleFontSize);
+    letter-spacing: 0.01em;
+
+    margin-bottom: 10px;
+    color: #333333;
+    line-height: @lineHeightValue;
+    height: @titleContainerHeight;
   }
   .content {
     min-height: 201px;

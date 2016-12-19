@@ -1,5 +1,12 @@
-<span [hidden]="editMode">{{ value }}</span>
-<a (click)="edit(value)" [hidden]="(editing) || (!editMode)"> {{ value || placeholder }} </a>
+<span
+  [hidden]="editMode"
+  [class.from-text-area]="textArea"
+>{{ value }}</span>
+<a
+  (click)="edit(value)"
+  [hidden]="(editing) || (!editMode)"
+  [class.from-text-area]="textArea"
+> {{ value || placeholder }} </a>
 <input
   #editControl
   *ngIf="!textArea"
@@ -15,7 +22,7 @@
 <textarea
   #editControl
   *ngIf="textArea"
-  rows="3"
+  rows="4"
   [hidden]="(!editing) || (!editMode)"
   [placeholder]="placeholder"
   [style.max-width]="maxEditorWidth"

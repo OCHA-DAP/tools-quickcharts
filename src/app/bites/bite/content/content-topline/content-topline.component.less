@@ -1,11 +1,15 @@
 .bite-content {
-  padding: 10px;
+  padding: 10px 0;
 
-  @titleSize: 26px;
+  &.bite-edit {
+    padding: 10px;
+  }
+
+  @titleSize: 16px;
   @valueSize: 48px;
   @preSize: 32px;
   @postSize: 24px;
-  @descriptionSize: 12px;
+  @descriptionSize: 13px;
 
   &.bite-init{
     @shrinkRatio: 3/4;
@@ -32,7 +36,7 @@
   }
 
   .value {
-    margin-top: 15px;
+    //margin-top: 15px;
     font-weight: 300;
     font-size: @valueSize;
 

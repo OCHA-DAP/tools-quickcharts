@@ -1,15 +1,9 @@
 <div
   class="bite-content"
   [class.bite-init]="!bite.init"
+  [class.bite-edit]="edit"
 >
   <div class="row">
-    <div class="col-xs-12">
-      <div class="title" >
-        <hxl-inline-edit [(ngModel)]="bite.dataTitle" [editMode]="edit"
-                         [hidden]="!bite.init" [placeholder]="'add data title'"></hxl-inline-edit>
-        <span [hidden]="bite.init">{{ bite.ingredient.valueColumn }}</span>
-      </div>
-    </div>
     <div class="col-xs-12">
       <div class="value">
         <span class="pre-value">
@@ -23,6 +17,13 @@
                            [placeholder]="'...'" [maxEditorWidth]="'70px'"></hxl-inline-edit>
           <span [hidden]="bite.init">{{ "USD" }}</span>
         </span>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="title" >
+        <hxl-inline-edit [(ngModel)]="bite.dataTitle" [editMode]="edit" [maxEditorWidth]="'100%'"
+                         [hidden]="!bite.init" [placeholder]="'add data title'"></hxl-inline-edit>
+        <span [hidden]="bite.init">{{ bite.ingredient.valueColumn }}</span>
       </div>
     </div>
     <div class="col-xs-12">
