@@ -29,7 +29,7 @@ export class BitesComponent implements OnInit {
       (params: Params) => {
         const url = params['url'];
         const editMode = params['editMode'];
-        if (editMode) {
+        if (editMode === 'true') {
           this.editMode = true;
         }
         this.logger.warn('URL is: ' + url);
