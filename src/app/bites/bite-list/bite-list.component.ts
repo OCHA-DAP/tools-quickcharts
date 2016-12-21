@@ -37,6 +37,19 @@ export class BiteListComponent implements OnInit {
     this.biteService.getBites().subscribe(
       (bite: Bite) => {
         this.logger.log('Processing bite ' + JSON.stringify(bite));
+
+        if (this.availableBites) {
+          let removeIndex = -1;
+          this.availableBites.forEach((availableBite, idx) => {
+            if (availableBite.hashCode === bite.hashCode) {
+              removeIndex = idx;
+            }
+          });
+          if (removeIndex >= 0) {
+            this.availableBites.splice(removeIndex, 1);
+          }
+        }
+
         this.biteList.push(bite);
       }
     );
@@ -63,9 +76,15 @@ export class BiteListComponent implements OnInit {
   onEdit() {
     if (!this.availableBites) {
       this.availableBites = [];
+      let loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
       this.biteService.generateAvailableBites()
         .subscribe(
-          bite => this.availableBites.push(bite)
+          bite => {
+            this.logger.log('Available bite ' + JSON.stringify(bite));
+            if (loadedHashCodeList.indexOf(bite.hashCode) < 0 ) {
+              this.availableBites.push(bite);
+            }
+          }
         );
     }
   }

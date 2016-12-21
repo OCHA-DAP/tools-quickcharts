@@ -29,7 +29,43 @@ export abstract class BiteLogic {
   }
 
   public getBite(): Bite {
-    return this.bite
+    return this.bite;
   }
+
+  public populateHashCode(): void {
+    this.bite.hashCode = this.strListHash(this.buildImportantPropertiesList());
+  }
+
+  protected buildImportantPropertiesList(): string[] {
+    let importantProperties: string[] = [];
+    importantProperties.push(this.bite.initialTitle, this.bite.type);
+    importantProperties.push(this.bite.ingredient.valueColumn, this.bite.ingredient.aggregateColumn);
+    return importantProperties;
+  }
+
+  protected strHash(theString: string, startHash?: number): number {
+    let i, chr, len;
+    let hash = startHash ? startHash : 0;
+    if (!theString || theString.length === 0) {
+      return hash;
+    }
+    for (i = 0, len = theString.length; i < len; i++) {
+      chr = theString.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  };
+
+  protected strListHash(strList: string[]): number {
+    let hash = 0;
+    if (strList) {
+      for (let i = 0; i < strList.length; i++) {
+        let curStr = strList[i];
+        hash = this.strHash(curStr, hash);
+      }
+    }
+    return hash;
+  };
 
 }

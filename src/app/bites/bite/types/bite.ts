@@ -13,6 +13,8 @@ export abstract class Bite {
   // internal to know what type of bite we have inside the template :)
   public type: string;
 
+  public hashCode: number;
+
   constructor(title: string, type: string) {
     this.title = title.slice(0, 35) + (title.length > 35 ? '...' : '');
     this.initialTitle = this.title;
