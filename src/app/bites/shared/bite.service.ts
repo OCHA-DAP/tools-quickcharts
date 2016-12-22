@@ -5,20 +5,26 @@ import { Logger } from 'angular2-logger/core';
 import { CookBookService } from './cook-book.service';
 import { Observable } from 'rxjs';
 import { PersistService } from './persist.service';
+import { AppConfigService } from '../../shared/app-config.service';
 
 @Injectable()
 export class BiteService {
   public url: string;
 
   constructor(private recipeService: RecipeService, private cookBookService: CookBookService,
-              private logger: Logger, private persistService: PersistService) { }
+              private logger: Logger, private persistService: PersistService, private appConfigService: AppConfigService) { }
 
   public init(url: string) {
     this.url = url;
   }
 
   private loadBites(): Observable<Bite[]> {
-    return this.persistService.load();
+    let embeddedConfig = this.appConfigService.get('embeddedConfig');
+    if (embeddedConfig && embeddedConfig.length) {
+      return Observable.of(JSON.parse(embeddedConfig));
+    } else {
+      return this.persistService.load();
+    }
   }
 
   getBites(): Observable<Bite> {
@@ -38,6 +44,10 @@ export class BiteService {
         (successful: boolean) => this.logger.log('Result of bites saved: ' + successful),
         error => this.logger.error('Save failed: ' + error)
       );
+  }
+
+  exportBitesToURL(biteList: Bite[]): string {
+    return encodeURIComponent(JSON.stringify(biteList));
   }
 
   generateAvailableBites(): Observable<Bite> {
