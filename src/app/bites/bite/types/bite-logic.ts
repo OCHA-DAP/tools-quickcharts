@@ -16,6 +16,17 @@ export abstract class BiteLogic {
     return this;
   }
 
+  /**]
+   * Generally used before saving the bite. We don't want the values to be saved as well.
+   * The bites should have fresh data loaded from the data source each time.
+   *
+   * @return {BiteLogic}
+   */
+  public unpopulateBite(): BiteLogic {
+    this.bite.dataTitle = null;
+    return this;
+  }
+
   protected findHxlTagIndex(hxlTag: string, hxlData: any[][]): number {
     if (hxlData && hxlData.length > 2) {
       for (let i = 0; i < hxlData[1].length; i++) {

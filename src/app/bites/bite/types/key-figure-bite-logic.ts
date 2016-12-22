@@ -26,5 +26,10 @@ export class KeyFigureBiteLogic extends BiteLogic {
     return this;
   }
 
+
+  public unpopulateBite(): BiteLogic {
+    this.bite.value = null;
+    return super.unpopulateBite();
+  }
 }
 

@@ -39,5 +39,10 @@ export class ChartBiteLogic extends BiteLogic {
     return this;
   }
 
+  public unpopulateBite(): BiteLogic {
+    this.bite.values = null;
+    this.bite.categories = null;
+    return super.unpopulateBite();
+  }
 }
 

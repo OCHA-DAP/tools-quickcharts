@@ -6,6 +6,7 @@ import { CookBookService } from './cook-book.service';
 import { Observable } from 'rxjs';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
+import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 
 @Injectable()
 export class BiteService {
@@ -38,8 +39,8 @@ export class BiteService {
   }
 
   saveBites(biteList: Bite[]) {
-    // this.savedBites = biteList;
-    this.persistService.save(biteList)
+    let modifiedBiteList = this.unpopulateListOfBites(biteList);
+    this.persistService.save(modifiedBiteList)
       .subscribe(
         (successful: boolean) => this.logger.log('Result of bites saved: ' + successful),
         error => this.logger.error('Save failed: ' + error)
@@ -47,7 +48,23 @@ export class BiteService {
   }
 
   exportBitesToURL(biteList: Bite[]): string {
-    return encodeURIComponent(JSON.stringify(biteList));
+    biteList = biteList ? biteList : [];
+
+    let modifiedBiteList = this.unpopulateListOfBites(biteList);
+    return encodeURIComponent(JSON.stringify(modifiedBiteList));
+  }
+
+  /**
+   *
+   * @param biteList
+   * @return {Bite[]} A new list with cloned object. The fields that were populated from the source data will be emptied.
+   */
+  private unpopulateListOfBites(biteList: Bite[]): Bite[] {
+
+    /* This is an ugly hack to not modify the original bites by cloning them */
+    let modifiedBiteList = JSON.parse(JSON.stringify(biteList));
+    modifiedBiteList.forEach(bite => BiteLogicFactory.createBiteLogic(bite).unpopulateBite());
+    return modifiedBiteList;
   }
 
   generateAvailableBites(): Observable<Bite> {
