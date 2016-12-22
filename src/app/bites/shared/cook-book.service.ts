@@ -7,8 +7,7 @@ import { ChartBite } from '../bite/types/chart-bite';
 import { KeyFigureBite } from '../bite/types/key-figure-bite';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-import { ChartBiteLogic } from '../bite/types/chart-bite-logic';
-import { KeyFigureBiteLogic } from '../bite/types/key-figure-bite-logic';
+import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 
 @Injectable()
 export class CookBookService {
@@ -65,7 +64,7 @@ export class CookBookService {
             avAggCols.forEach((agg) => {
               avValCols.forEach(val => {
                 let bite = new ChartBite(columnNames[availableTags[val]], agg, val);
-                new ChartBiteLogic(bite).populateHashCode();
+                BiteLogicFactory.createBiteLogic(bite).populateHashCode();
                 observer.next(bite);
               });
             });
@@ -73,7 +72,7 @@ export class CookBookService {
           case KeyFigureBite.type():
             avValCols.forEach(val => {
               let bite = new KeyFigureBite(columnNames[availableTags[val]], val);
-              new KeyFigureBiteLogic(bite).populateHashCode();
+              BiteLogicFactory.createBiteLogic(bite).populateHashCode();
               observer.next(bite);
             });
             break;
