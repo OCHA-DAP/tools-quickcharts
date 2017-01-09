@@ -8,6 +8,7 @@ import { BitesModule } from './bites/bites.module';
 import {LOG_LOGGER_PROVIDERS} from 'angular2-logger/core';
 import { HxlBitesRoutingModule } from './app-routing.module';
 import { AppConfigService } from './shared/app-config.service';
+import { DomEventsService } from './shared/dom-events.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,7 @@ import { AppConfigService } from './shared/app-config.service';
     BitesModule,
     HxlBitesRoutingModule
   ],
-  providers: [LOG_LOGGER_PROVIDERS, AppConfigService],
+  providers: [LOG_LOGGER_PROVIDERS, AppConfigService, DomEventsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

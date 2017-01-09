@@ -7,13 +7,15 @@ import { Observable } from 'rxjs';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
+import { DomEventsService } from '../../shared/dom-events.service';
 
 @Injectable()
 export class BiteService {
   public url: string;
 
   constructor(private recipeService: RecipeService, private cookBookService: CookBookService,
-              private logger: Logger, private persistService: PersistService, private appConfigService: AppConfigService) { }
+              private logger: Logger, private persistService: PersistService,
+              private appConfigService: AppConfigService, private domEventService: DomEventsService) { }
 
   public init(url: string) {
     this.url = url;
@@ -42,7 +44,10 @@ export class BiteService {
     let modifiedBiteList = this.unpopulateListOfBites(biteList);
     this.persistService.save(modifiedBiteList)
       .subscribe(
-        (successful: boolean) => this.logger.log('Result of bites saved: ' + successful),
+        (successful: boolean) => {
+          this.logger.log('Result of bites saved: ' + successful);
+          this.domEventService.sendSavedEvent();
+        },
         error => this.logger.error('Save failed: ' + error)
       );
   }

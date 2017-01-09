@@ -12,12 +12,14 @@ import { AppConfigService } from '../shared/app-config.service';
 })
 export class BitesComponent implements OnInit {
   private editMode: boolean;
+  private onlyViewMode: boolean;
   private state: RouterState;
 
   constructor(router: Router, private logger: Logger, private biteService: BiteService,
               private appConfigService: AppConfigService) {
 
     this.editMode = false;
+    this.onlyViewMode = false;
     this.state = router.routerState;
   }
 
@@ -27,14 +29,16 @@ export class BitesComponent implements OnInit {
     this.logger.info('Bites Component on init');
     child.params.subscribe(
       (params: Params) => {
-        const url = params['url'];
-        const editMode = params['editMode'];
-        if (editMode === 'true') {
+        this.appConfigService.init(params);
+        const editMode = this.appConfigService.get('editMode');
+        const onlyViewMode = this.appConfigService.get('onlyViewMode');
+        if (onlyViewMode === 'true') {
+          this.onlyViewMode = true;
+        } else if (editMode === 'true') {
           this.editMode = true;
         }
-        this.logger.warn('URL is: ' + url);
-        this.biteService.init(url);
-        this.appConfigService.init(params);
+        // this.logger.warn('URL is: ' + url);
+        this.biteService.init(this.appConfigService.get('url'));
       }
     );
   }
