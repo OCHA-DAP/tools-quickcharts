@@ -80,6 +80,10 @@ export class BiteService {
     return this.recipeService.myProcessBite(bite, this.url);
   }
 
+  resetBites() {
+    this.domEventService.sendCancelledEvent();
+  }
+
   resetBite(bite: Bite): Bite {
     return this.recipeService.resetBite(bite);
   }

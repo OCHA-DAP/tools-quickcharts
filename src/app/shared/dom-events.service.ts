@@ -11,6 +11,10 @@ export class DomEventsService {
     this.sendDomEventOnIframeParent('hxlPreviewSaved');
   }
 
+  public sendCancelledEvent() {
+    this.sendDomEventOnIframeParent('hxlPreviewCancelled');
+  }
+
   public sendDomEventOnIframeParent(eventName) {
     if (window.parent) {
       window.parent.document.body.dispatchEvent(new CustomEvent(eventName, {'detail': ''}));

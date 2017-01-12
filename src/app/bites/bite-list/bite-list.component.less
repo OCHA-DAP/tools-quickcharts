@@ -1,3 +1,35 @@
+@import "../../../variables";
+@import "../../../fonts";
+
 .sortable-ghost {
   opacity: 0.5;
+}
+
+
+@listHeaderHeight: 50px;
+@listBorderHeight: 1px;
+.list-header-mixin(){
+  height: @listHeaderHeight;
+  border-bottom: @listBorderHeight solid @lightGrayColor;
+  vertical-align: middle;
+  line-height: @listHeaderHeight - @listBorderHeight;
+  padding: 0;
+  padding-right: 15px;
+}
+
+/* List header */
+.list-header {
+
+  margin-top: 15px;
+  .list-header-mixin();
+  background-color: @extraLightBlueColor;
+
+  .list-header-title {
+    .gothamBoldFont(16px);
+    color: @darkGrayColor;
+  }
+
+  & + .row {
+    margin-top: 35px;
+  }
 }

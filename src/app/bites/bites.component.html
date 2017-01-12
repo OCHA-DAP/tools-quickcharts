@@ -1,25 +1,25 @@
 <div class="container-fluid">
-  <div *ngIf="!onlyViewMode" class="bites-title">
-    <span class="bites-header"></span>
-    <span class="bites-actions pull-right">
+  <div *ngIf="!onlyViewMode" class="bites-title row">
+    <div class="col-xs-9 bites-description">
+      <strong>Adding values:</strong> You can edit the header, add units (ie. USD, $, million, people, %, etc) and small description. <br />
+      <strong>Adding charts:</strong> You can edit the header. <br />
+      Click "save" when you finish to allow others to see these visualisations.
+    </div>
+    <div class="col-xs-3 bites-actions">
       <i
         class="glyphicon glyphicon-edit"
         *ngIf="!editMode"
         (click)="editMode=true; biteList.onEdit($event);"
       ></i>
-      <i
-        class="glyphicon glyphicon-ok"
-        style="color: green;"
-        *ngIf="editMode"
-        (click)="editMode=false; biteList.onSave($event);"
-      ></i>
-      <i
-        class="glyphicon glyphicon-remove"
-        style="color: red;"
-        *ngIf="editMode"
-        (click)="editMode=false; biteList.onReset($event);"
-      ></i>
-    </span>
+      <button class="btn btn-inverted"
+              *ngIf="editMode"
+              (click)="editMode=false; biteList.onReset($event);"
+      >Not now</button>
+      <button class="btn btn-primary"
+              *ngIf="editMode"
+              (click)="editMode=false; biteList.onSave($event);"
+      >Save</button>
+    </div>
   </div>
   <hxl-bite-list #biteList [edit]="editMode"></hxl-bite-list>
 

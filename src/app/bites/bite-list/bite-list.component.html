@@ -1,3 +1,6 @@
+<div *ngIf="edit" class="row list-header">
+  <div class="col-xs-12"><span class="list-header-title">Select (up to 6) visualisations</span></div>
+</div>
 <div
   [sortablejs]="biteList"
   [sortablejsOptions]="sortableMain"
@@ -11,21 +14,20 @@
   </div>
 </div>
 
-<div
-  class="row available-bites"
-
->
-  <div class="col-xs-12" *ngIf="edit">
-    <h2>Available items:</h2>
-    <div
-      class="row"
-      style="margin-top: 30px;"
-    >
-      <div
-        class="col-xs-3"
-        *ngFor="let bite of availableBites"
-      >
-        <hxl-bite [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>
+<div *ngIf="edit">
+  <div class="row list-header">
+    <div class="col-xs-12"><span class="list-header-title">Visualisation options to add</span></div>
+  </div>
+  <div class="row available-bites">
+    <div class="col-xs-12" *ngIf="edit">
+      <!--<h2>Available items:</h2>-->
+      <div class="row">
+        <div
+          class="col-xs-3"
+          *ngFor="let bite of availableBites"
+        >
+          <hxl-bite [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>
+        </div>
       </div>
     </div>
   </div>

@@ -96,5 +96,7 @@ export class BiteListComponent implements OnInit {
   onReset() {
     this.logger.log('Reset toggled ... not doing anything for now');
     // this.load();
+    this.biteService.resetBites();
+
   }
 }
