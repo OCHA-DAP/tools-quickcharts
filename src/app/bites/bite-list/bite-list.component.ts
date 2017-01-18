@@ -3,6 +3,7 @@ import {Bite} from '../bite/types/bite';
 import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
 import {Logger} from 'angular2-logger/core';
+import { AppConfigService } from '../../shared/app-config.service';
 
 @Component({
   selector: 'hxl-bite-list',
@@ -10,18 +11,23 @@ import {Logger} from 'angular2-logger/core';
   styleUrls: ['./bite-list.component.less']
 })
 export class BiteListComponent implements OnInit {
+
   private biteList: Array<Bite>;
   private availableBites: Array<Bite>;
   @Input()
   edit: boolean;
+
+  listIsFull: boolean;
+
   sortableMain: SortablejsOptions = {
     handle: '.drag-handle',
     animation: 150,
     ghostClass: 'sortable-ghost'
   };
 
-  constructor(private biteService: BiteService, private logger: Logger) {
+  constructor(private biteService: BiteService, private appConfig: AppConfigService, private logger: Logger) {
     this.biteList = [];
+    this.listIsFull = false;
     this.logger = logger;
   }
 
@@ -30,6 +36,20 @@ export class BiteListComponent implements OnInit {
     this.load();
     if (this.edit) {
       this.onEdit();
+    }
+  }
+
+  private addLoadedBiteToList(bite: Bite): void {
+    this.biteList.push(bite);
+    if (this.biteList.length >= +this.appConfig.get('maxBites')) {
+      this.listIsFull = true;
+    }
+  }
+
+  private removeLoadedBiteToList(bite: Bite): void {
+    this.biteList = this.biteList.filter(b => b !== bite);
+    if (this.biteList.length <= +this.appConfig.get('maxBites')) {
+      this.listIsFull = false;
     }
   }
 
@@ -50,7 +70,7 @@ export class BiteListComponent implements OnInit {
           }
         }
 
-        this.biteList.push(bite);
+        this.addLoadedBiteToList(bite);
       }
     );
   }
@@ -60,7 +80,7 @@ export class BiteListComponent implements OnInit {
     this.availableBites = this.availableBites.filter(b => b !== bite);
     this.biteService.initBite(bite)
       .subscribe(
-        b => this.biteList.push(b),
+        b => this.addLoadedBiteToList(b),
         err => {
           this.logger.error('Can\'t process bite due to:' + err);
           this.availableBites.push(bite);
@@ -69,7 +89,7 @@ export class BiteListComponent implements OnInit {
   }
 
   deleteBite(bite: Bite) {
-    this.biteList = this.biteList.filter(b => b !== bite);
+    this.removeLoadedBiteToList(bite);
     this.availableBites.push(this.biteService.resetBite(bite));
   }
 

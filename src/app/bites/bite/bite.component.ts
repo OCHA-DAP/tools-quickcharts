@@ -16,6 +16,10 @@ export class BiteComponent implements OnInit {
   add: boolean;
   @Input()
   edit: boolean;
+
+  @Input()
+  listIsFull: boolean;
+
   @Output()
   onAdd = new EventEmitter<Bite>();
   @Output()

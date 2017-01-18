@@ -10,7 +10,7 @@
     class="col-xs-4"
     *ngFor="let bite of biteList"
   >
-    <hxl-bite [bite]="bite" [edit]="edit" (onDelete)="deleteBite($event)"></hxl-bite>
+    <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [edit]="edit" (onDelete)="deleteBite($event)"></hxl-bite>
   </div>
 </div>
 
@@ -26,7 +26,7 @@
           class="col-xs-3"
           *ngFor="let bite of availableBites"
         >
-          <hxl-bite [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>
+          <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>
         </div>
       </div>
     </div>

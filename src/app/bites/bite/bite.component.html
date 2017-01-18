@@ -15,10 +15,15 @@
 
     <span class="pull-right">
       <i
-        *ngIf="add"
+        *ngIf="add && !listIsFull"
         style="color: green;"
         class="glyphicon glyphicon-plus"
         (click)="addBite($event);"
+      ></i>
+      <i
+        *ngIf="add && listIsFull"
+        style="color: lightgray;"
+        class="glyphicon glyphicon-plus"
       ></i>
       <i
         *ngIf="edit"
