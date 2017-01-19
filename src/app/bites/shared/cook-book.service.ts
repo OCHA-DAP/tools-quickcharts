@@ -109,7 +109,7 @@ export class CookBookService {
         }
       );
 
-    bites.subscribe(bite => console.log(bite));
+    bites.subscribe(bite => this.logger.log(bite));
 
     return bites;
   }
