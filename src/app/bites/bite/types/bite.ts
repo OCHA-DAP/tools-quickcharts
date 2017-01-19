@@ -10,6 +10,8 @@ export abstract class Bite {
   public readonly initialTitle: string;
   // HXL Proxy generated: hxl tag
   public dataTitle: string;
+
+  public displayedDataTitle: string = null;
   // internal to know what type of bite we have inside the template :)
   public type: string;
 

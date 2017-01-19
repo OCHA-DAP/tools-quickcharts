@@ -12,7 +12,11 @@ export abstract class BiteLogic {
 
   public populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): BiteLogic {
     this.bite.dataTitle = this.bite.ingredient.valueColumn;
-    // this.bite.title = tagToTitleMap[this.bite.dataTitle];
+
+    if (!this.bite.displayedDataTitle) {
+      this.bite.displayedDataTitle = this.bite.dataTitle;
+    }
+
     return this;
   }
 

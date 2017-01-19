@@ -21,7 +21,7 @@
     </div>
     <div class="col-xs-12">
       <div class="title" >
-        <hxl-inline-edit [(ngModel)]="bite.dataTitle" [editMode]="edit" [maxEditorWidth]="'100%'"
+        <hxl-inline-edit [(ngModel)]="bite.displayedDataTitle" [editMode]="edit" [maxEditorWidth]="'100%'"
                          [hidden]="!bite.init" [placeholder]="'add data title'"></hxl-inline-edit>
         <span [hidden]="bite.init">{{ bite.ingredient.valueColumn }}</span>
       </div>
