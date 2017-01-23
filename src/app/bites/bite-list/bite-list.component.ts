@@ -22,7 +22,8 @@ export class BiteListComponent implements OnInit {
   sortableMain: SortablejsOptions = {
     handle: '.drag-handle',
     animation: 150,
-    ghostClass: 'sortable-ghost'
+    ghostClass: 'sortable-ghost',
+    forceFallback: true
   };
 
   constructor(private biteService: BiteService, private appConfig: AppConfigService, private logger: Logger) {
