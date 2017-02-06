@@ -1,0 +1,7 @@
+HXL Preview
+===========
+
+How to build this documentation:
+ - docker run -d --name sphinx -v /path-to-your-repo/hxl-bites:/doc minimum2scp/sphinx:latest "tail -f /dev/null"
+ - bash inside sphinx
+ -
