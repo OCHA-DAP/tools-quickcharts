@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Bite } from '../bite/types/bite';
-import { KeyFigureBite } from '../bite/types/key-figure-bite';
-import { ChartBite } from '../bite/types/chart-bite';
 import { Observable } from 'rxjs';
 import { HxlproxyService } from './hxlproxy.service';
 import { Logger } from 'angular2-logger/core';
-import { BiteLogic } from '../bite/types/bite-logic';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 
 @Injectable()
@@ -17,7 +14,8 @@ export class RecipeService {
   //   let bite1 = new KeyFigureBite('KF Bite', '#affected+buildings+partially', 'PRE', 'POST', 'descr');
   //   let bite2 = new ChartBite('KF Bite', '#affected+buildings+partially', '#adm1+name');
     // this.myProcessBite(bite1,
-    //   'https://test-data.humdata.org/dataset/8b154975-4871-4634-b540-f6c77972f538/resource/3630d818-344b-4bee-b5b0-6ddcfdc28fc8/download/eed.csv'
+    //   'https://test-data.humdata.org/dataset/8b154975-4871-4634-b540-f6c77972f538/resource/3630d818-
+    // 344b-4bee-b5b0-6ddcfdc28fc8/download/eed.csv'
     // ).subscribe( (bite: Bite) => {
     //   let ret = JSON.stringify(bite);
     //   this.logger.log(ret);
@@ -26,7 +24,8 @@ export class RecipeService {
 
 
     // this.myProcessBite(bite2,
-    //   'https://test-data.humdata.org/dataset/8b154975-4871-4634-b540-f6c77972f538/resource/3630d818-344b-4bee-b5b0-6ddcfdc28fc8/download/eed.csv'
+    //   'https://test-data.humdata.org/dataset/8b154975-4871-4634-b540-f6c77972f538/resource/3630d818-344b-
+    // 4bee-b5b0-6ddcfdc28fc8/download/eed.csv'
     // ).subscribe( (bite: Bite) => {
     //   let ret = JSON.stringify(bite);
     //   this.logger.log(ret);
@@ -35,7 +34,8 @@ export class RecipeService {
   //
   //
   //   this.myProcessAll([bite1, bite2],
-  //     'https://test-data.humdata.org/dataset/8b154975-4871-4634-b540-f6c77972f538/resource/3630d818-344b-4bee-b5b0-6ddcfdc28fc8/download/eed.csv'
+  //     'https://test-data.humdata.org/dataset/8b154975-4871-4634-b540-f6c77972f538/resource/3630d818-344b-
+  // 4bee-b5b0-6ddcfdc28fc8/download/eed.csv'
   //   ).subscribe( (bite: Bite) => this.logger.log(JSON.stringify(bite) ) );
   // }
 
