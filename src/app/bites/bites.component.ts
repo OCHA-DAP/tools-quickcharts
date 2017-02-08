@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {Bite} from './bite/types/bite';
 import { Router, RouterState, ActivatedRoute, Params } from '@angular/router';
 import { Logger } from 'angular2-logger/core';
 import { BiteService } from './shared/bite.service';

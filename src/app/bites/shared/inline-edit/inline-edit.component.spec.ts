@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
 import { InlineEditComponent } from './inline-edit.component';
+import { FormsModule } from '@angular/forms';
 
 describe('InlineEditComponent', () => {
   let component: InlineEditComponent;
@@ -11,7 +12,8 @@ describe('InlineEditComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ InlineEditComponent ]
+      declarations: [ InlineEditComponent ],
+      imports: [ FormsModule ]
     })
     .compileComponents();
   }));
