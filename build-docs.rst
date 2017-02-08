@@ -6,3 +6,4 @@ How to build this documentation:
  - bash inside sphinx
  - cd /doc
  - make html
+ - now you can check the documentation in /path-to-your-repo/hxl-bites/docs/build/html
