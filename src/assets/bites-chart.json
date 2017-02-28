@@ -16,7 +16,8 @@
         "#affected",
         "#inneed",
         "#reached",
-        "#targeted"
+        "#targeted",
+        "#population"
       ]
     }
   }
