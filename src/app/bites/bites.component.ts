@@ -3,6 +3,7 @@ import { Router, RouterState, ActivatedRoute, Params } from '@angular/router';
 import { Logger } from 'angular2-logger/core';
 import { BiteService } from './shared/bite.service';
 import { AppConfigService } from '../shared/app-config.service';
+import { AnalyticsService } from './shared/analytics.service';
 
 @Component({
   selector: 'hxl-bites',
@@ -15,7 +16,7 @@ export class BitesComponent implements OnInit {
   private state: RouterState;
 
   constructor(router: Router, private logger: Logger, private biteService: BiteService,
-              private appConfigService: AppConfigService) {
+              private appConfigService: AppConfigService, private analyticsService: AnalyticsService) {
 
     this.editMode = false;
     this.onlyViewMode = false;
@@ -29,6 +30,8 @@ export class BitesComponent implements OnInit {
     child.params.subscribe(
       (params: Params) => {
         this.appConfigService.init(params);
+        this.analyticsService.init();
+        this.analyticsService.trackView();
         const editMode = this.appConfigService.get('editMode');
         const onlyViewMode = this.appConfigService.get('onlyViewMode');
         if (onlyViewMode === 'true') {

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { PersistService } from '../persist.service';
 import { Bite } from '../../bite/types/bite';
 import { AppConfigService } from '../../../shared/app-config.service';
+import { AnalyticsService } from '../analytics.service';
 
 /**
  * This persister assumes we have the following configurations available:
@@ -17,7 +18,8 @@ export class HdxPersistService extends PersistService {
   private static SAVE_PATH = '/api/action/resource_view_update';
   private static LOAD_PATH = '/api/action/resource_view_show?id=';
 
-  constructor(private logger: Logger, private http: Http, private appConfig: AppConfigService) {
+  constructor(private logger: Logger, private http: Http, private appConfig: AppConfigService,
+              private analytics: AnalyticsService) {
     super();
   }
 
@@ -36,7 +38,7 @@ export class HdxPersistService extends PersistService {
     this.logger.info('The save url is: ' + url);
 
     let hxlPreviewConfig = JSON.stringify(bites);
-
+    this.analytics.trackSave();
     return this.http.post(url, {id: neededConfigs.resourceViewId, hxl_preview_config: hxlPreviewConfig})
       .map(mapFunction).catch(err => this.handleError(err));
   }
@@ -55,6 +57,9 @@ export class HdxPersistService extends PersistService {
 
     let neededConfigs = this.getDomainAndViewId(false);
 
+    if (!neededConfigs.hdxDomain || !neededConfigs.resourceViewId){
+      return Observable.from([]);
+    }
     let url = neededConfigs.hdxDomain + HdxPersistService.LOAD_PATH + neededConfigs.resourceViewId;
 
     return this.http.get(url).map(mapFunction.bind(this)).catch(err => this.handleError(err));
