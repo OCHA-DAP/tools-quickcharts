@@ -36,12 +36,22 @@ export class AnalyticsService {
 
   public trackView() {
     const category = 'hxl preview';
+    let url = (window.location !== window.parent.location)
+      ? document.referrer
+      : document.location.href;
+    let pageTitle = window.parent ? window.parent.document.title : window.document.title;
     let gaData = {
       type: 'pageview',
-      category: category
+      category: category,
+      action: 'view',
+      label: pageTitle || ''
     };
     let mpData = {
-      category: category
+      category: category,
+      metadata: {
+        url: url,
+        pageTitle: pageTitle,
+      }
     };
     this.send(gaData, mpData);
   }
@@ -51,12 +61,21 @@ export class AnalyticsService {
   }
 
   public trackEventCategory(category: string) {
+    let url = (window.location !== window.parent.location)
+      ? document.referrer
+      : document.location.href;
+    let pageTitle = window.parent ? window.parent.document.title : window.document.title;
     let gaData = {
       type: 'event',
-      category: category
+      category: category,
+      label: pageTitle || ''
     };
     let mpData = {
-      category: category
+      category: category,
+      metadata: {
+        url: url,
+        pageTitle: pageTitle,
+      }
     };
     this.send(gaData, mpData);
   }
