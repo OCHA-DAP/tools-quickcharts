@@ -7,9 +7,9 @@ class CountRecipe extends BasicRecipe {
   /**
    *
    * @param patterns column names to aggregate by
-   * @param aggregate_pattern column that will be aggregated
+   * @param aggregators the operations and respective columns. ex: ["sum(#targeted) as Total targeted#targeted+total"]
    */
-  constructor(public patterns: string[], public aggregate_pattern: string) {
+  constructor(public patterns: string[], public aggregators: string[]) {
     super('count');
   }
 }
@@ -48,7 +48,7 @@ export abstract class AbstractOperation {
 }
 
 export class CountOperation extends AbstractOperation {
-  constructor(valueCol: string, aggCols: string[]) {
+  constructor(valueCol: string, aggCols: string[], operation: string) {
     let aggColumns: any[];
     if ( aggCols && aggCols.length > 0 ) {
       aggColumns = aggCols.filter( (value: string) => Boolean(value) );
@@ -56,8 +56,8 @@ export class CountOperation extends AbstractOperation {
     if (aggColumns.length === 0) {
       aggColumns.push('#fake_column');
     }
-
-    super(new CountRecipe(aggColumns, valueCol));
+    let operations = [`${operation}(${valueCol})`];
+    super(new CountRecipe(aggColumns, operations));
   }
 
 }
