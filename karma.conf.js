@@ -33,6 +33,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
+    mime: { 'text/x-typescript': ['ts','tsx'] }, //fix for Chrome 55 on Mac
     singleRun: false
   });
 };

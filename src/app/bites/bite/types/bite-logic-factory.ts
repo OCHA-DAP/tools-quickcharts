@@ -6,7 +6,7 @@ import { ChartBite } from './chart-bite';
 import { ChartBiteLogic } from './chart-bite-logic';
 
 export class BiteLogicFactory {
-  public static createBiteLogic(bite: Bite): BiteLogic{
+  public static createBiteLogic(bite: Bite): BiteLogic {
     if (bite) {
       switch (bite.type) {
         case KeyFigureBite.type():

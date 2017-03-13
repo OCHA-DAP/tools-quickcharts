@@ -66,8 +66,10 @@ export abstract class BiteLogic {
     }
     for (i = 0, len = theString.length; i < len; i++) {
       chr = theString.charCodeAt(i);
+      /* tslint:disable */
       hash = ((hash << 5) - hash) + chr;
       hash |= 0; // Convert to 32bit integer
+      /* tslint:enable */
     }
     return hash;
   };

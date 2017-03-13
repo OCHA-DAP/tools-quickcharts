@@ -1,5 +1,5 @@
 export abstract class BasicRecipe {
-  constructor(public filter: string){}
+  constructor(public filter: string) {}
 
 }
 
