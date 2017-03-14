@@ -11,5 +11,5 @@ It's layout is affected by the "edit" and "add" input properties and it can gene
 When rendering the bite in the selected list, it's contents is going to be different depending on the bite's type. Various
 content components are available:
 
-* :doc:`content/content-chart`
-* :doc:`content/content-topline`
+* :doc:`content/content-chart/content-chart`
+* :doc:`content/content-topline/content-topline`
