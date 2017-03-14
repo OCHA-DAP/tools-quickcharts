@@ -1,5 +1,5 @@
 import {AbstractHxlTransformer} from './abstract-hxl-transformer';
-import {CountOperation, BasicRecipe, RenameOperation, CutOperation} from './hxl-operations';
+import {CountOperation, BasicRecipe, RenameOperation} from './hxl-operations';
 
 export class ChartTransformer extends AbstractHxlTransformer {
 

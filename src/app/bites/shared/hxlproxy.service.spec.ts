@@ -59,7 +59,7 @@ describe('Service: Hxlproxy', () => {
     expect(errorThrown).toBeTruthy();
   });
 
-  it('should ... throw error when meta rows missing', () => {
+  it('should ... work with mocked data', () => {
     let proxy: HxlproxyService = service;
     let response = '[' +
       '["id", "ident", "type", "name", "latitude_deg", "longitude_deg", "elevation_ft", "continent", ' +
