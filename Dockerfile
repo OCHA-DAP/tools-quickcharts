@@ -31,6 +31,7 @@ RUN mkdir -p ${DST_DIR} && \
     mv ${SRC_DIR}/env/etc/nginx/conf.d/default.conf /etc/nginx/conf.d/ && \
     cd ${SRC_DIR} && \
     npm install && \
+    ./node_modules/angular-cli/bin/ng test --single-run && \
     ./node_modules/angular-cli/bin/ng build  --prod --bh /hxlpreview/ && \
     cd / && \
     rsync -avh --delete-after ${SRC_DIR}/dist/* ${DST_DIR}/ && \
