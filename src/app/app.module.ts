@@ -5,11 +5,11 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { BitesModule } from './bites/bites.module';
-import {LOG_LOGGER_PROVIDERS} from 'angular2-logger/core';
 import { HxlBitesRoutingModule } from './app-routing.module';
 import { AppConfigService } from './shared/app-config.service';
 import { DomEventsService } from './shared/dom-events.service';
 import { AnalyticsService } from './bites/shared/analytics.service';
+import { LOG_LOGGER_PROVIDERS } from 'angular2-logger/app/core/providers';
 
 @NgModule({
   declarations: [
