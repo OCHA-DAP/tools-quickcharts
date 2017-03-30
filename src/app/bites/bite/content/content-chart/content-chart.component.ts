@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
 import { ChartBite } from '../../types/chart-bite';
-import { Input } from '@angular/core/src/metadata/directives';
+import { Input } from '@angular/core';
 
 declare var c3: any;
 
