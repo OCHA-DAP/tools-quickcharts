@@ -11,8 +11,8 @@ import { AnalyticsService } from './shared/analytics.service';
   styleUrls: ['./bites.component.less']
 })
 export class BitesComponent implements OnInit {
-  private editMode: boolean;
-  private onlyViewMode: boolean;
+  editMode: boolean;
+  onlyViewMode: boolean;
   private state: RouterState;
 
   constructor(router: Router, private logger: Logger, private biteService: BiteService,

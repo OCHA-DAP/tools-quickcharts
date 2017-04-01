@@ -33,7 +33,7 @@ export class InlineEditComponent implements OnInit, ControlValueAccessor {
   // internal data model
   private _value: string = '';
   private preValue: string;
-  private editing: boolean = false;
+  editing: boolean = false;
 
   public onChange: any = Function.prototype;
   public onTouched: any = Function.prototype;
