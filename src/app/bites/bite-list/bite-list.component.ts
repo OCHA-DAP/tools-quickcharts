@@ -12,7 +12,7 @@ import { AppConfigService } from '../../shared/app-config.service';
 })
 export class BiteListComponent implements OnInit {
 
-  private biteList: Array<Bite>;
+  biteList: Array<Bite>;
   private availableBites: Array<Bite>;
   @Input()
   edit: boolean;
