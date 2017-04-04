@@ -2,7 +2,8 @@ import { Bite } from '../../bite/types/bite';
 export type BiteInfo = {
   type: string,
   valueTag: string,
-  groupByTags: string[]
+  groupByTags: string[],
+  aggregateFunction: string
 };
 
 export abstract class AbstractHxlTransformer {
@@ -15,7 +16,8 @@ export abstract class AbstractHxlTransformer {
     this.biteInfo = {
       type: bite.type,
       valueTag: bite.ingredient.valueColumn,
-      groupByTags: [bite.ingredient.aggregateColumn]
+      groupByTags: [bite.ingredient.aggregateColumn],
+      aggregateFunction: bite.ingredient.aggregateFunction
     };
   }
 

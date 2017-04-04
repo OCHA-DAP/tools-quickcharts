@@ -1,8 +1,9 @@
 <div class="chart-content">
   <div class="placeholder">
     <div class="title">
-      Chart using <span class="data-title">{{bite.ingredient.valueColumn}}</span>
-      and <span class="data-title">{{bite.ingredient.aggregateColumn}}</span>
+      Chart using <span class="data-title">{{bite.ingredient.aggregateColumn}}</span>
+      and <span class="data-title">{{bite.ingredient.aggregateFunction}}</span>
+      <span *ngIf="bite.ingredient.aggregateFunction !== 'count'" class="data-title">of {{bite.ingredient.valueColumn}}</span>
     </div>
     <div class="placeholder-content">
       <i class="glyphicon glyphicon-align-left"></i>

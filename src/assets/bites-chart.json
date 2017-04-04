@@ -4,6 +4,7 @@
     "description": "1. Checks if count columns are present (at least one) and if values are unique\n2. Checks if value columns exist (at least one)\n3. Generate a number of visual bites equal with no_count_col * no_value_col * no_aggregations",
     "type": "chart",
     "ingredients": {
+      "aggregateFunctions": ["sum", "count"],
       "aggregateColumns": [
         "#country",
         "#adm1",

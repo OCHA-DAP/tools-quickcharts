@@ -3,11 +3,12 @@ import { Logger } from 'angular2-logger/core';
 import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/mergeMap';
 import { Observable, AsyncSubject } from 'rxjs';
-import { ChartTransformer } from './hxlproxy-transformers/chart-transformer';
+import { SumChartTransformer } from './hxlproxy-transformers/sum-chart-transformer';
 import { Bite } from '../bite/types/bite';
 import { AbstractHxlTransformer } from './hxlproxy-transformers/abstract-hxl-transformer';
 import { AppConfigService } from '../../shared/app-config.service';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
+import { CountChartTransformer } from './hxlproxy-transformers/count-chart-transformer';
 
 @Injectable()
 export class HxlproxyService {
@@ -44,9 +45,15 @@ export class HxlproxyService {
     return this.fetchMetaRows(hxlFileUrl).flatMap(
       (metarows: string[][]) => {
         let transformer: AbstractHxlTransformer;
-        switch (bite.type) {
+        switch (bite.ingredient.aggregateFunction) {
+          case 'count':
+            transformer = new CountChartTransformer(bite);
+            break;
+          case 'sum':
+            transformer = new SumChartTransformer(bite);
+            break;
           default:
-            transformer = new ChartTransformer(bite);
+            transformer = new SumChartTransformer(bite);
             break;
         }
         let recipesStr = transformer.buildRecipes();
