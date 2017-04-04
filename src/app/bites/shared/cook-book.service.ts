@@ -83,10 +83,15 @@ export class CookBookService {
             });
             break;
           case KeyFigureBite.type():
-            avValCols.forEach(val => {
-              const bite = new KeyFigureBite(columnNames[availableTags[val]], val, null);
-              BiteLogicFactory.createBiteLogic(bite).populateHashCode();
-              observer.next(bite);
+            aggregateFunctions.forEach(aggFunction => {
+              /* For count function we don't need value columns */
+              const modifiedValueColumns = aggFunction === 'count' ? ['#count'] : avValCols;
+              modifiedValueColumns.forEach(val => {
+                const columnName = aggFunction === 'count' ? 'Count' : columnNames[availableTags[val]];
+                const bite = new KeyFigureBite(columnName, val, aggFunction);
+                BiteLogicFactory.createBiteLogic(bite).populateHashCode();
+                observer.next(bite);
+              });
             });
             break;
         }
