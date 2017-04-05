@@ -19,6 +19,8 @@ export class BiteListComponent implements OnInit {
 
   listIsFull: boolean;
 
+  hxlUnsupported: boolean;
+
   sortableMain: SortablejsOptions = {
     handle: '.drag-handle',
     animation: 150,
@@ -30,6 +32,7 @@ export class BiteListComponent implements OnInit {
     this.biteList = [];
     this.listIsFull = false;
     this.logger = logger;
+    this.hxlUnsupported=true;
   }
 
   ngOnInit() {
@@ -105,7 +108,17 @@ export class BiteListComponent implements OnInit {
             if (loadedHashCodeList.indexOf(bite.hashCode) < 0 ) {
               this.availableBites.push(bite);
             }
-          }
+          },
+        errObj => {
+            this.logger.log('in ERROR...');
+        },
+          () => {
+            this.logger.log('on COMPLETE...');
+            if (this.availableBites.length == 0  && this.biteList.length == 0){
+              //this.logger.log("Your files contains HXL tags which are not supported by Smart Charts. If you have any questions or suggestions, or if you would like further information, please don't hesitate to contact us");
+              this.hxlUnsupported=false;
+            }
+        }
         );
     }
   }
