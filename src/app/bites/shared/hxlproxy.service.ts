@@ -9,6 +9,7 @@ import { AbstractHxlTransformer } from './hxlproxy-transformers/abstract-hxl-tra
 import { AppConfigService } from '../../shared/app-config.service';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { CountChartTransformer } from './hxlproxy-transformers/count-chart-transformer';
+import { DistinctCountChartTransformer } from './hxlproxy-transformers/distinct-count-chart-transformer';
 
 @Injectable()
 export class HxlproxyService {
@@ -52,8 +53,8 @@ export class HxlproxyService {
           case 'sum':
             transformer = new SumChartTransformer(bite);
             break;
-          default:
-            transformer = new SumChartTransformer(bite);
+          case 'distinct-count':
+            transformer = new DistinctCountChartTransformer(bite);
             break;
         }
         let recipesStr = transformer.buildRecipes();
