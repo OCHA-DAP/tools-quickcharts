@@ -6,9 +6,9 @@ import { Bite } from '../bite/types/bite';
 import { ChartBite } from '../bite/types/chart-bite';
 import { KeyFigureBite } from '../bite/types/key-figure-bite';
 import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { AggregateFunctionOptions } from '../bite/types/ingredients';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class CookBookService {
@@ -106,7 +106,7 @@ export class CookBookService {
     let cookBooksObs: Array<Observable<Response>> = this.cookBooks.map(book => this.http.get(book));
     let biteConfigs: Observable<BiteConfig[]> = cookBooksObs
       .reduce((prev, current, idx) => prev.merge(current))
-      .map((res: Response) => res.json()[0])
+      .flatMap((res: Response) => res.json())
       .map((biteConfig) => <BiteConfig>biteConfig)
       .toArray();
       // .subscribe(json => console.log(json);
