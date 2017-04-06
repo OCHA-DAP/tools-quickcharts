@@ -9,13 +9,16 @@ import { Http, Response } from '@angular/http';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { AggregateFunctionOptions } from '../bite/types/ingredients';
 import { Observable } from 'rxjs/Observable';
+import { AppConfigService } from '../../shared/app-config.service';
+
 
 @Injectable()
 export class CookBookService {
 
   private cookBooks: string[];
 
-  constructor(private logger: Logger, private hxlproxyService: HxlproxyService, private http: Http) {
+  constructor(private logger: Logger, private hxlproxyService: HxlproxyService, private http: Http,
+              private appConfigService: AppConfigService) {
     this.cookBooks = [
       'assets/bites-chart.json',
       'assets/bites-key-figure.json',
@@ -103,13 +106,20 @@ export class CookBookService {
   }
 
   load(url): Observable<Bite> {
+
+    // if user is using an external recipe, provided as url
+    const recipeUrl = this.appConfigService.get('recipeUrl');
+    if ( typeof recipeUrl !== 'undefined' ) {
+      this.cookBooks = [recipeUrl];
+    }
+
     let cookBooksObs: Array<Observable<Response>> = this.cookBooks.map(book => this.http.get(book));
     let biteConfigs: Observable<BiteConfig[]> = cookBooksObs
       .reduce((prev, current, idx) => prev.merge(current))
       .flatMap((res: Response) => res.json())
       .map((biteConfig) => <BiteConfig>biteConfig)
       .toArray();
-      // .subscribe(json => console.log(json);
+      // .subscribe(json => console.log(json));
     let metaRows = this.hxlproxyService.fetchMetaRows(url);
 
     let bites: Observable<Bite> = Observable.forkJoin(

@@ -13,14 +13,15 @@ import { AnalyticsService } from './shared/analytics.service';
 export class BitesComponent implements OnInit {
   editMode: boolean;
   onlyViewMode: boolean;
+  recipeUrl: string;
   private state: RouterState;
 
   constructor(router: Router, private logger: Logger, private biteService: BiteService,
               private appConfigService: AppConfigService, private analyticsService: AnalyticsService) {
-
     this.editMode = false;
     this.onlyViewMode = false;
     this.state = router.routerState;
+    this.recipeUrl = 'undefined';
   }
 
   ngOnInit() {
@@ -39,8 +40,10 @@ export class BitesComponent implements OnInit {
         } else if (editMode === 'true') {
           this.editMode = true;
         }
+
         // this.logger.warn('URL is: ' + url);
         this.biteService.init(this.appConfigService.get('url'));
+
       }
     );
   }
