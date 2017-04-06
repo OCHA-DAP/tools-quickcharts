@@ -6,8 +6,9 @@ import { Bite } from '../bite/types/bite';
 import { ChartBite } from '../bite/types/chart-bite';
 import { KeyFigureBite } from '../bite/types/key-figure-bite';
 import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
+import { AggregateFunctionOptions } from '../bite/types/ingredients';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class CookBookService {
@@ -35,13 +36,19 @@ export class CookBookService {
   private determineAvailableBites(columnNames: Array<string>, hxlTags: Array<string>,
                                   biteConfigs: Array<BiteConfig>): Observable<Bite> {
 
-    let availableTags = {};
+    const availableTags = {};
     hxlTags.forEach((v, idx) => availableTags[v] = idx);
 
-    let bites: Observable<Bite> = new Observable<Bite>(observer => {
+    const bites: Observable<Bite> = new Observable<Bite>(observer => {
       biteConfigs.forEach((biteConfig) => {
-        let aggregateColumns = biteConfig.ingredients.aggregateColumns;
-        let valueColumns = biteConfig.ingredients.valueColumns;
+        const aggregateColumns = biteConfig.ingredients.aggregateColumns;
+        const valueColumns = biteConfig.ingredients.valueColumns;
+
+        let aggregateFunctions: AggregateFunctionOptions[] = biteConfig.ingredients.aggregateFunctions;
+        if ( !aggregateFunctions || aggregateFunctions.length === 0 ) {
+          aggregateFunctions = ['sum'];
+        }
+
 
         let avAggCols: string[] = [];
         if (aggregateColumns) {
@@ -61,19 +68,30 @@ export class CookBookService {
 
         switch (biteConfig.type) {
           case ChartBite.type():
-            avAggCols.forEach((agg) => {
-              avValCols.forEach(val => {
-                let bite = new ChartBite(columnNames[availableTags[val]], agg, val);
-                BiteLogicFactory.createBiteLogic(bite).populateHashCode();
-                observer.next(bite);
+            aggregateFunctions.forEach(aggFunction => {
+              avAggCols.forEach((agg) => {
+
+                /* For count function we don't need value columns */
+                const modifiedValueColumns = aggFunction === 'count' ? ['#count'] : avValCols;
+                modifiedValueColumns.forEach(val => {
+                  const columnName = aggFunction === 'count' ? 'Count' : columnNames[availableTags[val]];
+                  const bite = new ChartBite(columnName, agg, val, aggFunction);
+                  BiteLogicFactory.createBiteLogic(bite).populateHashCode();
+                  observer.next(bite);
+                });
               });
             });
             break;
           case KeyFigureBite.type():
-            avValCols.forEach(val => {
-              let bite = new KeyFigureBite(columnNames[availableTags[val]], val);
-              BiteLogicFactory.createBiteLogic(bite).populateHashCode();
-              observer.next(bite);
+            aggregateFunctions.forEach(aggFunction => {
+              /* For count function we don't need value columns */
+              const modifiedValueColumns = aggFunction === 'count' ? ['#count'] : avValCols;
+              modifiedValueColumns.forEach(val => {
+                const columnName = aggFunction === 'count' ? 'Count' : columnNames[availableTags[val]];
+                const bite = new KeyFigureBite(columnName, val, aggFunction);
+                BiteLogicFactory.createBiteLogic(bite).populateHashCode();
+                observer.next(bite);
+              });
             });
             break;
         }
@@ -88,7 +106,7 @@ export class CookBookService {
     let cookBooksObs: Array<Observable<Response>> = this.cookBooks.map(book => this.http.get(book));
     let biteConfigs: Observable<BiteConfig[]> = cookBooksObs
       .reduce((prev, current, idx) => prev.merge(current))
-      .map((res: Response) => res.json()[0])
+      .flatMap((res: Response) => res.json())
       .map((biteConfig) => <BiteConfig>biteConfig)
       .toArray();
       // .subscribe(json => console.log(json);

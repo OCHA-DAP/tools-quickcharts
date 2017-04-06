@@ -4,6 +4,7 @@
     "description": "",
     "type": "key figure",
     "ingredients": {
+      "aggregateFunctions": ["sum", "count"],
       "valueColumns":[
         "#affected",
         "#inneed",
