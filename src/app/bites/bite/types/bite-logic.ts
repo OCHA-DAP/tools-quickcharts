@@ -47,8 +47,9 @@ export abstract class BiteLogic {
     return this.bite;
   }
 
-  public populateHashCode(): void {
+  public populateHashCode(): BiteLogic {
     this.bite.hashCode = this.strListHash(this.buildImportantPropertiesList());
+    return this;
   }
 
   protected buildImportantPropertiesList(): string[] {
@@ -84,5 +85,7 @@ export abstract class BiteLogic {
     }
     return hash;
   };
+
+  public abstract populateWithTitle(columnNames: string[], hxlTags: string[]): BiteLogic;
 
 }

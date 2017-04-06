@@ -36,9 +36,6 @@ export class CookBookService {
   private determineAvailableBites(columnNames: Array<string>, hxlTags: Array<string>,
                                   biteConfigs: Array<BiteConfig>): Observable<Bite> {
 
-    const availableTags = {};
-    hxlTags.forEach((v, idx) => availableTags[v] = idx);
-
     const bites: Observable<Bite> = new Observable<Bite>(observer => {
       biteConfigs.forEach((biteConfig) => {
         const aggregateColumns = biteConfig.ingredients.aggregateColumns;
@@ -74,9 +71,8 @@ export class CookBookService {
                 /* For count function we don't need value columns */
                 const modifiedValueColumns = aggFunction === 'count' ? ['#count'] : avValCols;
                 modifiedValueColumns.forEach(val => {
-                  const columnName = aggFunction === 'count' ? 'Count' : columnNames[availableTags[val]];
-                  const bite = new ChartBite(columnName, agg, val, aggFunction);
-                  BiteLogicFactory.createBiteLogic(bite).populateHashCode();
+                  const bite = new ChartBite(agg, val, aggFunction);
+                  BiteLogicFactory.createBiteLogic(bite).populateHashCode().populateWithTitle(columnNames, hxlTags);
                   observer.next(bite);
                 });
               });
@@ -87,9 +83,8 @@ export class CookBookService {
               /* For count function we don't need value columns */
               const modifiedValueColumns = aggFunction === 'count' ? ['#count'] : avValCols;
               modifiedValueColumns.forEach(val => {
-                const columnName = aggFunction === 'count' ? 'Count' : columnNames[availableTags[val]];
-                const bite = new KeyFigureBite(columnName, val, aggFunction);
-                BiteLogicFactory.createBiteLogic(bite).populateHashCode();
+                const bite = new KeyFigureBite(val, aggFunction);
+                BiteLogicFactory.createBiteLogic(bite).populateHashCode().populateWithTitle(columnNames, hxlTags);
                 observer.next(bite);
               });
             });

@@ -18,8 +18,8 @@ export class ChartBiteLogic extends BiteLogic {
   public populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): ChartBiteLogic {
     super.populateWithHxlProxyInfo(hxlData, tagToTitleMap);
 
-    let valColIndex = this.findHxlTagIndex(this.bite.ingredient.valueColumn, hxlData);
-    let aggColIndex = this.findHxlTagIndex(this.bite.ingredient.aggregateColumn, hxlData);
+    const valColIndex = this.findHxlTagIndex(this.bite.ingredient.valueColumn, hxlData);
+    const aggColIndex = this.findHxlTagIndex(this.bite.ingredient.aggregateColumn, hxlData);
 
     if ( aggColIndex >= 0 && valColIndex >= 0) {
 
@@ -43,6 +43,28 @@ export class ChartBiteLogic extends BiteLogic {
     this.bite.values = null;
     this.bite.categories = null;
     return super.unpopulateBite();
+  }
+
+
+  public populateWithTitle(columnNames: string[], hxlTags: string[]): BiteLogic {
+    if (!this.bite.title) {
+      const availableTags = {};
+      hxlTags.forEach((v, idx) => availableTags[v] = idx);
+
+      switch (this.bite.ingredient.aggregateFunction) {
+        case 'count':
+          this.bite.setTitle('ROW COUNT BY ' + columnNames[availableTags[this.bite.ingredient.aggregateColumn]]);
+          break;
+        case 'distinct-count':
+          this.bite.setTitle('UNIQUE ' + columnNames[availableTags[this.bite.ingredient.valueColumn]] +
+            ' BY ' + columnNames[availableTags[this.bite.ingredient.aggregateColumn]]);
+          break;
+        default:
+          this.bite.setTitle(columnNames[availableTags[this.bite.ingredient.valueColumn]]);
+      }
+
+    }
+    return this;
   }
 }
 
