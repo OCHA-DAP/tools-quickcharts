@@ -12,8 +12,8 @@ export class ChartBite extends Bite {
     return 'chart';
   }
 
-  constructor(title: string, aggregateColumn: string, valueColumn: string, aggregateFunction: AggregateFunctionOptions) {
-    super(title, ChartBite.type());
+  constructor(aggregateColumn: string, valueColumn: string, aggregateFunction: AggregateFunctionOptions, title?: string) {
+    super(ChartBite.type(), title);
     this.ingredient = new Ingredient(aggregateColumn, valueColumn, aggregateFunction);
     this.dataTitle = valueColumn;
   }
