@@ -17,10 +17,16 @@ export abstract class Bite {
 
   public hashCode: number;
 
-  constructor(title: string, type: string) {
-    this.title = title.slice(0, 35) + (title.length > 35 ? '...' : '');
+  constructor(type: string, title?: string) {
+    if (title) {
+      this.setTitle(title);
+    }
     this.initialTitle = this.title;
     this.type = type;
+  }
+
+  public setTitle(title: string) {
+    this.title = title.slice(0, 35) + (title.length > 35 ? '...' : '');
   }
 
 }

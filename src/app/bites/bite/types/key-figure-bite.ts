@@ -19,8 +19,8 @@ export class KeyFigureBite extends Bite {
     return 'key figure';
   }
 
-  constructor(title: string, valueColumn: string, aggregateFunction: AggregateFunctionOptions) {
-    super(title, KeyFigureBite.type());
+  constructor(valueColumn: string, aggregateFunction: AggregateFunctionOptions, title?: string) {
+    super(KeyFigureBite.type(), title);
     this.ingredient = new Ingredient(null, valueColumn, aggregateFunction);
     this.dataTitle = valueColumn;
   }
