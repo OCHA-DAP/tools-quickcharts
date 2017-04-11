@@ -34,6 +34,26 @@ class CutRecipe extends BasicRecipe {
   }
 }
 
+class CleanRecipe extends BasicRecipe {
+  /**
+   *
+   * @param date Tag that contains dates to clean
+   */
+  constructor(public date: string) {
+    super('clean_data');
+  }
+}
+
+class SortRecipe extends BasicRecipe {
+  /**
+   *
+   * @param tags comma separated tags by which to sort
+   */
+  constructor(public tags: string) {
+    super('sort');
+  }
+}
+
 
 export abstract class AbstractOperation {
   protected readonly _recipe: BasicRecipe;
@@ -76,5 +96,17 @@ export class CutOperation extends AbstractOperation {
       keepList = keepList.concat(aggCols.filter( (value: string) => Boolean(value) ));
     }
     super(new CutRecipe(keepList));
+  }
+}
+
+export class CleanOperation extends  AbstractOperation {
+  constructor(dateCol: string) {
+    super(new CleanRecipe(dateCol));
+  }
+}
+
+export class SortOperation extends  AbstractOperation {
+  constructor(col: string) {
+    super(new SortRecipe(col));
   }
 }

@@ -42,5 +42,6 @@
   <div class="content" [ngSwitch]="bite.type">
     <hxl-content-topline *ngSwitchCase="classTypes.ToplineBite" [bite]="bite" [edit]="edit"></hxl-content-topline>
     <hxl-content-chart *ngSwitchCase="classTypes.ChartBite" [bite]="bite"></hxl-content-chart>
+    <hxl-content-timeseries-chart *ngSwitchCase="classTypes.TimeseriesChartBite" [bite]="bite"></hxl-content-timeseries-chart>
   </div>
 </div>

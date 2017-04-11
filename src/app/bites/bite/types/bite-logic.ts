@@ -10,7 +10,7 @@ export abstract class BiteLogic {
     return this;
   }
 
-  public populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): BiteLogic {
+  protected populateDataTitleWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): BiteLogic {
     this.bite.dataTitle = this.bite.ingredient.valueColumn;
 
     if (!this.bite.displayedDataTitle) {
@@ -87,5 +87,6 @@ export abstract class BiteLogic {
   };
 
   public abstract populateWithTitle(columnNames: string[], hxlTags: string[]): BiteLogic;
+  public abstract populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): BiteLogic;
 
 }
