@@ -9,6 +9,7 @@ import { Http, Response } from '@angular/http';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { AggregateFunctionOptions } from '../bite/types/ingredients';
 import { Observable } from 'rxjs/Observable';
+import { TimeseriesChartBite } from '../bite/types/timeseries-chart-bite';
 
 @Injectable()
 export class CookBookService {
@@ -38,8 +39,10 @@ export class CookBookService {
 
     const bites: Observable<Bite> = new Observable<Bite>(observer => {
       biteConfigs.forEach((biteConfig) => {
-        const aggregateColumns = biteConfig.ingredients.aggregateColumns;
+        const aggregateColumns: Array<string> = [];
         const valueColumns = biteConfig.ingredients.valueColumns;
+
+        const dateColumns: Array<string> = [];
 
         let aggregateFunctions: AggregateFunctionOptions[] = biteConfig.ingredients.aggregateFunctions;
         if ( !aggregateFunctions || aggregateFunctions.length === 0 ) {
@@ -48,7 +51,16 @@ export class CookBookService {
 
 
         let avAggCols: string[] = [];
-        if (aggregateColumns) {
+        if (biteConfig.ingredients.aggregateColumns) {
+          biteConfig.ingredients.aggregateColumns.forEach(col => {
+            if (biteConfig.type === 'chart' && col.indexOf('#date') >= 0) {
+              biteConfig.type = 'timeseries';
+              dateColumns.push(col);
+            } else {
+              aggregateColumns.push(col);
+            }
+          });
+
           // filter the available hxlTags, and not the recipe general tags
           avAggCols = hxlTags.filter(col => this.matchInSet(col, aggregateColumns));
           // avAggCols = aggregateColumns.filter(col => this.matchInSet(col, hxlTags));
@@ -64,6 +76,27 @@ export class CookBookService {
         this.logger.info(valueColumns);
 
         switch (biteConfig.type) {
+          case TimeseriesChartBite.type():
+            dateColumns.forEach(dateColumn => {
+              aggregateFunctions.forEach(aggFunction => {
+                /* For count function we don't need value columns */
+                const modifiedValueColumns = aggFunction === 'count' ? ['#count'] : avValCols;
+                modifiedValueColumns.forEach(val => {
+                  const simple_bite = new TimeseriesChartBite(dateColumn, null, val, aggFunction);
+                  BiteLogicFactory.createBiteLogic(simple_bite).populateHashCode()
+                    .populateWithTitle(columnNames, hxlTags);
+                  observer.next(simple_bite);
+                  avAggCols.forEach(agg => {
+                    const multiple_data_bite = new TimeseriesChartBite(dateColumn, agg, val, aggFunction);
+                    BiteLogicFactory.createBiteLogic(multiple_data_bite).populateHashCode()
+                      .populateWithTitle(columnNames, hxlTags);
+                    observer.next(multiple_data_bite);
+                  });
+                });
+              });
+            });
+
+            break;
           case ChartBite.type():
             aggregateFunctions.forEach(aggFunction => {
               avAggCols.forEach((agg) => {

@@ -10,6 +10,7 @@ import { AppConfigService } from '../../shared/app-config.service';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { CountChartTransformer } from './hxlproxy-transformers/count-chart-transformer';
 import { DistinctCountChartTransformer } from './hxlproxy-transformers/distinct-count-chart-transformer';
+import { TimeseriesChartTransformer } from './hxlproxy-transformers/timeseries-chart-transformer';
 
 @Injectable()
 export class HxlproxyService {
@@ -57,7 +58,10 @@ export class HxlproxyService {
             transformer = new DistinctCountChartTransformer(bite);
             break;
         }
-        let recipesStr = transformer.buildRecipes();
+        if (bite.ingredient.dateColumn) {
+          transformer = new TimeseriesChartTransformer(transformer, bite.ingredient.dateColumn);
+        }
+        const recipesStr: string = transformer.generateJsonFromRecipes();
         // this.logger.log(recipesStr);
 
         let biteLogic = BiteLogicFactory.createBiteLogic(bite);

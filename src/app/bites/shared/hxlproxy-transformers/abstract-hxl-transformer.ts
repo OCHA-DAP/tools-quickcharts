@@ -1,25 +1,25 @@
 import { Bite } from '../../bite/types/bite';
-export type BiteInfo = {
-  type: string,
-  valueTag: string,
-  groupByTags: string[],
-  aggregateFunction: string
-};
+import { BasicRecipe } from './hxl-operations';
 
 export abstract class AbstractHxlTransformer {
 
-  readonly jsonRecipe: any[];
-  readonly biteInfo: BiteInfo;
+  protected  type: string;
+  protected valueTag: string;
+  public groupByTags: string[];
+  protected aggregateFunction: string;
 
   constructor(bite: Bite) {
-    this.jsonRecipe = [];
-    this.biteInfo = {
-      type: bite.type,
-      valueTag: bite.ingredient.valueColumn,
-      groupByTags: [bite.ingredient.aggregateColumn],
-      aggregateFunction: bite.ingredient.aggregateFunction
-    };
+    if (bite) {
+      this.type = bite.type;
+      this.valueTag = bite.ingredient.valueColumn;
+      this.groupByTags = [bite.ingredient.aggregateColumn];
+      this.aggregateFunction = bite.ingredient.aggregateFunction;
+    }
   }
 
-  abstract buildRecipes();
+  abstract buildRecipes(): BasicRecipe[];
+
+  public generateJsonFromRecipes(): string {
+    return JSON.stringify(this.buildRecipes());
+  }
 }

@@ -5,7 +5,7 @@ export class SumChartTransformer extends CountChartTransformer {
   protected metaTagForAggColumn = '#meta+sum';
 
   protected nameForAggregatedValueColumn(): string {
-    return this.biteInfo.valueTag;
+    return this.valueTag;
   }
 
 }

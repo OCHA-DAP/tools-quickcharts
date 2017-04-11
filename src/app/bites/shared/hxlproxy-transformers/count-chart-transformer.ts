@@ -9,10 +9,10 @@ export class CountChartTransformer extends AbstractHxlTransformer {
     return '#count';
   }
 
-  buildRecipes(): string {
+  buildRecipes(): BasicRecipe[] {
     const recipes: BasicRecipe[] = [];
 
-    const countOperation = new CountOperation(this.biteInfo.valueTag, this.biteInfo.groupByTags, this.biteInfo.aggregateFunction);
+    const countOperation = new CountOperation(this.valueTag, this.groupByTags, this.aggregateFunction);
     recipes.push(countOperation.recipe);
 
     // let cutOperation = new CutOperation('#meta+sum', this.biteInfo.groupByTags);
@@ -21,7 +21,7 @@ export class CountChartTransformer extends AbstractHxlTransformer {
     const renameOperation = new RenameOperation(this.metaTagForAggColumn, this.nameForAggregatedValueColumn(), null);
     recipes.push(renameOperation.recipe);
 
-    return JSON.stringify(recipes);
+    return recipes;
   }
 
 }

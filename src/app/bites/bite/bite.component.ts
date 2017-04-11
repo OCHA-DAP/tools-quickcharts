@@ -3,6 +3,7 @@ import {Input, Output} from '@angular/core';
 import { Bite } from './types/bite';
 import { KeyFigureBite } from './types/key-figure-bite';
 import { ChartBite } from './types/chart-bite';
+import { TimeseriesChartBite } from './types/timeseries-chart-bite';
 
 @Component({
   selector: 'hxl-bite',
@@ -29,6 +30,7 @@ export class BiteComponent implements OnInit {
   constructor() {
     this.classTypes.ToplineBite = KeyFigureBite.type();
     this.classTypes.ChartBite = ChartBite.type();
+    this.classTypes.TimeseriesChartBite = TimeseriesChartBite.type();
   }
 
   ngOnInit() {
