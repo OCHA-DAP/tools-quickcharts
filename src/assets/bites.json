@@ -1,6 +1,6 @@
 [
   {
-    "name": "Charts: Sum/count items for a tag grouped by aggregate columns",
+    "name": "Charts: Sum/count items for a value column grouped by aggregate columns",
     "description": "",
     "type": "chart",
     "ingredients": {
@@ -22,9 +22,42 @@
       ]
     }
   },
+  {
+    "name": "Charts: Distinct count of values in value column by the aggregate column",
+    "description": "",
+    "type": "chart",
+    "ingredients": {
+      "aggregateFunctions": ["distinct-count"],
+      "aggregateColumns": ["#country"],
+      "valueColumns":[
+        "#adm1"
+      ]
+    }
+  },
+  {
+    "name": "Charts: Sum items for a tag grouped by administrative units",
+    "description": "",
+    "type": "chart",
+    "ingredients": {
+      "aggregateFunctions": ["sum", "count"],
+      "aggregateColumns": [
+        "#date",
+        "#country"
+      ],
+      "valueColumns":[
+        "#affected",
+        "#inneed",
+        "#reached",
+        "#targeted",
+        "#population"
+      ]
+    }
+  },
+
+
 
   {
-    "name": "Key Figures: Sum/count items for a tag",
+    "name": "Key Figures: Sum/count items for a value column",
     "description": "",
     "type": "key figure",
     "ingredients": {
@@ -35,6 +68,18 @@
         "#reached",
         "#targeted",
         "#population"
+      ]
+    }
+  },
+  {
+    "name": "Key Figures: Distinct count of values in value column",
+    "description": "",
+    "type": "key figure",
+    "ingredients": {
+      "aggregateFunctions": ["distinct-count"],
+      "valueColumns": [
+        "#country",
+        "#adm1"
       ]
     }
   }
