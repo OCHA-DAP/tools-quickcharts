@@ -20,8 +20,9 @@ export class CookBookService {
   constructor(private logger: Logger, private hxlproxyService: HxlproxyService, private http: Http,
               private appConfigService: AppConfigService) {
     this.cookBooks = [
-      'assets/bites-chart.json',
-      'assets/bites-key-figure.json',
+      // 'assets/bites-chart.json',
+      // 'assets/bites-key-figure.json',
+      'assets/bites.json',
     ];
   }
 
