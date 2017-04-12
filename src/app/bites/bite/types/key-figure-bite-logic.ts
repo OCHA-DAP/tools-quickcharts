@@ -14,7 +14,7 @@ export class KeyFigureBiteLogic extends BiteLogic {
   }
 
   public populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): KeyFigureBiteLogic {
-    super.populateWithHxlProxyInfo(hxlData, tagToTitleMap);
+    super.populateDataTitleWithHxlProxyInfo(hxlData, tagToTitleMap);
     const hxlTagIndex = this.findHxlTagIndex(this.bite.ingredient.valueColumn, hxlData);
 
     if ( hxlTagIndex >= 0 ) {

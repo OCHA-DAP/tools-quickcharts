@@ -20,7 +20,7 @@ export class KeyFigureBite extends Bite {
   }
 
   constructor(valueColumn: string, aggregateFunction: AggregateFunctionOptions, title?: string) {
-    super(KeyFigureBite.type(), title);
+    super(title);
     this.ingredient = new Ingredient(null, valueColumn, aggregateFunction);
     this.dataTitle = valueColumn;
   }

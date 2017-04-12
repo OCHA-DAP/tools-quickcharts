@@ -15,6 +15,7 @@ import { InlineEditComponent } from './shared/inline-edit/inline-edit.component'
 import { FormsModule } from '@angular/forms';
 import { PersistService } from './shared/persist.service';
 import { HdxPersistService } from './shared/persist/hdx-persist.service';
+import { ContentTimeseriesChartComponent } from './bite/content/content-timeseries-chart/content-timeseries-chart.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { HdxPersistService } from './shared/persist/hdx-persist.service';
     BitesComponent,
     InlineEditComponent
   ],
-  declarations: [BitesComponent, BiteListComponent, BiteComponent, ContentToplineComponent, ContentChartComponent, InlineEditComponent],
+  declarations: [BitesComponent, BiteListComponent, BiteComponent, ContentToplineComponent, ContentChartComponent, InlineEditComponent,
+    ContentTimeseriesChartComponent],
   providers: [
     BiteService,
     RecipeService,

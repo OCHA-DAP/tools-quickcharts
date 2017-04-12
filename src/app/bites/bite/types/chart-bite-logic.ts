@@ -16,7 +16,7 @@ export class ChartBiteLogic extends BiteLogic {
   }
 
   public populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): ChartBiteLogic {
-    super.populateWithHxlProxyInfo(hxlData, tagToTitleMap);
+    super.populateDataTitleWithHxlProxyInfo(hxlData, tagToTitleMap);
 
     const valColIndex = this.findHxlTagIndex(this.bite.ingredient.valueColumn, hxlData);
     const aggColIndex = this.findHxlTagIndex(this.bite.ingredient.aggregateColumn, hxlData);

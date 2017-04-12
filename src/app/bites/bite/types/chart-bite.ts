@@ -13,7 +13,7 @@ export class ChartBite extends Bite {
   }
 
   constructor(aggregateColumn: string, valueColumn: string, aggregateFunction: AggregateFunctionOptions, title?: string) {
-    super(ChartBite.type(), title);
+    super(title);
     this.ingredient = new Ingredient(aggregateColumn, valueColumn, aggregateFunction);
     this.dataTitle = valueColumn;
   }

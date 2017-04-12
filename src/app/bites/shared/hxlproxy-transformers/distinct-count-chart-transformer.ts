@@ -3,21 +3,21 @@ import { BasicRecipe, CountOperation, RenameOperation } from './hxl-operations';
 
 export class DistinctCountChartTransformer extends AbstractHxlTransformer {
 
-  buildRecipes(): string {
+  buildRecipes(): BasicRecipe[] {
     const recipes: BasicRecipe[] = [];
 
-    const countOperation1 = new CountOperation('', this.biteInfo.groupByTags.concat([this.biteInfo.valueTag]),
+    const countOperation1 = new CountOperation('', this.groupByTags.concat([this.valueTag]),
       'count');
     recipes.push(countOperation1.recipe);
 
-    const countOperation2 = new CountOperation('', this.biteInfo.groupByTags,
+    const countOperation2 = new CountOperation('', this.groupByTags,
       'count');
     recipes.push(countOperation2.recipe);
 
-    const renameOperation = new RenameOperation('#meta+count', this.biteInfo.valueTag, null);
+    const renameOperation = new RenameOperation('#meta+count', this.valueTag, null);
     recipes.push(renameOperation.recipe);
 
-    return JSON.stringify(recipes);
+    return recipes;
   }
 
 }
