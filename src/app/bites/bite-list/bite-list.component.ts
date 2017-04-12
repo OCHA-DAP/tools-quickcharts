@@ -114,9 +114,9 @@ export class BiteListComponent implements OnInit {
         },
           () => {
             this.logger.log('on COMPLETE...');
-            if (this.availableBites.length == 0  && this.biteList.length == 0){
-              //this.logger.log("Your files contains HXL tags which are not supported by Smart Charts. If you have any questions or suggestions, or if you would like further information, please don't hesitate to contact us");
-              this.hxlUnsupported=false;
+            if (this.availableBites.length === 0  && this.biteList.length === 0) {
+              // Your files contains HXL tags which are not supported by Smart Charts
+              this.hxlUnsupported = false;
             }
         }
         );

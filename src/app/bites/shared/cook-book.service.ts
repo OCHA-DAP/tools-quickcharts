@@ -138,6 +138,7 @@ export class CookBookService {
     // if user is using an external recipe, provided as url
     const recipeUrl = this.appConfigService.get('recipeUrl');
     if ( typeof recipeUrl !== 'undefined' ) {
+      this.logger.info('Using external recipe from: ' + recipeUrl);
       this.cookBooks = [recipeUrl];
     }
 
