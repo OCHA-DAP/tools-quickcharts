@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Charts: Sum/count items for a tag grouped by aggregate columns",
+    "description": "",
+    "type": "chart",
+    "ingredients": {
+      "aggregateFunctions": ["sum", "count"],
+      "aggregateColumns": [
+        "#country",
+        "#adm1",
+        "#adm2",
+        "#adm3",
+        "#adm4",
+        "#adm5"
+      ],
+      "valueColumns":[
+        "#affected",
+        "#inneed",
+        "#reached",
+        "#targeted",
+        "#population"
+      ]
+    }
+  },
+
+  {
+    "name": "Key Figures: Sum/count items for a tag",
+    "description": "",
+    "type": "key figure",
+    "ingredients": {
+      "aggregateFunctions": ["sum", "count"],
+      "valueColumns":[
+        "#affected",
+        "#inneed",
+        "#reached",
+        "#targeted",
+        "#population"
+      ]
+    }
+  }
+
+]
