@@ -39,6 +39,9 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
               rotate: 30
             }
           }
+        },
+        point: {
+          show: false
         }
       });
     }
