@@ -23,6 +23,7 @@ export class KeyFigureBite extends Bite {
     super(title);
     this.ingredient = new Ingredient(null, valueColumn, aggregateFunction);
     this.dataTitle = valueColumn;
+    this.displayCategory = 'Key Figures';
   }
 
 }

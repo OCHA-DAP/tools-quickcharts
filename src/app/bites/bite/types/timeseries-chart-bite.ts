@@ -11,5 +11,6 @@ export class TimeseriesChartBite extends ChartBite {
 
     super(aggregateColumn, valueColumn, aggregateFunction, title);
     this.ingredient.dateColumn = dateColumn;
+    this.displayCategory = 'Timeseries';
   }
 }

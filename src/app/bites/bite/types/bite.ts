@@ -18,6 +18,9 @@ export abstract class Bite {
 
   public hashCode: number;
 
+  // Timeseries or Charts or Key Figures
+  public displayCategory;
+
   static type(): string {
     return 'bite';
   }
@@ -31,7 +34,7 @@ export abstract class Bite {
   }
 
   public setTitle(title: string) {
-    this.title = title.slice(0, 35) + (title.length > 35 ? '...' : '');
+    this.title = title.slice(0, 55) + (title.length > 35 ? '...' : '');
   }
 
 }

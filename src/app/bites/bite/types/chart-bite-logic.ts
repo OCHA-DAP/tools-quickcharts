@@ -45,26 +45,5 @@ export class ChartBiteLogic extends BiteLogic {
     return super.unpopulateBite();
   }
 
-
-  public populateWithTitle(columnNames: string[], hxlTags: string[]): BiteLogic {
-    if (!this.bite.title) {
-      const availableTags = {};
-      hxlTags.forEach((v, idx) => availableTags[v] = idx);
-
-      switch (this.bite.ingredient.aggregateFunction) {
-        case 'count':
-          this.bite.setTitle('ROW COUNT BY ' + columnNames[availableTags[this.bite.ingredient.aggregateColumn]]);
-          break;
-        case 'distinct-count':
-          this.bite.setTitle('UNIQUE ' + columnNames[availableTags[this.bite.ingredient.valueColumn]] +
-            ' BY ' + columnNames[availableTags[this.bite.ingredient.aggregateColumn]]);
-          break;
-        default:
-          this.bite.setTitle(columnNames[availableTags[this.bite.ingredient.valueColumn]]);
-      }
-
-    }
-    return this;
-  }
 }
 

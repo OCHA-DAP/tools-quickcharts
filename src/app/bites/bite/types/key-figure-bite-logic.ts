@@ -17,7 +17,7 @@ export class KeyFigureBiteLogic extends BiteLogic {
     super.populateDataTitleWithHxlProxyInfo(hxlData, tagToTitleMap);
     const hxlTagIndex = this.findHxlTagIndex(this.bite.ingredient.valueColumn, hxlData);
 
-    if ( hxlTagIndex >= 0 ) {
+    if (hxlTagIndex >= 0) {
       this.bite.value = hxlData[2][hxlTagIndex];
       this.bite.init = true;
     } else {
@@ -26,30 +26,10 @@ export class KeyFigureBiteLogic extends BiteLogic {
     return this;
   }
 
-
   public unpopulateBite(): BiteLogic {
     this.bite.value = null;
     return super.unpopulateBite();
   }
 
-
-  public populateWithTitle(columnNames: string[], hxlTags: string[]): BiteLogic {
-    if (!this.bite.title) {
-      const availableTags = {};
-      hxlTags.forEach((v, idx) => availableTags[v] = idx);
-
-      switch (this.bite.ingredient.aggregateFunction) {
-        case 'count':
-          this.bite.setTitle('ROW COUNT');
-          break;
-        case 'distinct-count':
-          this.bite.setTitle('UNIQUE ' + columnNames[availableTags[this.bite.ingredient.valueColumn]]);
-          break;
-        default:
-          this.bite.setTitle(columnNames[availableTags[this.bite.ingredient.valueColumn]]);
-      }
-    }
-    return this;
-  }
 }
 

@@ -16,5 +16,6 @@ export class ChartBite extends Bite {
     super(title);
     this.ingredient = new Ingredient(aggregateColumn, valueColumn, aggregateFunction);
     this.dataTitle = valueColumn;
+    this.displayCategory = 'Charts';
   }
 }
