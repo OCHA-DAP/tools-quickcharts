@@ -2,52 +2,63 @@
 
 .hxl-bite {
   margin-bottom: 30px;
-  border: 1px solid #fff;
+  border: 1px solid @extraLighterGrayColor;
   border-bottom: 1px solid #eee;
   @lineHeightValue: 1.42857143;
   @titleFontSize: 14px;
-  @titleContainerHeight: 2*@lineHeightValue*@titleFontSize;
+  @titleContainerHeight: 50px;//2*@lineHeightValue*@titleFontSize;
+  @headerFooterPadding: 15px;
 
-  @editModePaddingSize: 5px;
-  &.hxl-bite-edit{
-    .title {
-      padding: @editModePaddingSize;
-      height: @titleContainerHeight + 2*@editModePaddingSize;
-      transition: background-color 0.5s, padding 0.5s, height 0.5s;
-    }
-  }
-  &.hxl-bite-edit:hover, &.hxl-bite-small {
-    border: 1px solid #eee;
-    //transition: border 0.5s;
-    .title {
-      .glyphicon {
-        transition: display 0.5s;
-        display: inline;
-      }
-
-      transition: background-color 0.5s, padding 0.5s, height 0.5s;
-
-      background-color: #eee;
-      padding: @editModePaddingSize;
-      height: @titleContainerHeight + 2*@editModePaddingSize;
-    }
-  }
   .title {
-    .glyphicon {
-      display: none;
-    }
     .gothamBoldFont(@titleFontSize);
     letter-spacing: 0.01em;
 
-    margin-bottom: 10px;
+    padding: @headerFooterPadding;
     color: #333333;
     line-height: @lineHeightValue;
     height: @titleContainerHeight;
+
+    background-color: @extraLighterGrayColor;
+    .title-content {
+      width: 100%;
+      background-color: @extraLighterGrayColor;
+    }
+
+    i {
+      vertical-align: middle;
+      &.glyphicon-triangle-bottom {
+        color: @blueColor;
+        font-size: 16px;
+      }
+    }
   }
   .content {
-    min-height: 201px;
+    min-height: 255px;
+    padding: @headerFooterPadding;
   }
-
+  .description {
+    height: 50px;
+    padding: 0 @headerFooterPadding;
+    .description-content{
+      border-top: 1px solid @extraLighterGrayColor;
+      .sourceSansProFont(400, 12px);
+      color: @grayColor;
+    }
+  }
+  .footer {
+    height: 35px;
+    padding: @headerFooterPadding/2;
+    background-color: @extraLighterGrayColor;
+    color: @grayColor;
+    .sourceSansProFont(400, 12px);
+    i {
+      vertical-align: middle;
+      font-size: 16px;
+    }
+    .pull-right {
+      height: 100%;
+    }
+  }
   &.hxl-bite-small{
     .content{
       min-height: 140px;
