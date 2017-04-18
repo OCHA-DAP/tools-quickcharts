@@ -19,7 +19,7 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
           type: 'line'
         },
         size: {
-          height: 190
+          height: 225
         },
         axis: {
           // rotated: true,

@@ -30,7 +30,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
           type: 'bar'
         },
         size: {
-          height: 190
+          height: 225
         },
         axis: {
           rotated: true,

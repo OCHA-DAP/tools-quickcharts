@@ -4,18 +4,13 @@
   [class.hxl-bite-small]="add"
 >
   <div class="title">
-    <!--<span [attr.contenteditable]="edit">{{ bite.title }}</span>-->
-    <div class="pull-left" style="width: 90%">
-      <i *ngIf="edit" class="glyphicon glyphicon-move drag-handle"></i>
-      <hxl-inline-edit
-        [(ngModel)]="bite.title"
-        [editMode]="edit"
-        [placeholder]="'Add Title'"
-        [maxEditorWidth]="'85%'"
-      ></hxl-inline-edit>
+    <div class="pull-left" style="width: 80%">
+      <!--<i *ngIf="edit" class="glyphicon glyphicon-move drag-handle"></i>-->
+      <div class="title-content">{{bite.title}}</div>
     </div>
 
     <span class="pull-right">
+      <i class="glyphicon glyphicon-triangle-bottom"></i>
       <i
         *ngIf="add && !listIsFull"
         style="color: green;"
@@ -27,10 +22,6 @@
         style="color: lightgray;"
         class="glyphicon glyphicon-plus"
       ></i>
-      <!--<i
-        *ngIf="edit"
-        class="glyphicon glyphicon-cog"
-      ></i>-->
       <i
         *ngIf="edit"
         style="color: red;"
@@ -43,5 +34,20 @@
     <hxl-content-topline *ngSwitchCase="classTypes.ToplineBite" [bite]="bite" [edit]="edit"></hxl-content-topline>
     <hxl-content-chart *ngSwitchCase="classTypes.ChartBite" [bite]="bite"></hxl-content-chart>
     <hxl-content-timeseries-chart *ngSwitchCase="classTypes.TimeseriesChartBite" [bite]="bite"></hxl-content-timeseries-chart>
+  </div>
+  <div class="description">
+    <div class="description-content">
+      Description added by contributor
+    </div>
+  </div>
+  <div class="footer">
+    <div class="pull-left">
+      <i class="glyphicon glyphicon-open"></i>
+      Export
+    </div>
+    <div class="pull-right">
+      <i class="glyphicon glyphicon-cog"></i>
+    </div>
+
   </div>
 </div>
