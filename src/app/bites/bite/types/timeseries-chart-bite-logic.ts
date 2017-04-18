@@ -86,6 +86,4 @@ export class TimeseriesChartBiteLogic extends ChartBiteLogic {
     mySet.forEach(item => result.push(item));
     return result;
   }
-
-
 }

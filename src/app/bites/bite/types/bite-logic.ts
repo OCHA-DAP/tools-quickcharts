@@ -86,7 +86,40 @@ export abstract class BiteLogic {
     return hash;
   };
 
-  public abstract populateWithTitle(columnNames: string[], hxlTags: string[]): BiteLogic;
+  public populateWithTitle(columnNames: string[], hxlTags: string[]): BiteLogic {
+    const availableTags = {};
+    hxlTags.forEach((v, idx) => availableTags[v] = idx);
+
+    const category = this.bite.displayCategory;
+    const valueColumn = columnNames[availableTags[this.bite.ingredient.valueColumn]];
+    const groupColumn = columnNames[availableTags[this.bite.ingredient.aggregateColumn]];
+    let aggFunction = null;
+    switch (this.bite.ingredient.aggregateFunction) {
+      case 'count':
+        aggFunction = 'Row Count of';
+        break;
+      case 'distinct-count':
+        aggFunction = 'Unique Values in';
+        break;
+      case 'sum':
+        aggFunction = 'Sum of';
+        break;
+      default:
+        aggFunction = 'Sum of';
+        break;
+    }
+
+    let title = `${category}: ${aggFunction}`;
+    if (valueColumn && valueColumn.trim().length > 0) {
+      title += ' ' + valueColumn;
+    }
+    if (groupColumn && groupColumn.trim().length > 0) {
+      title += ' grouped by ' + groupColumn;
+    }
+    this.bite.setTitle(title);
+
+    return this;
+  }
   public abstract populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): BiteLogic;
 
 }
