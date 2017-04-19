@@ -13,6 +13,16 @@ import { DomEventsService } from '../../shared/dom-events.service';
 export class BiteService {
   public url: string;
 
+  private static findBiteInArray(bite: Bite, bites: Bite[]): number {
+    let index = -1;
+    for (let i = 0; i < bites.length; i++) {
+      if (bite === bites[i]) {
+        index = i;
+      }
+    }
+    return index;
+  }
+
   constructor(private recipeService: RecipeService, private cookBookService: CookBookService,
               private logger: Logger, private persistService: PersistService,
               private appConfigService: AppConfigService, private domEventService: DomEventsService) { }
@@ -87,4 +97,44 @@ export class BiteService {
   resetBite(bite: Bite): Bite {
     return this.recipeService.resetBite(bite);
   }
+
+  addBite(bite: Bite, bites: Bite[], availableBites: Bite[], replaceIndex?: number) {
+
+    /* Removing bite from list of available bites */
+    const index = BiteService.findBiteInArray(bite, availableBites);
+    availableBites.splice(index, 1);
+
+    this.initBite(bite)
+      .subscribe(
+        b => {
+          if (replaceIndex == null) {
+            bites.push(b);
+          } else {
+            bites[replaceIndex] = b;
+          }
+        },
+        err => {
+          this.logger.error('Can\'t process bite due to:' + err);
+          availableBites.push(bite);
+        }
+      );
+  }
+
+  /**
+   *
+   * @param oldBite bite to be removed from bites list and added to availableBites
+   * @param newBite bite to be added to bites list and removed from availableBites
+   * @param bites
+   * @param availableBites
+   */
+  switchBites(oldBite: Bite, newBite: Bite, bites: Bite[], availableBites: Bite[]) {
+    if (bites) {
+      const index: number = BiteService.findBiteInArray(oldBite, bites);
+      if (index >= 0) {
+        availableBites.push(this.resetBite(oldBite));
+        this.addBite(newBite, bites, availableBites, index);
+      }
+    }
+  }
+
 }

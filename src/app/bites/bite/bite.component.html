@@ -10,7 +10,7 @@
     </div>
 
     <span class="pull-right">
-      <i class="glyphicon glyphicon-triangle-bottom"></i>
+      <simple-dropdown [items]="displayableAvailableBites" (selected)="switchBite($event)"></simple-dropdown>
       <i
         *ngIf="add && !listIsFull"
         style="color: green;"

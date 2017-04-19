@@ -13,7 +13,7 @@ import { AppConfigService } from '../../shared/app-config.service';
 export class BiteListComponent implements OnInit {
 
   biteList: Array<Bite>;
-  private availableBites: Array<Bite>;
+  availableBites: Array<Bite>;
   @Input()
   edit: boolean;
 
@@ -27,6 +27,12 @@ export class BiteListComponent implements OnInit {
     ghostClass: 'sortable-ghost',
     forceFallback: true
   };
+
+  // get displayableAvailableBites(): {displayValue: string, payload: Bite}[] {
+  //   return this.availableBites.map( b => {
+  //     return {displayValue: b.title, payload: b};
+  //   });
+  // }
 
   constructor(private biteService: BiteService, private appConfig: AppConfigService, private logger: Logger) {
     this.biteList = [];
@@ -42,13 +48,13 @@ export class BiteListComponent implements OnInit {
       this.onEdit();
     }
   }
-
-  private addLoadedBiteToList(bite: Bite): void {
-    this.biteList.push(bite);
-    if (this.biteList.length >= +this.appConfig.get('maxBites')) {
-      this.listIsFull = true;
-    }
-  }
+  // Deprecated in HXL Preview v2
+  // private addLoadedBiteToList(bite: Bite): void {
+  //   this.biteList.push(bite);
+  //   if (this.biteList.length >= +this.appConfig.get('maxBites')) {
+  //     this.listIsFull = true;
+  //   }
+  // }
 
   private removeLoadedBiteToList(bite: Bite): void {
     this.biteList = this.biteList.filter(b => b !== bite);
@@ -74,27 +80,23 @@ export class BiteListComponent implements OnInit {
           }
         }
 
-        this.addLoadedBiteToList(bite);
+        this.biteList.push(bite);
       }
     );
   }
 
 
   addBite(bite: Bite) {
-    this.availableBites = this.availableBites.filter(b => b !== bite);
-    this.biteService.initBite(bite)
-      .subscribe(
-        b => this.addLoadedBiteToList(b),
-        err => {
-          this.logger.error('Can\'t process bite due to:' + err);
-          this.availableBites.push(bite);
-        }
-      );
+    this.biteService.addBite(bite, this.biteList, this.availableBites);
   }
 
   deleteBite(bite: Bite) {
     this.removeLoadedBiteToList(bite);
     this.availableBites.push(this.biteService.resetBite(bite));
+  }
+
+  switchBite(bitePair: {oldBite: Bite, newBite: Bite}) {
+    this.biteService.switchBites(bitePair.oldBite, bitePair.newBite, this.biteList, this.availableBites);
   }
 
   onEdit() {
