@@ -32,6 +32,7 @@ export class BiteComponent implements OnInit {
 
 
   classTypes: any = {};
+  settingsDisplay: Boolean = false;
 
   @Input()
   availableBites: Bite[];
@@ -62,5 +63,9 @@ export class BiteComponent implements OnInit {
 
   switchBite(newBite: Bite) {
     this.onSwitch.emit({oldBite: this.bite, newBite: newBite});
+  }
+
+  toggleSettings(self) {
+    this.settingsDisplay = !this.settingsDisplay;
   }
 }

@@ -4,10 +4,21 @@
   margin-bottom: 30px;
   border: 1px solid @extraLighterGrayColor;
   border-bottom: 1px solid #eee;
+  position: relative;
+
+  &.settings-open {
+    border-color: @blueColor;
+  }
+
   @lineHeightValue: 1.42857143;
   @titleFontSize: 14px;
   @titleContainerHeight: 50px;//2*@lineHeightValue*@titleFontSize;
   @headerFooterPadding: 15px;
+  @contentHeight: 255px;
+  @descriptionHeight: 50px;
+  @footerHeight: 35px;
+
+  @settingWidth: 250px;
 
   .title {
     .gothamBoldFont(@titleFontSize);
@@ -33,11 +44,11 @@
     }
   }
   .content {
-    min-height: 255px;
+    min-height: @contentHeight;
     padding: @headerFooterPadding;
   }
   .description {
-    height: 50px;
+    height: @descriptionHeight;
     padding: 0 @headerFooterPadding;
     .description-content{
       border-top: 1px solid @extraLighterGrayColor;
@@ -46,7 +57,7 @@
     }
   }
   .footer {
-    height: 35px;
+    height: @footerHeight;
     padding: @headerFooterPadding/2;
     background-color: @extraLighterGrayColor;
     color: @grayColor;
@@ -55,8 +66,120 @@
       vertical-align: middle;
       font-size: 16px;
     }
-    .pull-right {
+
+    .glyphicon-cog{
+      cursor: pointer;
+      &.open {
+        color: @blueColor;
+      }
+    }
+  }
+
+  .settings-menu {
+    @settingsMenuBorderColor: @lightGrayColor;
+    @settingsMenuHeight: @titleContainerHeight + @contentHeight + @descriptionHeight + @footerHeight;
+    @settingsMenuElementMargin: 10px;
+
+    position: absolute;
+    right: -1*@settingWidth - 10px;
+    top: 0;
+    height: @settingsMenuHeight;
+    width: @settingWidth;
+    min-width: @settingWidth;
+    border: 1px solid @settingsMenuBorderColor;
+
+    &.open {
+      display: block;
+    }
+
+    .scrollable-content {
+      padding: @headerFooterPadding;
+      width: 100%;
       height: 100%;
+      overflow-y: scroll;
+    }
+
+    .section-title{
+      text-transform: uppercase;
+      .gothamLightFont(12px);
+      margin-bottom: @settingsMenuElementMargin;
+    }
+
+    .element-group {
+      margin: @settingsMenuElementMargin 0;
+      position: relative;
+    }
+
+    label {
+      .sourceSansProFont(400, 12px);
+      color: @darkGrayColor;
+      margin-bottom: 0;
+    }
+    input, textarea {
+      @inputInnerTextPadding: 5px;
+
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid @lightGrayColor;
+      padding: 2px @inputInnerTextPadding;
+      .sourceSansProFont(300, 14px);
+
+      &::placeholder {
+        color: @lightGrayColor;
+        font-size: 13px;
+      }
+
+      &.almost-fifty {
+        width: 49%;
+      }
+      &.to-right {
+        position: absolute;
+        right: 0;
+      }
+      &:focus {
+        border-color: @blueColor;
+        outline: none;
+      }
+    }
+
+    textarea.count {
+      ~ .count-container {
+        .sourceSansProFont(300, 10px);
+        text-align: right;
+      }
+      &:focus ~ .count-container {
+        color: @blueColor;
+      }
+    }
+
+
+    hr {
+      margin: @headerFooterPadding -@headerFooterPadding;
+    }
+
+    //Arrow
+    &:after, &:before {
+      right: 100%;
+      top: @settingsMenuHeight - 20px;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    &:after {
+      border-color: rgba(255, 255, 255, 0);
+      border-right-color: #ffffff;
+      border-width: 10px;
+      margin-top: -10px;
+    }
+    &:before {
+      border-color: rgba(158, 158, 158, 0);
+      border-right-color: @settingsMenuBorderColor;
+      border-width: 11px;
+      margin-top: -11px;
     }
   }
   &.hxl-bite-small{
@@ -68,4 +191,63 @@
 
 h1 {
   font-size: 100px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider*/
+.checkbox-slider {
+  position: relative; width: 30px;
+  -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.checkbox-slider-checkbox {
+  display: none;
+}
+.checkbox-slider-label {
+  display: block; overflow: hidden; cursor: pointer;
+  border: 2px solid transparent; border-radius: 28px;
+}
+.checkbox-slider-inner {
+  display: block; width: 200%; margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+}
+.checkbox-slider-inner:before, .checkbox-slider-inner:after {
+  display: block; float: left; width: 50%; height: 16px; padding: 0; line-height: 16px;
+  font-size: 16px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+  box-sizing: border-box;
+}
+.checkbox-slider-inner:before {
+  content: "";
+  padding-left: 10px;
+  background-color: #007CE0; color: #FFFFFF;
+}
+.checkbox-slider-inner:after {
+  content: "";
+  padding-right: 10px;
+  background-color: @grayColor; color: #666666;
+  text-align: right;
+}
+.checkbox-slider-switch {
+  display: block; width: 20px; margin: 0px;
+  background: #FFFFFF;
+  position: absolute; top: 0; bottom: 0;
+  right: 10px;
+  border: 2px solid @grayColor; border-radius: 28px;
+  transition: all 0.3s ease-in 0s;
+}
+.checkbox-slider-checkbox:checked + .checkbox-slider-label .checkbox-slider-inner {
+  margin-left: 0;
+}
+.checkbox-slider-checkbox:checked + .checkbox-slider-label .checkbox-slider-switch {
+  right: 0px;
+  border-color: @blueColor;
 }
