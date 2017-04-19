@@ -38,7 +38,7 @@ export class BiteListComponent implements OnInit {
     this.biteList = [];
     this.listIsFull = false;
     this.logger = logger;
-    this.hxlUnsupported=true;
+    this.hxlUnsupported = true;
   }
 
   ngOnInit() {

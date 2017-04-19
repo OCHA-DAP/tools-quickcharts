@@ -1,52 +1,53 @@
-<div *ngIf="edit">
+<div *ngIf="edit && hxlUnsupported">
+  <div class="row list-header">
+    <div class="col-xs-12"><span class="list-header-title">Select (up to 6) visualisations</span></div>
+  </div>
+</div>
 
-  <div *ngIf="hxlUnsupported; else hxlUnsupportedMessage">
-    <div class="row list-header">
-      <div class="col-xs-12"><span class="list-header-title">Select (up to 6) visualisations</span></div>
-    </div>
+<div
+  [sortablejs]="biteList"
+  [sortablejsOptions]="sortableMain"
+  class="row"
+>
+  <div
+    class="col-xs-4"
+    *ngFor="let bite of biteList"
+  >
+    <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [edit]="edit" (onDelete)="deleteBite($event)"
+              [availableBites]="availableBites" (onSwitch)="switchBite($event)">
+    </hxl-bite>
+  </div>
+</div>
 
-    <div
-      [sortablejs]="biteList"
-      [sortablejsOptions]="sortableMain"
-      class="row"
-    >
-      <div
-        class="col-xs-4"
-        *ngFor="let bite of biteList"
-      >
-        <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [edit]="edit" (onDelete)="deleteBite($event)"
-                  [availableBites]="availableBites" (onSwitch)="switchBite($event)">
-        </hxl-bite>
-      </div>
-    </div>
 
-    <div class="row list-header">
-      <div class="col-xs-12"><span class="list-header-title">Available visualizations</span></div>
-    </div>
-    <div class="row available-bites">
-      <div class="col-xs-12">
-        <!--<h2>Available items:</h2>-->
-        <div class="row">
-          <div
-            class="col-xs-3"
-            *ngFor="let bite of availableBites"
-          >
-            <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>
-          </div>
+<div *ngIf="edit && hxlUnsupported; else hxlUnsupportedMessage">
+  <div class="row list-header">
+    <div class="col-xs-12"><span class="list-header-title">Available visualizations</span></div>
+  </div>
+  <div class="row available-bites">
+    <div class="col-xs-12">
+      <!--<h2>Available items:</h2>-->
+      <div class="row">
+        <div
+          class="col-xs-3"
+          *ngFor="let bite of availableBites"
+        >
+          <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>
         </div>
       </div>
     </div>
   </div>
-
-  <ng-template #hxlUnsupportedMessage >
-    <div class="row list-header">
-      <div class="col-xs-12"><span class="list-header-title">Smart Charts can not be displayed</span></div>
-    </div>
-    <div class="row" >
-      <div class="col-xs-12" >
-        <span>Your files contains HXL tags which are not supported by Smart Charts. If you have any questions or suggestions, or if you would like further information, please don't hesitate to contact us</span>
-      </div>
-    </div>
-  </ng-template>
-
 </div>
+<ng-template #hxlUnsupportedMessage>
+  <div class="row list-header">
+    <div class="col-xs-12"><span class="list-header-title">Smart Charts can not be displayed</span></div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12">
+      <span>Your files contains HXL tags which are not supported by Smart Charts. If you have any questions or suggestions, or if you would like further information, please don't hesitate to contact us</span>
+    </div>
+  </div>
+</ng-template>
+
+
+
