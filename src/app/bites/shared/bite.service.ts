@@ -12,6 +12,7 @@ import { DomEventsService } from '../../shared/dom-events.service';
 @Injectable()
 export class BiteService {
   public url: string;
+  private nextId: number = 0;
 
   private static findBiteInArray(bite: Bite, bites: Bite[]): number {
     let index = -1;
@@ -29,6 +30,11 @@ export class BiteService {
 
   public init(url: string) {
     this.url = url;
+  }
+
+  public getNextId(): number {
+    this.nextId = this.nextId + 1;
+    return this.nextId;
   }
 
   private loadBites(): Observable<Bite[]> {
