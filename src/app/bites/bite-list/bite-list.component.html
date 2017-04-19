@@ -38,7 +38,7 @@
     </div>
   </div>
 </div>
-<ng-template #hxlUnsupportedMessage>
+<ng-template *ngIf="edit && hxlUnsupported" #hxlUnsupportedMessage>
   <div class="row list-header">
     <div class="col-xs-12"><span class="list-header-title">Smart Charts can not be displayed</span></div>
   </div>
