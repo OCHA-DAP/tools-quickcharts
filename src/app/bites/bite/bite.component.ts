@@ -1,9 +1,10 @@
-import {Component, OnInit, EventEmitter} from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import {Input, Output} from '@angular/core';
 import { Bite } from './types/bite';
 import { KeyFigureBite } from './types/key-figure-bite';
 import { ChartBite } from './types/chart-bite';
 import { TimeseriesChartBite } from './types/timeseries-chart-bite';
+import { Logger } from 'angular2-logger/core';
 
 @Component({
   selector: 'hxl-bite',
@@ -11,6 +12,7 @@ import { TimeseriesChartBite } from './types/timeseries-chart-bite';
   styleUrls: ['./bite.component.less']
 })
 export class BiteComponent implements OnInit {
+
   @Input()
   bite: Bite;
   @Input()
@@ -25,15 +27,29 @@ export class BiteComponent implements OnInit {
   onAdd = new EventEmitter<Bite>();
   @Output()
   onDelete = new EventEmitter<Bite>();
+  @Output()
+  onSwitch = new EventEmitter<{oldBite: Bite, newBite: Bite}>();
+
+
   classTypes: any = {};
 
-  constructor() {
+  @Input()
+  availableBites: Bite[];
+
+  displayableAvailableBites: {displayValue: string, payload: Bite}[];
+
+  constructor(private logger: Logger) {
     this.classTypes.ToplineBite = KeyFigureBite.type();
     this.classTypes.ChartBite = ChartBite.type();
     this.classTypes.TimeseriesChartBite = TimeseriesChartBite.type();
   }
 
   ngOnInit() {
+    if (this.availableBites) {
+      this.displayableAvailableBites = this.availableBites.map(bite => {
+        return {displayValue: bite.title, payload: bite};
+      });
+    }
   }
 
   addBite() {
@@ -42,5 +58,9 @@ export class BiteComponent implements OnInit {
 
   deleteBite() {
     this.onDelete.emit(this.bite);
+  }
+
+  switchBite(newBite: Bite) {
+    this.onSwitch.emit({oldBite: this.bite, newBite: newBite});
   }
 }
