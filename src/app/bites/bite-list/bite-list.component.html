@@ -1,4 +1,4 @@
-<div *ngIf="edit && hxlUnsupported">
+<div *ngIf="edit && hxlUnsupported === false">
   <div class="row list-header">
     <div class="col-xs-12"><span class="list-header-title">Select (up to 6) visualisations</span></div>
   </div>
@@ -19,7 +19,8 @@
   </div>
 </div>
 
-<div *ngIf="edit && hxlUnsupported; else hxlUnsupportedMessage">
+
+<div *ngIf="edit && hxlUnsupported === false; else hxlUnsupportedMessage">
   <div class="row list-header">
     <div class="col-xs-12"><span class="list-header-title">Available visualizations</span></div>
   </div>
@@ -37,7 +38,8 @@
     </div>
   </div>
 </div>
-<ng-template *ngIf="edit && hxlUnsupported" #hxlUnsupportedMessage>
+
+<ng-template *ngIf="edit && hxlUnsupported === false" #hxlUnsupportedMessage>
   <div class="row list-header">
     <div class="col-xs-12"><span class="list-header-title">Smart Charts can not be displayed</span></div>
   </div>
