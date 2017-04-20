@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Bite} from '../bite/types/bite';
 import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
 import {Logger} from 'angular2-logger/core';
-import { AppConfigService } from '../../shared/app-config.service';
+import {AppConfigService} from '../../shared/app-config.service';
 
 @Component({
   selector: 'hxl-bite-list',
@@ -38,16 +38,18 @@ export class BiteListComponent implements OnInit {
     this.biteList = [];
     this.listIsFull = false;
     this.logger = logger;
-    this.hxlUnsupported = true;
+    this.hxlUnsupported = false;
   }
 
   ngOnInit() {
     this.logger.info('BiteListComponent on init');
+    this.generateAvailableBites();
     this.load();
     if (this.edit) {
       this.onEdit();
     }
   }
+
   // Deprecated in HXL Preview v2
   // private addLoadedBiteToList(bite: Bite): void {
   //   this.biteList.push(bite);
@@ -81,10 +83,54 @@ export class BiteListComponent implements OnInit {
         }
 
         this.biteList.push(bite);
+        this.logger.log('biteList ' + JSON.stringify(this.biteList));
+      },
+      errObj => {
+        this.logger.log('load>getBites>in ERROR...');
+      },
+      () => {
+        this.logger.log('load>getBites>on COMPLETE...');
+
+        if (this.availableBites && this.biteList && this.availableBites.length !== 0 && this.biteList.length === 0) {
+          this.loadDefaultBites();
+        }
       }
     );
   }
 
+  // loads 3 bites as default when no other bites are saved
+  private loadDefaultBites() {
+
+    // splitting the bites by their type
+    const listA = this.availableBites.filter(bite => bite.type === 'chart');
+    const listB = this.availableBites.filter(bite => bite.type === 'key figure');
+    const listC = this.availableBites.filter(bite => bite.type === 'timeseries');
+
+    let orderedBites: Array<Bite>;
+    orderedBites = [];
+
+    if (listA && listA.length > 0) {
+      orderedBites.push(listA[0]);
+      listA.splice(0, 1);
+    }
+    if (listB && listB.length > 0) {
+      orderedBites.push(listB[0]);
+      listB.splice(0, 1);
+    }
+    if (listC && listC.length > 0) {
+      orderedBites.push(listC[0]);
+      listC.splice(0, 1);
+    }
+    orderedBites = orderedBites.concat(listA);
+    orderedBites = orderedBites.concat(listB);
+    orderedBites = orderedBites.concat(listC);
+
+    // filling the slots
+    this.addBite(orderedBites[0]);
+    this.addBite(orderedBites[1]);
+    this.addBite(orderedBites[2]);
+
+  }
 
   addBite(bite: Bite) {
     this.biteService.addBite(bite, this.biteList, this.availableBites);
@@ -95,32 +141,59 @@ export class BiteListComponent implements OnInit {
     this.availableBites.push(this.biteService.resetBite(bite));
   }
 
-  switchBite(bitePair: {oldBite: Bite, newBite: Bite}) {
+  switchBite(bitePair: { oldBite: Bite, newBite: Bite }) {
     this.biteService.switchBites(bitePair.oldBite, bitePair.newBite, this.biteList, this.availableBites);
   }
 
-  onEdit() {
+  generateAvailableBites() {
     if (!this.availableBites) {
       this.availableBites = [];
-      let loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
+      const loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
       this.biteService.generateAvailableBites()
         .subscribe(
           bite => {
             this.logger.log('Available bite ' + JSON.stringify(bite));
-            if (loadedHashCodeList.indexOf(bite.hashCode) < 0 ) {
+            if (loadedHashCodeList.indexOf(bite.hashCode) < 0) {
               this.availableBites.push(bite);
             }
           },
-        errObj => {
+          errObj => {
             this.logger.log('in ERROR...');
-        },
+          },
           () => {
             this.logger.log('on COMPLETE...');
-            if (this.availableBites.length === 0  && this.biteList.length === 0) {
+            if (this.availableBites && this.biteList && this.availableBites.length === 0 && this.biteList.length === 0) {
               // Your files contains HXL tags which are not supported by Smart Charts
-              this.hxlUnsupported = false;
+              this.hxlUnsupported = true;
             }
-        }
+          }
+        );
+    }
+  }
+
+  // this should be depracated/removed. Functionality copied to this.generateAvailableBites()
+  onEdit() {
+    if (!this.availableBites) {
+      this.availableBites = [];
+      const loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
+      this.biteService.generateAvailableBites()
+        .subscribe(
+          bite => {
+            this.logger.log('Available bite ' + JSON.stringify(bite));
+            if (loadedHashCodeList.indexOf(bite.hashCode) < 0) {
+              this.availableBites.push(bite);
+            }
+          },
+          errObj => {
+            this.logger.log('in ERROR...');
+          },
+          () => {
+            this.logger.log('on COMPLETE...');
+            if (this.availableBites && this.biteList && this.availableBites.length === 0 && this.biteList.length === 0) {
+              // Your files contains HXL tags which are not supported by Smart Charts
+              this.hxlUnsupported = true;
+            }
+          }
         );
     }
   }
