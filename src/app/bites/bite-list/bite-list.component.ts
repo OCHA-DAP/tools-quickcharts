@@ -4,6 +4,7 @@ import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
 import {Logger} from 'angular2-logger/core';
 import {AppConfigService} from '../../shared/app-config.service';
+import { AsyncSubject, Observable } from 'rxjs';
 
 @Component({
   selector: 'hxl-bite-list',
@@ -43,8 +44,7 @@ export class BiteListComponent implements OnInit {
 
   ngOnInit() {
     this.logger.info('BiteListComponent on init');
-    this.generateAvailableBites();
-    this.load();
+    this.generateAvailableBites().subscribe(() => this.load());
     if (this.edit) {
       this.onEdit();
     }
@@ -145,7 +145,8 @@ export class BiteListComponent implements OnInit {
     this.biteService.switchBites(bitePair.oldBite, bitePair.newBite, this.biteList, this.availableBites);
   }
 
-  generateAvailableBites() {
+  generateAvailableBites(): Observable<boolean> {
+    const observable = new AsyncSubject<boolean>();
     if (!this.availableBites) {
       this.availableBites = [];
       const loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
@@ -159,6 +160,8 @@ export class BiteListComponent implements OnInit {
           },
           errObj => {
             this.logger.log('in ERROR...');
+            observable.next(false);
+            observable.complete();
           },
           () => {
             this.logger.log('on COMPLETE...');
@@ -166,9 +169,12 @@ export class BiteListComponent implements OnInit {
               // Your files contains HXL tags which are not supported by Smart Charts
               this.hxlUnsupported = true;
             }
+            observable.next(true);
+            observable.complete();
           }
         );
     }
+    return observable;
   }
 
   // this should be depracated/removed. Functionality copied to this.generateAvailableBites()
