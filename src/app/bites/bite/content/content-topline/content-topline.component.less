@@ -1,15 +1,27 @@
+@import "../../../../../variables";
+@import "../../../../../fonts";
+
 .bite-content {
   padding: 10px 0;
+  position: absolute;
+  top: 50%;
+  transform: translate(0,-50%);
 
   &.bite-edit, &.bite-init {
     padding: 10px;
   }
 
   @titleSize: 16px;
-  @valueSize: 48px;
+  @valueSize: 56px;
   @preSize: 32px;
   @postSize: 24px;
   @descriptionSize: 13px;
+  @topLineItemUnitFontSize: 28px;
+  @topLinePadding: 20px 0;
+
+  .letter-spacing-1() {
+    letter-spacing: 0.28px;
+  }
 
   &.bite-init{
     @shrinkRatio: 3/4;
@@ -36,23 +48,44 @@
   }
 
   .value {
+    .gothamLightFont(@valueSize);
+    line-height: 1;
+    color: @darkGrayColor;
+    padding: 0;
+    //font-weight: 300;
     //margin-top: 15px;
-    font-weight: 300;
-    font-size: @valueSize;
-
-    .pre-value{
-      font-size: @preSize;
-      font-weight: 100;
-    }
-    .post-value{
-      font-size: @postSize;
-      font-weight: 100;
-    }
+    //font-size: @valueSize;
+    //.pre-value{
+    //  font-size: @preSize;
+    //  font-weight: 100;
+    //}
+    //.post-value{
+    //  font-size: @postSize;
+    //  font-weight: 100;
+    //}
   }
 
   .description {
     margin-top: 12px;
     font-size: @descriptionSize;
     font-weight: 100;
+  }
+  .prefix-value {
+    padding: @topLinePadding;
+    margin-bottom: 10px;
+    //margin-top: -1px;
+    color: @darkGrayColor;
+    .gothamLightFont(@topLineItemUnitFontSize);
+    .letter-spacing-1;
+    line-height: 1;
+  }
+  .suffix-value {
+    padding: @topLinePadding;
+    margin-top: 10px;
+    //margin-top: -1px;
+    color: @darkGrayColor;
+    .gothamLightFont(@topLineItemUnitFontSize);
+    .letter-spacing-1;
+    line-height: 1;
   }
 }
