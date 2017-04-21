@@ -21,6 +21,8 @@ export abstract class Bite {
   // Timeseries or Charts or Key Figures
   public displayCategory;
 
+  public description: string;
+
   static type(): string {
     return 'bite';
   }
