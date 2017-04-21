@@ -12,6 +12,7 @@ import { BiteService } from "app/bites/shared/bite.service";
   templateUrl: './bite.component.html',
   styleUrls: ['./bite.component.less']
 })
+
 export class BiteComponent implements OnInit {
 
   @Input()
@@ -41,11 +42,14 @@ export class BiteComponent implements OnInit {
 
   displayableAvailableBites: {displayValue: string, payload: Bite}[];
 
+  settingsModel: SettingsModel;
+
   constructor(private logger: Logger, biteService: BiteService) {
     this.classTypes.ToplineBite = KeyFigureBite.type();
     this.classTypes.ChartBite = ChartBite.type();
     this.classTypes.TimeseriesChartBite = TimeseriesChartBite.type();
     this.uuid = biteService.getNextId();
+
   }
 
   ngOnInit() {
@@ -54,6 +58,7 @@ export class BiteComponent implements OnInit {
         return {displayValue: bite.title, payload: bite};
       });
     }
+    this.settingsModel = new SettingsModel(this.bite);
   }
 
   addBite() {
@@ -74,5 +79,26 @@ export class BiteComponent implements OnInit {
 
   getUUID() {
     return this.uuid;
+  }
+
+  settingsModelChanged(model) {
+    this.logger.log(JSON.stringify(model));
+  }
+}
+
+class SettingsModel {
+  constructor(private bite: Bite) {}
+  get title(): string {
+    return this.bite.title;
+  }
+  set title(title: string) {
+    this.bite.title = title;
+  }
+
+  get description(): string {
+    return this.bite.description;
+  }
+  set description(description: string) {
+    this.bite.description = description;
   }
 }

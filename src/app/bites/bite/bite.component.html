@@ -38,7 +38,7 @@
   </div>
   <div class="description">
     <div class="description-content">
-      Description added by contributor
+      {{ bite.description }}
     </div>
   </div>
   <div class="footer">
@@ -46,107 +46,107 @@
       <i class="glyphicon glyphicon-open"></i>
       Export
     </div>
-    <div class="pull-right">
-      <span>
-        <i (click)="toggleSettings(this)" class="glyphicon glyphicon-cog" [class.open]="settingsDisplay"></i>
-      </span>
-      <div class="settings-menu dropdown-menu" [class.open]="settingsDisplay">
-        <div class="scrollable-content">
-          <div class="section-title">
-            Chart title
-          </div>
-          <div class="element-group">
-            <input type="text" placeholder="Custom chart title">
-          </div>
-          <hr/>
-
-          <div class="section-title">
-            Axis & Grid
-          </div>
-          <div class="element-group">
-            <label >
-              Reverse Axis
-            </label>
-            <div class="checkbox-slider pull-right">
-              <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="reverse-axis-{{uuid}}" checked>
-              <label class="checkbox-slider-label" for="reverse-axis-{{uuid}}">
-                <span class="checkbox-slider-inner"></span>
-                <span class="checkbox-slider-switch"></span>
+    <form #settingsForm="ngForm" (ngModelChange)="settingsModelChanged($event)">
+      <div class="pull-right">
+        <span>
+          <i (click)="toggleSettings(this)" class="glyphicon glyphicon-cog" [class.open]="settingsDisplay"></i>
+        </span>
+        <div class="settings-menu dropdown-menu" [class.open]="settingsDisplay">
+          <div class="scrollable-content">
+            <div class="section-title">
+              Chart title
+            </div>
+            <div class="element-group">
+              <input [(ngModel)]="settingsModel.title" type="text" placeholder="Custom chart title" name="title">
+            </div>
+            <hr/>
+            <div class="section-title">
+              Axis & Grid
+            </div>
+            <div class="element-group">
+              <label >
+                Reverse Axis
               </label>
+              <div class="checkbox-slider pull-right">
+                <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="reverse-axis-{{uuid}}" checked>
+                <label class="checkbox-slider-label" for="reverse-axis-{{uuid}}">
+                  <span class="checkbox-slider-inner"></span>
+                  <span class="checkbox-slider-switch"></span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div class="element-group">
-            <label >
-              Show Grid
-            </label>
-            <div class="checkbox-slider pull-right">
-              <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="show-grid-{{uuid}}">
-              <label class="checkbox-slider-label" for="show-grid-{{uuid}}">
-                <span class="checkbox-slider-inner"></span>
-                <span class="checkbox-slider-switch"></span>
+            <div class="element-group">
+              <label >
+                Show Grid
               </label>
+              <div class="checkbox-slider pull-right">
+                <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="show-grid-{{uuid}}">
+                <label class="checkbox-slider-label" for="show-grid-{{uuid}}">
+                  <span class="checkbox-slider-inner"></span>
+                  <span class="checkbox-slider-switch"></span>
+                </label>
+              </div>
             </div>
-          </div>
 
-          <div class="element-group">
-            <label>
-              Custom axis labels
-            </label>
-            <div>
-              <input class="almost-fifty" type="text" placeholder="X Axis Label">
-              <input class="almost-fifty pull-right" type="text" placeholder="Y Axis Label">
-            </div>
-          </div>
-          <hr/>
-
-          <div class="section-title">
-            Number format
-          </div>
-          <div class="element-group">
-            <label >
-              Abbreviate values
-            </label>
-            <div class="checkbox-slider pull-right">
-              <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="abbreviate-values-{{uuid}}" checked>
-              <label class="checkbox-slider-label" for="abbreviate-values-{{uuid}}">
-                <span class="checkbox-slider-inner"></span>
-                <span class="checkbox-slider-switch"></span>
+            <div class="element-group">
+              <label>
+                Custom axis labels
               </label>
+              <div>
+                <input class="almost-fifty" type="text" placeholder="X Axis Label">
+                <input class="almost-fifty pull-right" type="text" placeholder="Y Axis Label">
+              </div>
             </div>
-          </div>
-          <hr/>
+            <hr/>
 
-          <div class="section-title">
-            Display preference
-          </div>
-          <div class="element-group">
-            <label >
-              Exclude 0 values
-            </label>
-            <div class="checkbox-slider pull-right">
-              <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="exclude-zero-{{uuid}}" checked>
-              <label class="checkbox-slider-label" for="exclude-zero-{{uuid}}">
-                <span class="checkbox-slider-inner"></span>
-                <span class="checkbox-slider-switch"></span>
-              </label>
+            <div class="section-title">
+              Number format
             </div>
-          </div>
-          <div class="element-group">
-            <label>
-              Exclude custom value
-            </label>
-            <input type="text" placeholder="Add custom value">
-          </div>
-          <div class="element-group">
-            <label>
-              Chart description
-            </label>
-            <textarea class="count" rows="4"></textarea>
-            <div class="count-container">120 chars left</div>
+            <div class="element-group">
+              <label >
+                Abbreviate values
+              </label>
+              <div class="checkbox-slider pull-right">
+                <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="abbreviate-values-{{uuid}}" checked>
+                <label class="checkbox-slider-label" for="abbreviate-values-{{uuid}}">
+                  <span class="checkbox-slider-inner"></span>
+                  <span class="checkbox-slider-switch"></span>
+                </label>
+              </div>
+            </div>
+            <hr/>
+
+            <div class="section-title">
+              Display preference
+            </div>
+            <div class="element-group">
+              <label >
+                Exclude 0 values
+              </label>
+              <div class="checkbox-slider pull-right">
+                <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="exclude-zero-{{uuid}}" checked>
+                <label class="checkbox-slider-label" for="exclude-zero-{{uuid}}">
+                  <span class="checkbox-slider-inner"></span>
+                  <span class="checkbox-slider-switch"></span>
+                </label>
+              </div>
+            </div>
+            <div class="element-group">
+              <label>
+                Exclude custom value
+              </label>
+              <input type="text" placeholder="Add custom value">
+            </div>
+            <div class="element-group">
+              <label>
+                Chart description
+              </label>
+              <textarea [(ngModel)]="settingsModel.description" name="description" class="count" rows="4"></textarea>
+              <div class="count-container">120 chars left</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
+    </form>
   </div>
 </div>
