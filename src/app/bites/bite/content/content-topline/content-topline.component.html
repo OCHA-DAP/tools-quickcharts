@@ -4,36 +4,44 @@
   [class.bite-edit]="edit"
 >
   <div class="row">
+
     <div class="col-xs-12">
-      <div class="value">
-        <span class="pre-value">
+      <span class="prefix-value">
           <hxl-inline-edit [(ngModel)]="bite.preText" [editMode]="edit"
                            [hidden]="!bite.init" [placeholder]="'...'" [maxEditorWidth]="'70px'"></hxl-inline-edit>
-          <span [hidden]="bite.init">{{ "#" }}</span>
+          <span [hidden]="bite.init">{{ "PREFIX" }}</span>
         </span>
+    </div>
+
+    <div class="col-xs-12">
+      <div class="value">
         {{bite.init ? bite.value : "XY.ZW"}}
-        <span class="post-value">
+      </div>
+    </div>
+
+    <div class="col-xs-12">
+      <span class="suffix-value">
           <hxl-inline-edit [(ngModel)]="bite.postText" [editMode]="edit" [hidden]="!bite.init"
                            [placeholder]="'...'" [maxEditorWidth]="'70px'"></hxl-inline-edit>
-          <span [hidden]="bite.init">{{ "USD" }}</span>
-        </span>
-      </div>
-    </div>
-    <div class="col-xs-12">
-      <div class="title" >
-        <hxl-inline-edit [(ngModel)]="bite.displayedDataTitle" [editMode]="edit" [maxEditorWidth]="'100%'"
-                         [hidden]="!bite.init" [placeholder]="'add data title'"></hxl-inline-edit>
-        <span [hidden]="bite.init">{{ bite.ingredient.valueColumn }}</span>
-      </div>
-    </div>
-    <div class="col-xs-12">
-      <div class="description">
-        <hxl-inline-edit [(ngModel)]="bite.description" [editMode]="edit" [hidden]="!bite.init"
-                         [placeholder]="'Fill in a nice description'" [maxEditorWidth]="'100%'"
-                         [textArea]="true"></hxl-inline-edit>
-        <span [hidden]="bite.init">{{ "Values are calculated when bite is added to list" }}</span>
-      </div>
+          <span [hidden]="bite.init">{{ "SUFFIX" }}</span>
+      </span>
     </div>
   </div>
+    <!--<div class="col-xs-12">-->
+      <!--<div class="title" >-->
+        <!--<hxl-inline-edit [(ngModel)]="bite.displayedDataTitle" [editMode]="edit" [maxEditorWidth]="'100%'"-->
+                         <!--[hidden]="!bite.init" [placeholder]="'add data title'"></hxl-inline-edit>-->
+        <!--<span [hidden]="bite.init">{{ bite.ingredient.valueColumn }}</span>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="col-xs-12">-->
+      <!--<div class="description">-->
+        <!--<hxl-inline-edit [(ngModel)]="bite.description" [editMode]="edit" [hidden]="!bite.init"-->
+                         <!--[placeholder]="'Fill in a nice description'" [maxEditorWidth]="'100%'"-->
+                         <!--[textArea]="true"></hxl-inline-edit>-->
+        <!--<span [hidden]="bite.init">{{ "Values are calculated when bite is added to list" }}</span>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
 
 </div>
