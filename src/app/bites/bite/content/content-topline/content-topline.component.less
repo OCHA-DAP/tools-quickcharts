@@ -13,34 +13,34 @@
 
   @titleSize: 16px;
   @valueSize: 56px;
-  @preSize: 32px;
-  @postSize: 24px;
+  //@preSize: 32px;
+  //@postSize: 24px;
   @descriptionSize: 13px;
-  @topLineItemUnitFontSize: 28px;
+  @topLinePrefixSuffixFontSize: 28px;
   @topLinePadding: 20px 0;
 
   .letter-spacing-1() {
     letter-spacing: 0.28px;
   }
 
-  &.bite-init{
-    @shrinkRatio: 3/4;
-    .title{
-      font-size: @titleSize*@shrinkRatio;
-    }
-    .value {
-      font-size: @valueSize*@shrinkRatio;
-      .pre-value{
-        font-size: @preSize*@shrinkRatio;
-      }
-      .post-value{
-        font-size: @postSize*@shrinkRatio;
-      }
-    }
-    .description {
-      font-size: @descriptionSize*@shrinkRatio;
-    }
-  }
+  //&.bite-init{
+  //  @shrinkRatio: 3/4;
+  //  .title{
+  //    font-size: @titleSize*@shrinkRatio;
+  //  }
+  //  .value {
+  //    font-size: @valueSize*@shrinkRatio;
+  //    .pre-value{
+  //      font-size: @preSize*@shrinkRatio;
+  //    }
+  //    .post-value{
+  //      font-size: @postSize*@shrinkRatio;
+  //    }
+  //  }
+  //  .description {
+  //    font-size: @descriptionSize*@shrinkRatio;
+  //  }
+  //}
 
   .title{
     font-size: @titleSize;
@@ -52,17 +52,6 @@
     line-height: 1;
     color: @darkGrayColor;
     padding: 0;
-    //font-weight: 300;
-    //margin-top: 15px;
-    //font-size: @valueSize;
-    //.pre-value{
-    //  font-size: @preSize;
-    //  font-weight: 100;
-    //}
-    //.post-value{
-    //  font-size: @postSize;
-    //  font-weight: 100;
-    //}
   }
 
   .description {
@@ -73,18 +62,16 @@
   .prefix-value {
     padding: @topLinePadding;
     margin-bottom: 10px;
-    //margin-top: -1px;
     color: @darkGrayColor;
-    .gothamLightFont(@topLineItemUnitFontSize);
+    .gothamLightFont(@topLinePrefixSuffixFontSize);
     .letter-spacing-1;
     line-height: 1;
   }
   .suffix-value {
     padding: @topLinePadding;
     margin-top: 10px;
-    //margin-top: -1px;
     color: @darkGrayColor;
-    .gothamLightFont(@topLineItemUnitFontSize);
+    .gothamLightFont(@topLinePrefixSuffixFontSize);
     .letter-spacing-1;
     line-height: 1;
   }
