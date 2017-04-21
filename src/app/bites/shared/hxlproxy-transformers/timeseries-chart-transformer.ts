@@ -15,8 +15,8 @@ export class TimeseriesChartTransformer extends AbstractHxlTransformer {
   buildRecipes(): BasicRecipe[] {
     let recipes: BasicRecipe[] = [];
 
-    const countOperation = new CleanOperation(this.dateTag);
-    recipes.push(countOperation.recipe);
+    const cleanOperation = new CleanOperation(this.dateTag);
+    recipes.push(cleanOperation.recipe);
 
     const sortOperation = new SortOperation(this.dateTag);
     recipes.push(sortOperation.recipe);
