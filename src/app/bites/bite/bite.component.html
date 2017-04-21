@@ -5,12 +5,9 @@
   [class.settings-open]="settingsDisplay"
 >
   <div class="title">
-    <div class="pull-left" style="width: 80%">
-      <!--<i *ngIf="edit" class="glyphicon glyphicon-move drag-handle"></i>-->
-      <div class="title-content">{{bite.title}}</div>
-    </div>
+    <div class="title-content">{{bite.title}}</div>
 
-    <span class="pull-right">
+    <div class="title-menu">
       <simple-dropdown [items]="displayableAvailableBites" (selected)="switchBite($event)"></simple-dropdown>
       <i
         *ngIf="add && !listIsFull"
@@ -29,7 +26,7 @@
         class="glyphicon glyphicon-remove"
         (click)="deleteBite($event);"
       ></i>
-    </span>
+    </div>
   </div>
   <div class="content" [ngSwitch]="bite.type">
     <hxl-content-topline *ngSwitchCase="classTypes.ToplineBite" [bite]="bite" [edit]="edit"></hxl-content-topline>
@@ -51,7 +48,10 @@
         <span>
           <i (click)="toggleSettings(this)" class="glyphicon glyphicon-cog" [class.open]="settingsDisplay"></i>
         </span>
-        <div class="settings-menu dropdown-menu" [class.open]="settingsDisplay">
+        <div class="settings-menu dropdown-menu"
+           [class.open]="settingsDisplay"
+           [class.arrow-right]="index % 3 == 0"
+           [class.arrow-left]="index % 3 > 0">
           <div class="scrollable-content">
             <div class="section-title">
               Chart title
@@ -68,7 +68,10 @@
                 Reverse Axis
               </label>
               <div class="checkbox-slider pull-right">
-                <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="reverse-axis-{{uuid}}" checked>
+                <input [(ngModel)]="settingsModel.swapAxis"
+                       [checked]="settingsModel.swapAxis"
+                       (ngModelChange)="renderContent()"
+                       type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="reverse-axis-{{uuid}}">
                 <label class="checkbox-slider-label" for="reverse-axis-{{uuid}}">
                   <span class="checkbox-slider-inner"></span>
                   <span class="checkbox-slider-switch"></span>
@@ -80,7 +83,10 @@
                 Show Grid
               </label>
               <div class="checkbox-slider pull-right">
-                <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="show-grid-{{uuid}}">
+                <input [(ngModel)]="settingsModel.showGrid"
+                       [checked]="settingsModel.showGrid"
+                       (ngModelChange)="renderContent()"
+                       type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="show-grid-{{uuid}}">
                 <label class="checkbox-slider-label" for="show-grid-{{uuid}}">
                   <span class="checkbox-slider-inner"></span>
                   <span class="checkbox-slider-switch"></span>
@@ -141,8 +147,10 @@
               <label>
                 Chart description
               </label>
-              <textarea [(ngModel)]="settingsModel.description" name="description" class="count" rows="4"></textarea>
-              <div class="count-container">120 chars left</div>
+              <textarea
+                  [(ngModel)]="settingsModel.description"
+                  name="description" class="count" rows="4"></textarea>
+              <div class="count-container">{{settingsModel.descriptionRemaining}} chars left</div>
             </div>
           </div>
         </div>

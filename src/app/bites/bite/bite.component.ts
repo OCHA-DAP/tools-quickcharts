@@ -1,11 +1,12 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import {Input, Output} from '@angular/core';
 import { Bite } from './types/bite';
 import { KeyFigureBite } from './types/key-figure-bite';
 import { ChartBite } from './types/chart-bite';
 import { TimeseriesChartBite } from './types/timeseries-chart-bite';
 import { Logger } from 'angular2-logger/core';
-import { BiteService } from "app/bites/shared/bite.service";
+import { BiteService } from 'app/bites/shared/bite.service';
+import { ContentChartComponent } from './content/content-chart/content-chart.component';
 
 @Component({
   selector: 'hxl-bite',
@@ -21,9 +22,12 @@ export class BiteComponent implements OnInit {
   add: boolean;
   @Input()
   edit: boolean;
-
+  @Input()
+  index: number;
   @Input()
   listIsFull: boolean;
+  @Input()
+  availableBites: Bite[];
 
   @Output()
   onAdd = new EventEmitter<Bite>();
@@ -32,13 +36,12 @@ export class BiteComponent implements OnInit {
   @Output()
   onSwitch = new EventEmitter<{oldBite: Bite, newBite: Bite}>();
 
+  @ViewChild(ContentChartComponent)
+  private chartComponent: ContentChartComponent;
 
   classTypes: any = {};
   private settingsDisplay: Boolean = false;
   private uuid: number;
-
-  @Input()
-  availableBites: Bite[];
 
   displayableAvailableBites: {displayValue: string, payload: Bite}[];
 
@@ -81,13 +84,24 @@ export class BiteComponent implements OnInit {
     return this.uuid;
   }
 
+  renderContent() {
+    this.chartComponent.render();
+  }
+
   settingsModelChanged(model) {
     this.logger.log(JSON.stringify(model));
   }
 }
 
 class SettingsModel {
-  constructor(private bite: Bite) {}
+  private maxDescriptionLength = 20;
+  public descriptionRemaining: number;
+  private descriptionStr: string;
+
+  constructor(private bite: Bite) {
+    this.computeDescriptionLength();
+    this.descriptionStr = this.bite.description;
+  }
   get title(): string {
     return this.bite.title;
   }
@@ -96,9 +110,36 @@ class SettingsModel {
   }
 
   get description(): string {
-    return this.bite.description;
+    return this.descriptionStr;
   }
   set description(description: string) {
-    this.bite.description = description;
+    if (description.length <= this.maxDescriptionLength) {
+      this.bite.description = description;
+      this.computeDescriptionLength();
+    } else {
+      this.descriptionStr = this.bite.description;
+    }
+  }
+
+  get swapAxis(): boolean {
+    return (<ChartBite>this.bite).swapAxis;
+  }
+  set swapAxis(value: boolean) {
+    const chartBite: ChartBite = <ChartBite>this.bite;
+    chartBite.swapAxis = value;
+  }
+
+  get showGrid(): boolean {
+    return (<ChartBite>this.bite).showGrid;
+  }
+
+  set showGrid(value: boolean) {
+    const chartBite: ChartBite = <ChartBite>this.bite;
+    chartBite.showGrid = value;
+  }
+
+  computeDescriptionLength() {
+    const descriptionLength = this.bite.description ? this.bite.description.length : 0;
+    this.descriptionRemaining = this.maxDescriptionLength - descriptionLength;
   }
 }

@@ -8,6 +8,9 @@ export class ChartBite extends Bite {
   // HXL Proxy generated: categories
   public categories: string[];
 
+  public swapAxis = true;
+  public showGrid = true;
+
   static type(): string {
     return 'chart';
   }

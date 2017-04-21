@@ -1,7 +1,7 @@
 @import "../../../styles.less";
 
 .hxl-bite {
-  margin-bottom: 30px;
+  margin: 30px 0;
   border: 1px solid @extraLighterGrayColor;
   border-bottom: 1px solid #eee;
   position: relative;
@@ -24,15 +24,30 @@
     .gothamBoldFont(@titleFontSize);
     letter-spacing: 0.01em;
 
-    padding: @headerFooterPadding;
+    padding: 0;
     color: #333333;
     line-height: @lineHeightValue;
     height: @titleContainerHeight;
+    position: relative;
 
     background-color: @extraLighterGrayColor;
     .title-content {
-      width: 100%;
+      padding-left: @headerFooterPadding;
+      width: 80%;
       background-color: @extraLighterGrayColor;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+
+    .title-menu {
+      padding-right: @headerFooterPadding;
+      text-align: right;
+      width: 20%;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translate(0, -50%);
     }
 
     i {
@@ -159,6 +174,24 @@
     }
 
     //Arrow
+    &.arrow-right {
+      right: auto;
+      left: -1*@settingWidth - 10px;
+
+      &:after, &:before {
+        left: 100%;
+      }
+      &:after {
+        border-color: rgba(255, 255, 255, 0);
+        border-left-color: #ffffff;
+      }
+      &:before {
+        border-color: rgba(158, 158, 158, 0);
+        border-left-color: @settingsMenuBorderColor;
+      }
+    }
+
+    //arrow-left
     &:after, &:before {
       right: 100%;
       top: @settingsMenuHeight - 20px;

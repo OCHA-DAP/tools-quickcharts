@@ -11,10 +11,11 @@
 >
   <div
     class="col-xs-4"
-    *ngFor="let bite of biteList"
+    *ngFor="let bite of biteList; let idx = index;"
   >
-    <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [edit]="edit" (onDelete)="deleteBite($event)"
-              [availableBites]="availableBites" (onSwitch)="switchBite($event)">
+    <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [edit]="edit"
+              [availableBites]="availableBites" [index]="idx + 1"
+              (onDelete)="deleteBite($event)" (onSwitch)="switchBite($event)">
     </hxl-bite>
   </div>
 </div>
