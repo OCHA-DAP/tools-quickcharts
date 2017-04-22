@@ -23,7 +23,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.bite.values) {
-      c3.generate(this.generateOptions());
+      this.render();
     }
   }
 
@@ -33,6 +33,11 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       data: {
         columns: [this.bite.values],
         type: 'bar'
+      },
+      zoom: {
+        enabled: true,
+        type: 'drag', // can be [drag, scroll]
+        extent: [1.5, 2]
       },
       size: {
         height: 225
@@ -58,6 +63,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   }
 
   render(): void {
-    c3.generate(this.generateOptions());
+    const c3_chart = c3.generate(this.generateOptions());
+    c3_chart.internal.brush.extent([0, 12]).update();
+    c3_chart.internal.redrawForBrush();
   }
 }
