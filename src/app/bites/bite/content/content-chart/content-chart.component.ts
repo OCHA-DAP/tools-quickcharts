@@ -63,8 +63,12 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   }
 
   render(): void {
+    const numberOfValues = 12;
     const c3_chart = c3.generate(this.generateOptions());
-    c3_chart.internal.brush.extent([0, 12]).update();
-    c3_chart.internal.redrawForBrush();
+    if (this.bite.values.length > numberOfValues) {
+      c3_chart.internal.brush.extent([0, numberOfValues]).update();
+      c3_chart.internal.redrawForBrush();
+    }
+
   }
 }
