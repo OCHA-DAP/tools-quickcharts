@@ -23,6 +23,8 @@ export abstract class Bite {
 
   public description: string;
 
+  public filteredValues: number[];
+
   static type(): string {
     return 'bite';
   }
@@ -33,6 +35,8 @@ export abstract class Bite {
     }
     this.initialTitle = this.title;
     this.type = (this.constructor as typeof Bite).type();
+
+    this.filteredValues = [];
   }
 
   public setTitle(title: string) {

@@ -27,7 +27,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private generateOptions() {
+  protected generateOptions(): {} {
     return {
       bindto: this.elementRef.nativeElement.children[0],
       data: {
