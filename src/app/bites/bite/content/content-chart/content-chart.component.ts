@@ -1,8 +1,8 @@
-import { Component, OnInit, ElementRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
 import { ChartBite } from '../../types/chart-bite';
 import { Input } from '@angular/core';
 
-declare var c3: any;
+declare const c3: any;
 
 @Component({
   selector: 'hxl-content-chart',
@@ -29,7 +29,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private generateOptions() {
+  protected generateOptions(): {} {
     const config = {
       bindto: this.elementRef.nativeElement.children[0],
       data: {},
@@ -56,7 +56,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       }
     };
 
-    let values = this.bite.values;
+    const values = this.bite.values;
 
     if (values.length > 4) {
       config.data = {

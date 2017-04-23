@@ -11,6 +11,7 @@ import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { CountChartTransformer } from './hxlproxy-transformers/count-chart-transformer';
 import { DistinctCountChartTransformer } from './hxlproxy-transformers/distinct-count-chart-transformer';
 import { TimeseriesChartTransformer } from './hxlproxy-transformers/timeseries-chart-transformer';
+import { FilterSettingTransformer } from './hxlproxy-transformers/filter-setting-transformer';
 
 @Injectable()
 export class HxlproxyService {
@@ -61,10 +62,14 @@ export class HxlproxyService {
         if (bite.ingredient.dateColumn) {
           transformer = new TimeseriesChartTransformer(transformer, bite.ingredient.dateColumn);
         }
+        if (bite.filteredValues && bite.filteredValues.length > 0) {
+          transformer = new FilterSettingTransformer(transformer, bite.ingredient.valueColumn, bite.filteredValues);
+        }
+
         const recipesStr: string = transformer.generateJsonFromRecipes();
         // this.logger.log(recipesStr);
 
-        let biteLogic = BiteLogicFactory.createBiteLogic(bite);
+        const biteLogic = BiteLogicFactory.createBiteLogic(bite);
 
         return this.makeCallToHxlProxy<Bite>([{key: 'recipe', value: recipesStr}],
           (response: Response) => biteLogic.populateWithHxlProxyInfo(response.json(), this.tagToTitleMap).getBite()

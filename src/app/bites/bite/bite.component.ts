@@ -7,6 +7,7 @@ import { TimeseriesChartBite } from './types/timeseries-chart-bite';
 import { Logger } from 'angular2-logger/core';
 import { BiteService } from 'app/bites/shared/bite.service';
 import { ContentChartComponent } from './content/content-chart/content-chart.component';
+import { ContentTimeseriesChartComponent } from './content/content-timeseries-chart/content-timeseries-chart.component';
 
 @Component({
   selector: 'hxl-bite',
@@ -39,6 +40,9 @@ export class BiteComponent implements OnInit {
   @ViewChild(ContentChartComponent)
   private chartComponent: ContentChartComponent;
 
+  @ViewChild(ContentTimeseriesChartComponent)
+  private timeseriesComponent: ContentTimeseriesChartComponent;
+
   classTypes: any = {};
   private settingsDisplay: Boolean = false;
   private uuid: number;
@@ -47,7 +51,7 @@ export class BiteComponent implements OnInit {
 
   settingsModel: SettingsModel;
 
-  constructor(private logger: Logger, biteService: BiteService) {
+  constructor(private logger: Logger, private biteService: BiteService) {
     this.classTypes.ToplineBite = KeyFigureBite.type();
     this.classTypes.ChartBite = ChartBite.type();
     this.classTypes.TimeseriesChartBite = TimeseriesChartBite.type();
@@ -61,7 +65,7 @@ export class BiteComponent implements OnInit {
         return {displayValue: bite.title, payload: bite};
       });
     }
-    this.settingsModel = new SettingsModel(this.bite);
+    this.settingsModel = new SettingsModel(this.bite, this.biteService, this);
   }
 
   addBite() {
@@ -85,7 +89,11 @@ export class BiteComponent implements OnInit {
   }
 
   renderContent() {
-    this.chartComponent.render();
+    if (this.chartComponent) {
+      this.chartComponent.render();
+    } else if (this.timeseriesComponent) {
+      this.timeseriesComponent.render();
+    }
   }
 
   settingsModelChanged(model) {
@@ -98,7 +106,7 @@ class SettingsModel {
   public descriptionRemaining: number;
   private descriptionStr: string;
 
-  constructor(private bite: Bite) {
+  constructor(private bite: Bite, private biteService: BiteService, private biteComponent: BiteComponent) {
     this.computeDescriptionLength();
     this.descriptionStr = this.bite.description;
   }
@@ -136,6 +144,44 @@ class SettingsModel {
   set showGrid(value: boolean) {
     const chartBite: ChartBite = <ChartBite>this.bite;
     chartBite.showGrid = value;
+  }
+
+  get filterZero(): boolean {
+    return this.bite.filteredValues.indexOf(0) >= 0;
+  }
+  set filterZero(shouldAdd: boolean) {
+    if (shouldAdd && this.bite.filteredValues.indexOf(0) < 0) {
+      this.bite.filteredValues.push(0);
+      this.biteService.initBite(this.bite).subscribe(bite => this.biteComponent.renderContent());
+    }
+    if (!shouldAdd) {
+      const index = this.bite.filteredValues.indexOf(0);
+      if (index >= 0) {
+        this.bite.filteredValues.splice(index, 1);
+        this.biteService.initBite(this.bite).subscribe(bite => this.biteComponent.renderContent());
+      }
+    }
+  }
+
+  get filterCustomValue(): number {
+    for (let i = 0; i < this.bite.filteredValues.length; i++) {
+      const value = this.bite.filteredValues[i];
+      if (value !== 0) {
+        return value;
+      }
+    }
+    return null;
+  }
+  set filterCustomValue(value: number) {
+    const filterZero = this.filterZero;
+    this.bite.filteredValues = [];
+    if (filterZero) {
+      this.bite.filteredValues.push(0);
+    }
+    if (value) {
+      this.bite.filteredValues.push(value);
+    }
+    this.biteService.initBite(this.bite).subscribe(bite => this.biteComponent.renderContent());
   }
 
   computeDescriptionLength() {
