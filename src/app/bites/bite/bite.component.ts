@@ -190,6 +190,33 @@ class SettingsModel {
     this.biteService.initBite(this.bite).subscribe(bite => this.biteComponent.renderContent());
   }
 
+  get prefix(): string {
+    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
+    return keyFigureBite.preText;
+  }
+  set prefix(prefix: string) {
+    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
+    keyFigureBite.preText = prefix;
+  }
+
+  get suffix(): string {
+    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
+    return keyFigureBite.postText;
+  }
+  set suffix(suffix: string) {
+    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
+    keyFigureBite.postText = suffix;
+  }
+
+  get numberFormat(): string {
+    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
+    return keyFigureBite.numberFormat;
+  }
+  set numberFormat(numberFormat: string) {
+    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
+    keyFigureBite.numberFormat = numberFormat;
+  }
+
   computeDescriptionLength() {
     const descriptionLength = this.bite.description ? this.bite.description.length : 0;
     this.descriptionRemaining = this.maxDescriptionLength - descriptionLength;
