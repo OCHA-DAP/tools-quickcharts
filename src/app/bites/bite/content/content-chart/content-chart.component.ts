@@ -3,6 +3,7 @@ import { ChartBite } from '../../types/chart-bite';
 import { Input } from '@angular/core';
 
 declare const c3: any;
+declare const d3: any;
 
 @Component({
   selector: 'hxl-content-chart',
@@ -14,7 +15,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   bite: ChartBite;
 
   elementRef: ElementRef;
-  maxNumberOfValues = 12;
+  maxNumberOfValues = 7;
 
   pieThreshold = 4;
 
@@ -63,19 +64,23 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         y: {
           show: this.bite.showGrid
         }
-      }
+      },
+      pie: {},
+      tooltip: {}
     };
 
+    this.bite.values = this.bite.values.slice(0, 5);
     const values = this.bite.values;
+    console.log(values);
 
-    if (values.length > this.pieThreshold) {
+    if (values.length > (this.pieThreshold + 1)) { // first value is a label
       config.data = {
         columns: [values],
         type: 'bar'
       };
     } else {
       const pieValues = [];
-      for (let i = 0; i < values.length; i++) {
+      for (let i = 1; i < values.length; i++) {
         pieValues.push([this.bite.categories[i], values[i]]);
       }
       console.log(pieValues);
@@ -83,6 +88,16 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       config.data = {
         columns: pieValues,
         type: 'pie'
+      };
+      config.tooltip = {
+        format: {
+          // title: function (d) { return 'Data ' + d; },
+          value: function (value, ratio, id) {
+            const valueFormat = d3.format(',');
+            const percentageFormat = d3.format('.0%');
+            return valueFormat(value) + ' (' + percentageFormat(ratio) + ')';
+          }
+        }
       };
     }
 
