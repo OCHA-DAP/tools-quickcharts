@@ -126,6 +126,15 @@ class SettingsModel {
     }
   }
 
+  get xAxisLabel(): string {
+    return this.bite.dataTitle;
+  }
+
+  set xAxisLabel(label: string) {
+    this.bite.dataTitle = label;
+    this.biteComponent.renderContent();
+  }
+
   get swapAxis(): boolean {
     return (<ChartBite>this.bite).swapAxis;
   }
