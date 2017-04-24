@@ -1,6 +1,12 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
 
+export interface SimpleDropdownItem {
+  displayValue: string;
+  type: string; // header, menuitem, divider
+  payload: any;
+}
+
 @Component({
   selector: 'simple-dropdown',
   templateUrl: './simple-dropdown.component.html',
@@ -12,7 +18,7 @@ export class SimpleDropdownComponent implements OnInit {
   selected: EventEmitter<any>;
 
   @Input()
-  items: {displayValue: string, payload: any}[];
+  items: SimpleDropdownItem[];
 
   constructor(private logger: Logger) {
     this.selected = new EventEmitter<any>();

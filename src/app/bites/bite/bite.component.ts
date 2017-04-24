@@ -8,6 +8,7 @@ import { Logger } from 'angular2-logger/core';
 import { BiteService } from 'app/bites/shared/bite.service';
 import { ContentChartComponent } from './content/content-chart/content-chart.component';
 import { ContentTimeseriesChartComponent } from './content/content-timeseries-chart/content-timeseries-chart.component';
+import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 
 @Component({
   selector: 'hxl-bite',
@@ -47,7 +48,7 @@ export class BiteComponent implements OnInit {
   private settingsDisplay: Boolean = false;
   private uuid: number;
 
-  displayableAvailableBites: {displayValue: string, payload: Bite}[];
+  displayableAvailableBites: SimpleDropdownItem[];
 
   settingsModel: SettingsModel;
 
@@ -60,11 +61,7 @@ export class BiteComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.availableBites) {
-      this.displayableAvailableBites = this.availableBites.map(bite => {
-        return {displayValue: bite.title, payload: bite};
-      });
-    }
+    this.displayableAvailableBites = this.biteService.generateBiteSelectionMenu(this.availableBites);
     this.settingsModel = new SettingsModel(this.bite, this.biteService, this);
   }
 

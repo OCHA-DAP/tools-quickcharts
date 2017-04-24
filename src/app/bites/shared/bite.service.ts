@@ -8,6 +8,7 @@ import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { DomEventsService } from '../../shared/dom-events.service';
+import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 
 @Injectable()
 export class BiteService {
@@ -137,10 +138,64 @@ export class BiteService {
     if (bites) {
       const index: number = BiteService.findBiteInArray(oldBite, bites);
       if (index >= 0) {
-        availableBites.push(this.resetBite(oldBite));
+        BiteLogicFactory.createBiteLogic(oldBite).unpopulateBite();
+        availableBites.push(oldBite);
         this.addBite(newBite, bites, availableBites, index);
       }
     }
+  }
+
+  generateBiteSelectionMenu(availableBites: Bite[]): SimpleDropdownItem[] {
+    const categoryListMap: {[key: string]: SimpleDropdownItem[]} = {};
+    if (availableBites) {
+      for (let i = 0; i < availableBites.length; i++) {
+        const b = availableBites[i];
+
+        let categoryList: SimpleDropdownItem[] = categoryListMap[b.displayCategory];
+        /* Initializing category list */
+        if (!categoryList) {
+          categoryList = [
+            {
+              displayValue: b.displayCategory,
+              type: 'header',
+              payload: null
+            }
+          ];
+          categoryListMap[b.displayCategory] = categoryList;
+        }
+        categoryList.push({
+          displayValue: b.title,
+          type: 'menuitem',
+          payload: b
+        });
+      }
+
+      /* Add dividers */
+      for (const key in categoryListMap) {
+        if (categoryListMap.hasOwnProperty(key)) {
+          const categoryList = categoryListMap[key];
+          categoryList.push({
+            displayValue: null,
+            type: 'divider',
+            payload: null
+          });
+        }
+      }
+
+    }
+
+    /* Concatenate all menu items into one list */
+    let result: SimpleDropdownItem[] = [];
+    for (const key in categoryListMap) {
+      if (categoryListMap.hasOwnProperty(key)) {
+        result = result.concat(categoryListMap[key]);
+      }
+    }
+
+    /* No need for separator at the end */
+    result.pop();
+
+    return result;
   }
 
 }
