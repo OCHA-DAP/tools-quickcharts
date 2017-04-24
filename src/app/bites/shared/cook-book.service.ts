@@ -56,10 +56,7 @@ export class CookBookService {
         let avAggCols: string[] = [];
         if (biteConfig.ingredients.aggregateColumns) {
           biteConfig.ingredients.aggregateColumns.forEach(col => {
-            if (biteConfig.type === 'chart' && col.indexOf('#date') >= 0) {
-              biteConfig.type = 'timeseries';
-              dateColumns.push(col);
-            } else {
+            if (!(biteConfig.type === 'timeseries' && col.indexOf('#date') >= 0)) {
               aggregateColumns.push(col);
             }
           });
@@ -74,6 +71,14 @@ export class CookBookService {
           // filter the available hxlTags, and not the recipe general tags
           avValCols = hxlTags.filter(col => this.matchInSet(col, valueColumns));
           // avValCols = valueColumns.filter(col => this.matchInSet(col, hxlTags));
+        }
+
+        if (biteConfig.type === 'timeseries') {
+          hxlTags.forEach(col => {
+            if (col.indexOf('#date') >= 0) {
+              dateColumns.push(col);
+            }
+          });
         }
 
         this.logger.info(valueColumns);
