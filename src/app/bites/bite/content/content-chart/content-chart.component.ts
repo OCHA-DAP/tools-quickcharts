@@ -94,7 +94,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
           // title: function (d) { return 'Data ' + d; },
           value: function (value, ratio, id) {
             const valueFormat = d3.format(',');
-            const percentageFormat = d3.format('.0%');
+            const percentageFormat = d3.format('.1%');
             return valueFormat(value) + ' (' + percentageFormat(ratio) + ')';
           }
         }
