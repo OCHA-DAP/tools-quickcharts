@@ -3,9 +3,14 @@
     <i class="glyphicon glyphicon-triangle-bottom"></i>
   </a>
 
-  <ul *dropdownMenu class="dropdown-menu" role="menu">
-    <li *ngFor="let item of items" role="menuitem">
-      <a class="dropdown-item" href="javascript:void(0)" (click)="itemSelected(item.payload)"> {{item.displayValue}}</a>
-    </li>
+  <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+    <ng-template ngFor let-item="$implicit" [ngForOf]="items" let-i="index">
+
+      <li *ngIf="item.type=='header'" class="dropdown-header">{{item.displayValue}}</li>
+      <li *ngIf="item.type=='menuitem'" role="menuitem">
+        <a class="dropdown-item" href="javascript:void(0)" (click)="itemSelected(item.payload)"> {{item.displayValue}}</a>
+      </li>
+      <li *ngIf="item.type=='divider'" class="divider" role="separator"></li>
+    </ng-template>
   </ul>
 </span>

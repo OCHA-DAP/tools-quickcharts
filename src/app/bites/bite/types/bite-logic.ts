@@ -90,13 +90,12 @@ export abstract class BiteLogic {
     const availableTags = {};
     hxlTags.forEach((v, idx) => availableTags[v] = idx);
 
-    const category = this.bite.displayCategory;
     const valueColumn = columnNames[availableTags[this.bite.ingredient.valueColumn]];
     const groupColumn = columnNames[availableTags[this.bite.ingredient.aggregateColumn]];
     let aggFunction = null;
     switch (this.bite.ingredient.aggregateFunction) {
       case 'count':
-        aggFunction = 'Row Count of';
+        aggFunction = 'Row Count';
         break;
       case 'distinct-count':
         aggFunction = 'Unique Values in';
@@ -109,7 +108,7 @@ export abstract class BiteLogic {
         break;
     }
 
-    let title = `${category}: ${aggFunction}`;
+    let title = aggFunction;
     if (valueColumn && valueColumn.trim().length > 0) {
       title += ' ' + valueColumn;
     }
