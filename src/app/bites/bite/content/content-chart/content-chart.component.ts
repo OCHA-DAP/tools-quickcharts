@@ -32,9 +32,9 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   }
 
   protected overwriteXAxisLabel() {
-    // if (this.bite.dataTitle && this.bite.values.length > this.pieThreshold) {
-    //   this.bite.values[0] = this.bite.dataTitle;
-    // }
+    if (this.bite.dataTitle && this.bite.values.length > this.pieThreshold) {
+      this.bite.values[0] = this.bite.dataTitle;
+    }
   }
 
   protected generateOptions(): {} {
