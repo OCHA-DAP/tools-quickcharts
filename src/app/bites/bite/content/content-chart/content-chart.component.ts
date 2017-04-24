@@ -16,6 +16,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   elementRef: ElementRef;
   maxNumberOfValues = 12;
 
+  pieThreshold = 4;
+
   constructor(elementRef: ElementRef) {
     this.elementRef = elementRef;
   }
@@ -29,7 +31,15 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     }
   }
 
+  protected overwriteXAxisLabel() {
+    // if (this.bite.dataTitle && this.bite.values.length > this.pieThreshold) {
+    //   this.bite.values[0] = this.bite.dataTitle;
+    // }
+  }
+
   protected generateOptions(): {} {
+    this.overwriteXAxisLabel();
+
     const config = {
       bindto: this.elementRef.nativeElement.children[0],
       data: {},
@@ -58,7 +68,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
 
     const values = this.bite.values;
 
-    if (values.length > 4) {
+    if (values.length > this.pieThreshold) {
       config.data = {
         columns: [values],
         type: 'bar'

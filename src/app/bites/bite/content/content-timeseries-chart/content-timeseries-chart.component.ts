@@ -10,7 +10,14 @@ import { ContentChartComponent } from '../content-chart/content-chart.component'
 })
 export class ContentTimeseriesChartComponent extends ContentChartComponent implements OnInit, AfterViewInit {
 
+  protected overwriteXAxisLabel() {
+    if (this.bite.dataTitle && this.bite.values.length === 2) {
+      this.bite.values[1][0] = this.bite.dataTitle;
+    }
+  }
+
   protected generateOptions(): {} {
+    this.overwriteXAxisLabel();
     return {
       bindto: this.elementRef.nativeElement.children[0],
       data: {
@@ -45,4 +52,5 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
       }
     };
   }
+
 }
