@@ -96,18 +96,41 @@
 
             <div class="element-group">
               <label>
-                Custom axis labels
+                Chart values title
               </label>
               <div>
-                <input class="almost-fifty" type="text" placeholder="X Axis Label"
+                <input type="text" placeholder="X Axis Label"
                        [(ngModel)]="settingsModel.xAxisLabel" name="xAxisLabel">
-                <input class="almost-fifty pull-right" type="text" placeholder="Y Axis Label">
               </div>
             </div>
             <hr/>
 
             <div class="section-title">
               Number format
+            </div>
+            <div class="element-group">
+              <div class="almost-fifty pull-left">
+                <label>Prefix</label>
+              </div>
+              <div class="almost-fifty pull-right">
+                <label>Suffix</label>
+              </div>
+              <div>
+                <input class="almost-fifty" type="text" placeholder="Prefix"
+                       name="xAxisLabel">
+                <input class="almost-fifty pull-right" type="text" placeholder="Sufix">
+              </div>
+            </div>
+            <div class="element-group">
+              <label for="decimals-{{uuid}}">
+                Decimals
+              </label>
+              <!--<input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">-->
+              <select id="decimals-{{uuid}}">
+                <option> -- Select -- </option>
+                <option value="1">1.000,00</option>
+                <option value="2">1,000.00</option>
+              </select>
             </div>
             <div class="element-group">
               <label >
