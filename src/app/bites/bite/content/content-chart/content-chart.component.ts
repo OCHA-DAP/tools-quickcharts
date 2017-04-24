@@ -69,7 +69,6 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       tooltip: {}
     };
 
-    this.bite.values = this.bite.values.slice(0, 5);
     const values = this.bite.values;
     console.log(values);
 
