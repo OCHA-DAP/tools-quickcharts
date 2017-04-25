@@ -18,13 +18,6 @@ export class KeyFigureBite extends Bite {
 
   public numberFormat: string;
 
-  get formattedValue(): string {
-    if (this.numberFormat) {
-      return this.value.toLocaleString(this.numberFormat);
-    }
-    return this.value + '';
-  }
-
   static type(): string {
     return 'key figure';
   }

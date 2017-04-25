@@ -83,10 +83,15 @@ export class BiteService {
    */
   private unpopulateListOfBites(biteList: Bite[]): Bite[] {
 
-    /* This is an ugly hack to not modify the original bites by cloning them */
-    let modifiedBiteList = JSON.parse(JSON.stringify(biteList));
+    /* Do not modify the original bites by cloning them */
+    const modifiedBiteList: Bite[] = this.cloneObjectLiteral(biteList) as Bite[];
     modifiedBiteList.forEach(bite => BiteLogicFactory.createBiteLogic(bite).unpopulateBite());
     return modifiedBiteList;
+  }
+
+  private cloneObjectLiteral(obj: {}): {} {
+    /* Hack to clone an object */
+    return JSON.parse(JSON.stringify(obj));
   }
 
   generateAvailableBites(): Observable<Bite> {
@@ -107,11 +112,13 @@ export class BiteService {
 
   addBite(bite: Bite, bites: Bite[], availableBites: Bite[], replaceIndex?: number) {
 
-    /* Removing bite from list of available bites */
-    const index = BiteService.findBiteInArray(bite, availableBites);
-    availableBites.splice(index, 1);
+    // /* Removing bite from list of available bites */
+    // const index = BiteService.findBiteInArray(bite, availableBites);
+    // availableBites.splice(index, 1);
 
-    this.initBite(bite)
+    const clonedBite = this.cloneObjectLiteral(bite) as Bite;
+
+    this.initBite(clonedBite)
       .subscribe(
         b => {
           if (replaceIndex == null) {
@@ -122,7 +129,7 @@ export class BiteService {
         },
         err => {
           this.logger.error('Can\'t process bite due to:' + err);
-          availableBites.push(bite);
+          // availableBites.push(bite);
         }
       );
   }
@@ -138,8 +145,8 @@ export class BiteService {
     if (bites) {
       const index: number = BiteService.findBiteInArray(oldBite, bites);
       if (index >= 0) {
-        BiteLogicFactory.createBiteLogic(oldBite).unpopulateBite();
-        availableBites.push(oldBite);
+        // BiteLogicFactory.createBiteLogic(oldBite).unpopulateBite();
+        // availableBites.push(oldBite);
         this.addBite(newBite, bites, availableBites, index);
       }
     }
