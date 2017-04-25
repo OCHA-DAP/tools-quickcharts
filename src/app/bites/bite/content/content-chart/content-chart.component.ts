@@ -52,7 +52,9 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         rotated: this.bite.swapAxis,
         x: {
           type: 'category',
-          categories: this.bite.categories
+          categories: this.bite.categories,
+          tick: {},
+          height: 50
         },
         y: {
           tick: {
@@ -70,7 +72,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     };
 
     const values = this.bite.values;
-    console.log(values);
+    const categories = this.bite.categories;
 
     if (values.length > (this.pieThreshold + 1)) { // first value is a label
       config.data = {
@@ -105,6 +107,21 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         enabled: true,
         type: 'drag', // can be [drag, scroll]
         extent: [1.5, 2]
+      };
+    }
+
+    if (!this.bite.swapAxis) {
+      config.axis.x.tick = {
+        rotate: 30,
+        // format: function (x) {
+        //   const maxLength = 13;
+        //   const value = categories[x];
+        //   if (value.length > maxLength) {
+        //     return value.substring(0, maxLength - 3) + '...';
+        //   } else {
+        //     return value;
+        //   }
+        // }
       };
     }
 
