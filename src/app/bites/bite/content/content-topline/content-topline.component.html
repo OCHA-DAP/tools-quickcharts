@@ -15,7 +15,7 @@
 
     <div class="col-xs-12">
       <div class="value">
-        {{bite.init ? bite.formattedValue : "XY.ZW"}}
+        {{bite.init ? (bite.value | numberFormat:bite.numberFormat) : "XY.ZW"}}
       </div>
     </div>
 
