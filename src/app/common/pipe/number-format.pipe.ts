@@ -28,7 +28,7 @@ export class NumberFormatPipe implements PipeTransform {
           break;
       }
       /* Keep only one decimal value  */
-      return Math.round(newValue * 10.0) / 10.0;
+      return Math.floor(newValue * 10.0) / 10.0;
     }
 
     return value;

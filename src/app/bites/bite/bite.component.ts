@@ -221,15 +221,18 @@ class SettingsModel {
 
   get abbreviateValues(): boolean {
     const bite: KeyFigureBite = this.bite as KeyFigureBite;
+    if (bite.unit === 'none') {
+      return false;
+    }
     return !!bite.unit;
   }
   set abbreviateValues(abbreviateValues: boolean) {
     const bite: KeyFigureBite = this.bite as KeyFigureBite;
     if (abbreviateValues) {
       const biteLogic: KeyFigureBiteLogic = BiteLogicFactory.createBiteLogic(bite) as KeyFigureBiteLogic;
-      biteLogic.computeBiteUnit();
+      biteLogic.computeBiteUnit(true);
     } else {
-      bite.unit = null;
+      bite.unit = 'none';
     }
   }
 
