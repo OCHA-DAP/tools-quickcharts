@@ -57,16 +57,9 @@ export class BiteService {
       );
   }
 
-  saveBites(biteList: Bite[]) {
-    let modifiedBiteList = this.unpopulateListOfBites(biteList);
-    this.persistService.save(modifiedBiteList)
-      .subscribe(
-        (successful: boolean) => {
-          this.logger.log('Result of bites saved: ' + successful);
-          this.domEventService.sendSavedEvent();
-        },
-        error => this.logger.error('Save failed: ' + error)
-      );
+  saveBites(biteList: Bite[]): Observable<boolean> {
+    const modifiedBiteList = this.unpopulateListOfBites(biteList);
+    return this.persistService.save(modifiedBiteList);
   }
 
   private filterPathWithoutParams(path: string): string {

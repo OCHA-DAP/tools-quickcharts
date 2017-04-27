@@ -6,6 +6,7 @@ import {Logger} from 'angular2-logger/core';
 import {AppConfigService} from '../../shared/app-config.service';
 import { AsyncSubject, Observable } from 'rxjs';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
+import { ModalDirective } from 'ngx-bootstrap';
 
 declare const window: any;
 
@@ -34,6 +35,10 @@ export class BiteListComponent implements OnInit {
     forceFallback: true
   };
 
+  @ViewChild('savedModal')
+  private savedModal: ModalDirective;
+  private savedModalMessage: string;
+
   @ViewChild('staticModal')
   private staticModal;
   private embedUrl;
@@ -51,21 +56,6 @@ export class BiteListComponent implements OnInit {
     this.hxlUnsupported = false;
 
     this.smartChartsMenu = [
-      {
-        displayValue: 'ADMIN SETTINGS',
-        type: 'header',
-        payload: null
-      },
-      {
-        displayValue: 'Save the current views as default',
-        type: 'menuitem',
-        payload: 'save-views'
-      },
-      {
-        displayValue: null,
-        type: 'divider',
-        payload: null
-      },
       {
         displayValue: 'EXPORT ALL CHARTS',
         type: 'header',
@@ -86,6 +76,26 @@ export class BiteListComponent implements OnInit {
     this.generateAvailableBites().subscribe(() => this.load());
     if (this.edit) {
       this.onEdit();
+    }
+
+    if (this.appConfig.get('is_logged_in') === 'true') {
+      this.smartChartsMenu.splice(0, 0,
+        {
+          displayValue: 'ADMIN SETTINGS',
+          type: 'header',
+          payload: null
+        },
+        {
+          displayValue: 'Save the current views as default',
+          type: 'menuitem',
+          payload: 'save-views'
+        },
+        {
+          displayValue: null,
+          type: 'divider',
+          payload: null
+        }
+      );
     }
   }
 
@@ -223,6 +233,18 @@ export class BiteListComponent implements OnInit {
     if (action === 'embed') {
       this.embedUrl = this.biteService.exportBitesToURL(loc.protocol, loc.hostname, loc.pathname, this.biteList);
       this.staticModal.show();
+    } else if (action === 'save-views') {
+      this.biteService.saveBites(this.biteList).subscribe(
+        (successful: boolean) => {
+          this.logger.log('Result of bites saved: ' + successful);
+          this.savedModalMessage = 'Your configuration was saved on the server !';
+          this.savedModal.show();
+        },
+        error => {
+          this.logger.error('Save failed: ' + error);
+          this.savedModalMessage = 'FAILED: Saving configuration failed. Please try again!';
+        }
+      );
     }
   }
 
