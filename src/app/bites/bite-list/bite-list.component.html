@@ -1,6 +1,6 @@
 <div>
   <div class="row list-header">
-    <div class="col-xs-11"><span class="list-header-title">Select (up to 6) visualisations</span></div>
+    <div class="col-xs-11"><span class="list-header-title">Smart Charts</span></div>
     <div class="col-xs-1 right-menu">
       <simple-dropdown [glyphiconClass]="'glyphicon-open'" [items]="smartChartsMenu" (selected)="doSaveAction($event)">
       </simple-dropdown>
@@ -25,35 +25,35 @@
 </div>
 
 
-<div *ngIf="edit && hxlUnsupported === false; else hxlUnsupportedMessage">
-  <div class="row list-header">
-    <div class="col-xs-12"><span class="list-header-title">Available visualizations</span></div>
-  </div>
-  <div class="row available-bites">
-    <div class="col-xs-12">
-      <!--<h2>Available items:</h2>-->
-      <div class="row">
-        <div
-          class="col-xs-3"
-          *ngFor="let bite of availableBites"
-        >
-          <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<!--<div *ngIf="edit && hxlUnsupported === false; else hxlUnsupportedMessage">-->
+  <!--<div class="row list-header">-->
+    <!--<div class="col-xs-12"><span class="list-header-title">Available visualizations</span></div>-->
+  <!--</div>-->
+  <!--<div class="row available-bites">-->
+    <!--<div class="col-xs-12">-->
+      <!--&lt;!&ndash;<h2>Available items:</h2>&ndash;&gt;-->
+      <!--<div class="row">-->
+        <!--<div-->
+          <!--class="col-xs-3"-->
+          <!--*ngFor="let bite of availableBites"-->
+        <!--&gt;-->
+          <!--<hxl-bite [listIsFull]="listIsFull" [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
 
-<ng-template *ngIf="edit && hxlUnsupported === false" #hxlUnsupportedMessage>
-  <div class="row list-header">
-    <div class="col-xs-12"><span class="list-header-title">Smart Charts can not be displayed</span></div>
-  </div>
-  <div class="row">
-    <div class="col-xs-12">
-      <span>Your files contains HXL tags which are not supported by Smart Charts. If you have any questions or suggestions, or if you would like further information, please don't hesitate to contact us</span>
-    </div>
-  </div>
-</ng-template>
+<!--<ng-template *ngIf="edit && hxlUnsupported === false" #hxlUnsupportedMessage>-->
+  <!--<div class="row list-header">-->
+    <!--<div class="col-xs-12"><span class="list-header-title">Smart Charts can not be displayed</span></div>-->
+  <!--</div>-->
+  <!--<div class="row">-->
+    <!--<div class="col-xs-12">-->
+      <!--<span>Your files contains HXL tags which are not supported by Smart Charts. If you have any questions or suggestions, or if you would like further information, please don't hesitate to contact us</span>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</ng-template>-->
 
 
 
