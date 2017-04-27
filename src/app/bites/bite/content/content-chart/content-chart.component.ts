@@ -82,7 +82,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     } else {
       const pieValues = [];
       for (let i = 1; i < values.length; i++) {
-        pieValues.push([this.bite.categories[i], values[i]]);
+        pieValues.push([this.bite.categories[i - 1], values[i]]);
       }
       console.log(pieValues);
 
