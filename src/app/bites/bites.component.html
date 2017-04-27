@@ -1,26 +1,26 @@
 <div class="container-fluid">
-  <div *ngIf="!onlyViewMode" class="bites-title row">
-    <div class="col-xs-9 bites-description">
-      <strong>Adding values:</strong> You can edit the header, add units (ie. USD, $, million, people, %, etc) and small description. <br />
-      <strong>Adding charts:</strong> You can edit the header. <br />
-      Click "save" when you finish to allow others to see these visualisations.
-    </div>
-    <div class="col-xs-3 bites-actions">
-      <i
-        class="glyphicon glyphicon-edit"
-        *ngIf="!editMode"
-        (click)="editMode=true; biteList.onEdit($event);"
-      ></i>
-      <button class="btn btn-inverted"
-              *ngIf="editMode"
-              (click)="editMode=false; biteList.onReset($event);"
-      >Not now</button>
-      <button class="btn btn-primary"
-              *ngIf="editMode"
-              (click)="editMode=false; biteList.onSave($event);"
-      >Save</button>
-    </div>
-  </div>
+  <!--<div *ngIf="!onlyViewMode" class="bites-title row">-->
+    <!--<div class="col-xs-9 bites-description">-->
+      <!--<strong>Adding values:</strong> You can edit the header, add units (ie. USD, $, million, people, %, etc) and small description. <br />-->
+      <!--<strong>Adding charts:</strong> You can edit the header. <br />-->
+      <!--Click "save" when you finish to allow others to see these visualisations.-->
+    <!--</div>-->
+    <!--<div class="col-xs-3 bites-actions">-->
+      <!--<i-->
+        <!--class="glyphicon glyphicon-edit"-->
+        <!--*ngIf="!editMode"-->
+        <!--(click)="editMode=true; biteList.onEdit($event);"-->
+      <!--&gt;</i>-->
+      <!--<button class="btn btn-inverted"-->
+              <!--*ngIf="editMode"-->
+              <!--(click)="editMode=false; biteList.onReset($event);"-->
+      <!--&gt;Not now</button>-->
+      <!--<button class="btn btn-primary"-->
+              <!--*ngIf="editMode"-->
+              <!--(click)="editMode=false; biteList.onSave($event);"-->
+      <!--&gt;Save</button>-->
+    <!--</div>-->
+  <!--</div>-->
   <hxl-bite-list #biteList [edit]="editMode"></hxl-bite-list>
 
 </div>
