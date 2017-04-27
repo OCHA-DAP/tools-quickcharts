@@ -17,7 +17,7 @@ import { PersistService } from './shared/persist.service';
 import { HdxPersistService } from './shared/persist/hdx-persist.service';
 import { ContentTimeseriesChartComponent } from './bite/content/content-timeseries-chart/content-timeseries-chart.component';
 import { CommonModule as MyCommonModule } from '../common/common.module';
-import { BsDropdownModule } from 'ngx-bootstrap';
+import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 
 @NgModule({
   imports: [
@@ -26,7 +26,8 @@ import { BsDropdownModule } from 'ngx-bootstrap';
     SortablejsModule,
     FormsModule,
     MyCommonModule,
-    BsDropdownModule.forRoot()
+    BsDropdownModule.forRoot(),
+    ModalModule.forRoot()
   ],
   exports: [
     BitesComponent,

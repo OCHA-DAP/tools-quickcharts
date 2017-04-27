@@ -4,6 +4,23 @@
     <div class="col-xs-1 right-menu">
       <simple-dropdown [glyphiconClass]="'glyphicon-open'" [items]="smartChartsMenu" (selected)="doSaveAction($event)">
       </simple-dropdown>
+      <div class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: 'static'}"
+        tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="width: 500px;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">Embed Smart Charts</h4>
+              <button type="button" class="close pull-right" aria-label="Close" (click)="staticModal.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="text-align: left;">
+              Please copy the url below to be able to embed the smart charts:
+              <input type="text" readonly [(ngModel)]="embedUrl" style="width: 100%;" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

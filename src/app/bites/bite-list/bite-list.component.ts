@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {Bite} from '../bite/types/bite';
 import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
@@ -33,6 +33,10 @@ export class BiteListComponent implements OnInit {
     ghostClass: 'sortable-ghost',
     forceFallback: true
   };
+
+  @ViewChild('staticModal')
+  private staticModal;
+  private embedUrl;
 
   // get displayableAvailableBites(): {displayValue: string, payload: Bite}[] {
   //   return this.availableBites.map( b => {
@@ -216,6 +220,10 @@ export class BiteListComponent implements OnInit {
     const loc = window.location;
     this.logger.log(action + ' - ' +
       this.biteService.exportBitesToURL(loc.protocol, loc.hostname, loc.pathname, this.biteList));
+    if (action === 'embed') {
+      this.embedUrl = this.biteService.exportBitesToURL(loc.protocol, loc.hostname, loc.pathname, this.biteList);
+      this.staticModal.show();
+    }
   }
 
   // this should be depracated/removed. Functionality copied to this.generateAvailableBites()
