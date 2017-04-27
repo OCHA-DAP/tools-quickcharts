@@ -9,6 +9,8 @@ import { BiteService } from 'app/bites/shared/bite.service';
 import { ContentChartComponent } from './content/content-chart/content-chart.component';
 import { ContentTimeseriesChartComponent } from './content/content-timeseries-chart/content-timeseries-chart.component';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
+import { BiteLogicFactory } from './types/bite-logic-factory';
+import { KeyFigureBiteLogic } from './types/key-figure-bite-logic';
 
 @Component({
   selector: 'hxl-bite',
@@ -215,6 +217,20 @@ class SettingsModel {
   set numberFormat(numberFormat: string) {
     const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
     keyFigureBite.numberFormat = numberFormat;
+  }
+
+  get abbreviateValues(): boolean {
+    const bite: KeyFigureBite = this.bite as KeyFigureBite;
+    return !!bite.unit;
+  }
+  set abbreviateValues(abbreviateValues: boolean) {
+    const bite: KeyFigureBite = this.bite as KeyFigureBite;
+    if (abbreviateValues) {
+      const biteLogic: KeyFigureBiteLogic = BiteLogicFactory.createBiteLogic(bite) as KeyFigureBiteLogic;
+      biteLogic.computeBiteUnit();
+    } else {
+      bite.unit = null;
+    }
   }
 
   computeDescriptionLength() {

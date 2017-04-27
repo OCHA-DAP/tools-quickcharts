@@ -6,6 +6,9 @@ export class KeyFigureBite extends Bite {
   // HXL Proxy generated: value
   public value: number;
 
+  /* k, mln, bln */
+  public unit: string;
+
   /**
    * User properties
    */
@@ -27,6 +30,7 @@ export class KeyFigureBite extends Bite {
     this.ingredient = new Ingredient(null, valueColumn, aggregateFunction);
     this.dataTitle = valueColumn;
     this.displayCategory = 'Key Figures';
+    this.unit = null;
   }
 
 }
