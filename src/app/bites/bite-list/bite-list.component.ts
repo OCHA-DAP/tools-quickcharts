@@ -5,6 +5,9 @@ import {BiteService} from '../shared/bite.service';
 import {Logger} from 'angular2-logger/core';
 import {AppConfigService} from '../../shared/app-config.service';
 import { AsyncSubject, Observable } from 'rxjs';
+import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
+
+declare const window: any;
 
 @Component({
   selector: 'hxl-bite-list',
@@ -21,6 +24,8 @@ export class BiteListComponent implements OnInit {
   listIsFull: boolean;
 
   hxlUnsupported: boolean;
+
+  smartChartsMenu: SimpleDropdownItem[];
 
   sortableMain: SortablejsOptions = {
     handle: '.drag-handle',
@@ -40,6 +45,36 @@ export class BiteListComponent implements OnInit {
     this.listIsFull = false;
     this.logger = logger;
     this.hxlUnsupported = false;
+
+    this.smartChartsMenu = [
+      {
+        displayValue: 'ADMIN SETTINGS',
+        type: 'header',
+        payload: null
+      },
+      {
+        displayValue: 'Save the current views as default',
+        type: 'menuitem',
+        payload: 'save-views'
+      },
+      {
+        displayValue: null,
+        type: 'divider',
+        payload: null
+      },
+      {
+        displayValue: 'EXPORT ALL CHARTS',
+        type: 'header',
+        payload: null
+      },
+      {
+        displayValue: 'Embed',
+        type: 'menuitem',
+        payload: 'embed'
+      }
+
+    ];
+
   }
 
   ngOnInit() {
@@ -175,6 +210,12 @@ export class BiteListComponent implements OnInit {
         );
     }
     return observable;
+  }
+
+  doSaveAction(action: string) {
+    const loc = window.location;
+    this.logger.log(action + ' - ' +
+      this.biteService.exportBitesToURL(loc.protocol, loc.hostname, loc.pathname, this.biteList));
   }
 
   // this should be depracated/removed. Functionality copied to this.generateAvailableBites()

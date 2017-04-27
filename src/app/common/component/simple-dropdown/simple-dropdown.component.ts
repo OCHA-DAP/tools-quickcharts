@@ -20,6 +20,12 @@ export class SimpleDropdownComponent implements OnInit {
   @Input()
   items: SimpleDropdownItem[];
 
+  @Input()
+  buttonText: string;
+
+  @Input()
+  glyphiconClass: string;
+
   constructor(private logger: Logger) {
     this.selected = new EventEmitter<any>();
   }
