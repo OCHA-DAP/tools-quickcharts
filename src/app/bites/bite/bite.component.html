@@ -141,7 +141,9 @@
                   Abbreviate values
                 </label>
                 <div class="checkbox-slider pull-right">
-                  <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="abbreviate-values-{{uuid}}" checked>
+                  <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox"
+                         id="abbreviate-values-{{uuid}}" checked
+                         [(ngModel)]="settingsModel.abbreviateValues" name="abbreviateValues">
                   <label class="checkbox-slider-label" for="abbreviate-values-{{uuid}}">
                     <span class="checkbox-slider-inner"></span>
                     <span class="checkbox-slider-switch"></span>

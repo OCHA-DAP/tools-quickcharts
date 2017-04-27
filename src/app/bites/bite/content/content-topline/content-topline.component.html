@@ -15,7 +15,8 @@
 
     <div class="col-xs-12">
       <div class="value">
-        {{bite.init ? (bite.value | numberFormat:bite.numberFormat) : "XY.ZW"}}
+        {{bite.init ? (bite.value | numberFormat:bite.numberFormat:bite.unit) : "XY.ZW"}}
+        <span *ngIf="bite.unit" class="unit">{{bite.unit}}</span>
       </div>
     </div>
 
