@@ -48,6 +48,7 @@
         <span>
           <i (click)="toggleSettings(this)" class="glyphicon glyphicon-cog" [class.open]="settingsDisplay"></i>
         </span>
+        <div class="settings-menu-shadow" [class.open]="settingsDisplay" (click)="toggleSettings(this);"></div>
         <div class="settings-menu dropdown-menu"
            [class.open]="settingsDisplay"
            [class.arrow-right]="index % 3 == 0"
@@ -150,11 +151,12 @@
               </div>
               <hr/>
             </div>
-            <div class="section">
+            <div class="section" *ngIf="bite.type != classTypes.ToplineBite">
               <div class="section-title">
                 Display preference
               </div>
-              <div class="element-group" *ngIf="bite.type == classTypes.ToplineBite">
+              <!-- TODO: not implemented yet -->
+              <div class="element-group" *ngIf="false && bite.type == classTypes.ToplineBite">
                 <label >
                   Exclude 0 values
                 </label>
@@ -167,7 +169,8 @@
                   </label>
                 </div>
               </div>
-              <div class="element-group" *ngIf="bite.type == classTypes.ToplineBite">
+              <!-- TODO: not implemented yet -->
+              <div class="element-group" *ngIf="false && bite.type == classTypes.ToplineBite">
                 <label>
                   Exclude custom value
                 </label>

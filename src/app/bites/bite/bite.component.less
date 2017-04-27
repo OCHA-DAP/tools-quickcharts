@@ -91,11 +91,26 @@
     }
   }
 
+  .settings-menu-shadow {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 9999;
+    &.open {
+      display: block;
+    }
+  }
+
   .settings-menu {
     @settingsMenuBorderColor: @lightGrayColor;
     @settingsMenuHeight: @titleContainerHeight + @contentHeight + @descriptionHeight + @footerHeight;
     @settingsMenuElementMargin: 10px;
 
+    z-index: 10000;
     position: absolute;
     right: -1*@settingWidth - 10px;
     top: 0;
