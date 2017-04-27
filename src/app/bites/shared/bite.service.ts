@@ -69,11 +69,23 @@ export class BiteService {
       );
   }
 
-  exportBitesToURL(biteList: Bite[]): string {
+  private filterPathWithoutParams(path: string): string {
+    if (path) {
+      const index = path.indexOf(';');
+      return path.slice(0, index);
+    }
+    return '';
+  }
+
+  exportBitesToURL(protocol: string, hostname: string, path: string, biteList: Bite[]): string {
     biteList = biteList ? biteList : [];
 
-    let modifiedBiteList = this.unpopulateListOfBites(biteList);
-    return encodeURIComponent(JSON.stringify(modifiedBiteList));
+    const modifiedBiteList = this.unpopulateListOfBites(biteList);
+    const embeddedConfig = encodeURIComponent(JSON.stringify(modifiedBiteList));
+    const url = encodeURIComponent(this.appConfigService.get('url'));
+    const pathWithoutParams = this.filterPathWithoutParams(path);
+
+    return `${protocol}//${hostname}${pathWithoutParams};url=${url};embeddedConfig=${embeddedConfig}`;
   }
 
   /**
