@@ -21,17 +21,17 @@
   @settingWidth: 250px;
 
   .title {
-    .gothamBoldFont(@titleFontSize);
     letter-spacing: 0.01em;
+    .gothamBlackFont(@titleFontSize);
 
     padding: 0;
-    color: #333333;
     line-height: @lineHeightValue;
     height: @titleContainerHeight;
     position: relative;
-
     background-color: @extraLighterGrayColor;
+
     .title-content {
+      color: @darkGrayColor;
       padding-left: @headerFooterPadding;
       width: 80%;
       background-color: @extraLighterGrayColor;
