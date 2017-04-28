@@ -10,13 +10,10 @@ export abstract class BiteLogic {
     return this;
   }
 
-  protected populateDataTitleWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): BiteLogic {
-    this.bite.dataTitle = this.bite.ingredient.valueColumn;
-
-    if (!this.bite.displayedDataTitle) {
-      this.bite.displayedDataTitle = this.bite.dataTitle;
+  protected populateDataTitleWithHxlProxyInfo(): BiteLogic {
+    if (!this.bite.dataTitle) {
+      this.bite.dataTitle = this.bite.ingredient.valueColumn;
     }
-
     return this;
   }
 
@@ -27,7 +24,7 @@ export abstract class BiteLogic {
    * @return {BiteLogic}
    */
   public unpopulateBite(): BiteLogic {
-    this.bite.dataTitle = null;
+    // this.bite.dataTitle = null;
     return this;
   }
 

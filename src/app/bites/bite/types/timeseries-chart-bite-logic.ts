@@ -3,7 +3,7 @@ import { ChartBiteLogic } from './chart-bite-logic';
 export class TimeseriesChartBiteLogic extends ChartBiteLogic {
 
   public populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): ChartBiteLogic {
-    super.populateDataTitleWithHxlProxyInfo(hxlData, tagToTitleMap);
+    super.populateDataTitleWithHxlProxyInfo();
 
     const valColIndex = this.findHxlTagIndex(this.bite.ingredient.valueColumn, hxlData);
     const dateColIndex = this.findHxlTagIndex(this.bite.ingredient.dateColumn, hxlData);

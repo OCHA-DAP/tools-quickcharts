@@ -119,17 +119,17 @@ export class BiteListComponent implements OnInit {
       (bite: Bite) => {
         this.logger.log('Processing bite ' + JSON.stringify(bite));
 
-        if (this.availableBites) {
-          let removeIndex = -1;
-          this.availableBites.forEach((availableBite, idx) => {
-            if (availableBite.hashCode === bite.hashCode) {
-              removeIndex = idx;
-            }
-          });
-          if (removeIndex >= 0) {
-            this.availableBites.splice(removeIndex, 1);
-          }
-        }
+        // if (this.availableBites) {
+        //   let removeIndex = -1;
+        //   this.availableBites.forEach((availableBite, idx) => {
+        //     if (availableBite.hashCode === bite.hashCode) {
+        //       removeIndex = idx;
+        //     }
+        //   });
+        //   if (removeIndex >= 0) {
+        //     this.availableBites.splice(removeIndex, 1);
+        //   }
+        // }
 
         this.biteList.push(bite);
         this.logger.log('biteList ' + JSON.stringify(this.biteList));
@@ -198,14 +198,12 @@ export class BiteListComponent implements OnInit {
     const observable = new AsyncSubject<boolean>();
     if (!this.availableBites) {
       this.availableBites = [];
-      const loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
+      // const loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
       this.biteService.generateAvailableBites()
         .subscribe(
           bite => {
             this.logger.log('Available bite ' + JSON.stringify(bite));
-            if (loadedHashCodeList.indexOf(bite.hashCode) < 0) {
-              this.availableBites.push(bite);
-            }
+            this.availableBites.push(bite);
           },
           errObj => {
             this.logger.log('in ERROR...');

@@ -101,7 +101,7 @@ export class BiteComponent implements OnInit {
 }
 
 class SettingsModel {
-  private maxDescriptionLength = 20;
+  private maxDescriptionLength = 200;
   public descriptionRemaining: number;
   private descriptionStr: string;
 
