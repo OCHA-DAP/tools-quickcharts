@@ -47,6 +47,11 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
           }
         }
       },
+      grid: {
+        y: {
+          show: this.bite.showGrid
+        }
+      },
       point: {
         show: false
       }
