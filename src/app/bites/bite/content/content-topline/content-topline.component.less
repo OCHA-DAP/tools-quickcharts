@@ -1,34 +1,47 @@
+@import "../../../../../variables";
+@import "../../../../../fonts";
+
 .bite-content {
   padding: 10px 0;
+  position: absolute;
+  top: 50%;
+  transform: translate(0,-50%);
 
   &.bite-edit, &.bite-init {
     padding: 10px;
   }
 
   @titleSize: 16px;
-  @valueSize: 48px;
-  @preSize: 32px;
-  @postSize: 24px;
+  @valueSize: 56px;
+  @unitSize: 36px;
+  //@preSize: 32px;
+  //@postSize: 24px;
   @descriptionSize: 13px;
+  @topLinePrefixSuffixFontSize: 28px;
+  @topLinePadding: 20px 0;
 
-  &.bite-init{
-    @shrinkRatio: 3/4;
-    .title{
-      font-size: @titleSize*@shrinkRatio;
-    }
-    .value {
-      font-size: @valueSize*@shrinkRatio;
-      .pre-value{
-        font-size: @preSize*@shrinkRatio;
-      }
-      .post-value{
-        font-size: @postSize*@shrinkRatio;
-      }
-    }
-    .description {
-      font-size: @descriptionSize*@shrinkRatio;
-    }
+  .letter-spacing-1() {
+    letter-spacing: 0.28px;
   }
+
+  //&.bite-init{
+  //  @shrinkRatio: 3/4;
+  //  .title{
+  //    font-size: @titleSize*@shrinkRatio;
+  //  }
+  //  .value {
+  //    font-size: @valueSize*@shrinkRatio;
+  //    .pre-value{
+  //      font-size: @preSize*@shrinkRatio;
+  //    }
+  //    .post-value{
+  //      font-size: @postSize*@shrinkRatio;
+  //    }
+  //  }
+  //  .description {
+  //    font-size: @descriptionSize*@shrinkRatio;
+  //  }
+  //}
 
   .title{
     font-size: @titleSize;
@@ -36,23 +49,37 @@
   }
 
   .value {
-    //margin-top: 15px;
-    font-weight: 300;
-    font-size: @valueSize;
+    .gothamLightFont(@valueSize);
+    line-height: 1;
+    color: @darkGrayColor;
+    padding: 0;
+  }
 
-    .pre-value{
-      font-size: @preSize;
-      font-weight: 100;
-    }
-    .post-value{
-      font-size: @postSize;
-      font-weight: 100;
-    }
+  .unit {
+    .gothamLightFont(@unitSize);
+    color: @darkGrayColor;
+
   }
 
   .description {
     margin-top: 12px;
     font-size: @descriptionSize;
     font-weight: 100;
+  }
+  .prefix-value {
+    padding: @topLinePadding;
+    margin-bottom: 10px;
+    color: @darkGrayColor;
+    .gothamLightFont(@topLinePrefixSuffixFontSize);
+    .letter-spacing-1;
+    line-height: 1;
+  }
+  .suffix-value {
+    padding: @topLinePadding;
+    margin-top: 10px;
+    color: @darkGrayColor;
+    .gothamLightFont(@topLinePrefixSuffixFontSize);
+    .letter-spacing-1;
+    line-height: 1;
   }
 }

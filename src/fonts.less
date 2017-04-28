@@ -3,6 +3,7 @@
 //Fonts
 @gothamBoldFont: 'Gotham-Bold', sans-serif;
 @gothamBookFont: 'Gotham-Book', sans-serif;
+@gothamBlackFont: 'Gotham-Black', sans-serif;
 @gothamLightFont: 'Gotham-Light', sans-serif;
 @gothamMediumFont: 'Gotham-Medium', sans-serif;
 @sourceSansProFont: 'Source Sans Pro', sans-serif;
@@ -25,6 +26,11 @@
 }
 .gothamBoldFont(@size: 16px) {
   font-family: @gothamBoldFont;
+  .font-definition(400, @size);
+}
+
+.gothamBlackFont(@size: 16px) {
+  font-family: @gothamBlackFont;
   .font-definition(400, @size);
 }
 

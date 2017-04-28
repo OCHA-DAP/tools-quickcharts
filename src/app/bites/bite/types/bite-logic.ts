@@ -10,7 +10,7 @@ export abstract class BiteLogic {
     return this;
   }
 
-  public populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): BiteLogic {
+  protected populateDataTitleWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): BiteLogic {
     this.bite.dataTitle = this.bite.ingredient.valueColumn;
 
     if (!this.bite.displayedDataTitle) {
@@ -47,8 +47,9 @@ export abstract class BiteLogic {
     return this.bite;
   }
 
-  public populateHashCode(): void {
+  public populateHashCode(): BiteLogic {
     this.bite.hashCode = this.strListHash(this.buildImportantPropertiesList());
+    return this;
   }
 
   protected buildImportantPropertiesList(): string[] {
@@ -84,5 +85,40 @@ export abstract class BiteLogic {
     }
     return hash;
   };
+
+  public populateWithTitle(columnNames: string[], hxlTags: string[]): BiteLogic {
+    const availableTags = {};
+    hxlTags.forEach((v, idx) => availableTags[v] = idx);
+
+    const valueColumn = columnNames[availableTags[this.bite.ingredient.valueColumn]];
+    const groupColumn = columnNames[availableTags[this.bite.ingredient.aggregateColumn]];
+    let aggFunction = null;
+    switch (this.bite.ingredient.aggregateFunction) {
+      case 'count':
+        aggFunction = 'Row Count';
+        break;
+      case 'distinct-count':
+        aggFunction = 'Unique Values in';
+        break;
+      case 'sum':
+        aggFunction = 'Sum of';
+        break;
+      default:
+        aggFunction = 'Sum of';
+        break;
+    }
+
+    let title = aggFunction;
+    if (valueColumn && valueColumn.trim().length > 0) {
+      title += ' ' + valueColumn;
+    }
+    if (groupColumn && groupColumn.trim().length > 0) {
+      title += ' grouped by ' + groupColumn;
+    }
+    this.bite.setTitle(title);
+
+    return this;
+  }
+  public abstract populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap): BiteLogic;
 
 }

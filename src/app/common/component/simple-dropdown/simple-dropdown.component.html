@@ -1,0 +1,24 @@
+<span *ngIf="items && items.length > 0" dropdown container="body">
+  <a *ngIf="!buttonText; else dropdownButton" href dropdownToggle (click)="false">
+    <i *ngIf="!glyphiconClass; else customGlyphicon" class="glyphicon glyphicon-triangle-bottom"></i>
+    <ng-template #customGlyphicon>
+      <i class="glyphicon {{glyphiconClass}}"></i>
+    </ng-template>
+  </a>
+  <ng-template #dropdownButton >
+    <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">
+      {{buttonText}}
+    </button>
+  </ng-template>
+
+  <ul *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu">
+    <ng-template ngFor let-item="$implicit" [ngForOf]="items" let-i="index">
+
+      <li *ngIf="item.type=='header'" class="dropdown-header">{{item.displayValue}}</li>
+      <li *ngIf="item.type=='menuitem'" role="menuitem">
+        <a class="dropdown-item" href="javascript:void(0)" (click)="itemSelected(item.payload)"> {{item.displayValue}}</a>
+      </li>
+      <li *ngIf="item.type=='divider'" class="divider" role="separator"></li>
+    </ng-template>
+  </ul>
+</span>

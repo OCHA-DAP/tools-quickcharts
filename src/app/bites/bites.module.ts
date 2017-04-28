@@ -15,19 +15,26 @@ import { InlineEditComponent } from './shared/inline-edit/inline-edit.component'
 import { FormsModule } from '@angular/forms';
 import { PersistService } from './shared/persist.service';
 import { HdxPersistService } from './shared/persist/hdx-persist.service';
+import { ContentTimeseriesChartComponent } from './bite/content/content-timeseries-chart/content-timeseries-chart.component';
+import { CommonModule as MyCommonModule } from '../common/common.module';
+import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 
 @NgModule({
   imports: [
     CommonModule,
     BitesRoutingModule,
     SortablejsModule,
-    FormsModule
+    FormsModule,
+    MyCommonModule,
+    BsDropdownModule.forRoot(),
+    ModalModule.forRoot()
   ],
   exports: [
     BitesComponent,
     InlineEditComponent
   ],
-  declarations: [BitesComponent, BiteListComponent, BiteComponent, ContentToplineComponent, ContentChartComponent, InlineEditComponent],
+  declarations: [BitesComponent, BiteListComponent, BiteComponent, ContentToplineComponent, ContentChartComponent, InlineEditComponent,
+    ContentTimeseriesChartComponent],
   providers: [
     BiteService,
     RecipeService,

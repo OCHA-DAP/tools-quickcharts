@@ -1,53 +1,238 @@
 @import "../../../styles.less";
 
 .hxl-bite {
-  margin-bottom: 30px;
-  border: 1px solid #fff;
+  margin: 30px 0;
+  border: 1px solid @extraLighterGrayColor;
   border-bottom: 1px solid #eee;
+  position: relative;
+
+  &.settings-open {
+    border-color: @blueColor;
+  }
+
   @lineHeightValue: 1.42857143;
   @titleFontSize: 14px;
-  @titleContainerHeight: 2*@lineHeightValue*@titleFontSize;
+  @titleContainerHeight: 50px;//2*@lineHeightValue*@titleFontSize;
+  @headerFooterPadding: 15px;
+  @contentHeight: 255px;
+  @descriptionHeight: 50px;
+  @footerHeight: 35px;
 
-  @editModePaddingSize: 5px;
-  &.hxl-bite-edit{
-    .title {
-      padding: @editModePaddingSize;
-      height: @titleContainerHeight + 2*@editModePaddingSize;
-      transition: background-color 0.5s, padding 0.5s, height 0.5s;
-    }
-  }
-  &.hxl-bite-edit:hover, &.hxl-bite-small {
-    border: 1px solid #eee;
-    //transition: border 0.5s;
-    .title {
-      .glyphicon {
-        transition: display 0.5s;
-        display: inline;
-      }
+  @settingWidth: 250px;
 
-      transition: background-color 0.5s, padding 0.5s, height 0.5s;
-
-      background-color: #eee;
-      padding: @editModePaddingSize;
-      height: @titleContainerHeight + 2*@editModePaddingSize;
-    }
-  }
   .title {
-    .glyphicon {
-      display: none;
-    }
-    .gothamBoldFont(@titleFontSize);
     letter-spacing: 0.01em;
+    .gothamBlackFont(@titleFontSize);
 
-    margin-bottom: 10px;
-    color: #333333;
+    padding: 0;
     line-height: @lineHeightValue;
     height: @titleContainerHeight;
+    position: relative;
+    background-color: @extraLighterGrayColor;
+
+    .title-content {
+      color: @darkGrayColor;
+      padding-left: @headerFooterPadding;
+      width: 80%;
+      background-color: @extraLighterGrayColor;
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+
+    .title-menu {
+      padding-right: @headerFooterPadding;
+      text-align: right;
+      width: 20%;
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+
+    i {
+      vertical-align: middle;
+      &.glyphicon-triangle-bottom {
+        color: @blueColor;
+        font-size: 16px;
+      }
+    }
   }
   .content {
-    min-height: 201px;
+    min-height: @contentHeight;
+    padding: @headerFooterPadding;
+    position: relative;
+  }
+  .description {
+    height: @descriptionHeight;
+    padding: 0 @headerFooterPadding;
+    .description-content{
+      border-top: 1px solid @extraLighterGrayColor;
+      .sourceSansProFont(400, 12px);
+      color: @grayColor;
+    }
+  }
+  .footer {
+    height: @footerHeight;
+    padding: @headerFooterPadding/2;
+    background-color: @extraLighterGrayColor;
+    color: @grayColor;
+    .sourceSansProFont(400, 12px);
+    i {
+      vertical-align: middle;
+      font-size: 16px;
+    }
+
+    .glyphicon-cog{
+      cursor: pointer;
+      &.open {
+        color: @blueColor;
+      }
+    }
   }
 
+  .settings-menu-shadow {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 9999;
+    &.open {
+      display: block;
+    }
+  }
+
+  .settings-menu {
+    @settingsMenuBorderColor: @lightGrayColor;
+    @settingsMenuHeight: @titleContainerHeight + @contentHeight + @descriptionHeight + @footerHeight;
+    @settingsMenuElementMargin: 10px;
+
+    z-index: 10000;
+    position: absolute;
+    right: -1*@settingWidth - 10px;
+    top: 0;
+    height: @settingsMenuHeight;
+    width: @settingWidth;
+    min-width: @settingWidth;
+    border: 1px solid @settingsMenuBorderColor;
+
+    &.open {
+      display: block;
+    }
+
+    .scrollable-content {
+      padding: @headerFooterPadding;
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+    }
+
+    .section-title{
+      text-transform: uppercase;
+      .gothamLightFont(12px);
+      margin-bottom: @settingsMenuElementMargin;
+    }
+
+    .element-group {
+      margin: @settingsMenuElementMargin 0;
+      position: relative;
+    }
+
+    .almost-fifty {
+      width: 49%;
+    }
+
+    label {
+      .sourceSansProFont(400, 12px);
+      color: @darkGrayColor;
+      margin-bottom: 0;
+    }
+    input, textarea, select {
+      @inputInnerTextPadding: 5px;
+
+      background-color: @whiteColor;
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid @lightGrayColor;
+      padding: 2px @inputInnerTextPadding;
+      .sourceSansProFont(300, 14px);
+
+      &::placeholder {
+        color: @lightGrayColor;
+        font-size: 13px;
+      }
+
+      &.to-right {
+        position: absolute;
+        right: 0;
+      }
+      &:focus {
+        border-color: @blueColor;
+        outline: none;
+      }
+    }
+
+    textarea.count {
+      ~ .count-container {
+        .sourceSansProFont(300, 10px);
+        text-align: right;
+      }
+      &:focus ~ .count-container {
+        color: @blueColor;
+      }
+    }
+
+
+    hr {
+      margin: @headerFooterPadding -@headerFooterPadding;
+    }
+
+    //Arrow
+    &.arrow-right {
+      right: auto;
+      left: -1*@settingWidth - 10px;
+
+      &:after, &:before {
+        left: 100%;
+      }
+      &:after {
+        border-color: rgba(255, 255, 255, 0);
+        border-left-color: #ffffff;
+      }
+      &:before {
+        border-color: rgba(158, 158, 158, 0);
+        border-left-color: @settingsMenuBorderColor;
+      }
+    }
+
+    //arrow-left
+    &:after, &:before {
+      right: 100%;
+      top: @settingsMenuHeight - 20px;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    &:after {
+      border-color: rgba(255, 255, 255, 0);
+      border-right-color: #ffffff;
+      border-width: 10px;
+      margin-top: -10px;
+    }
+    &:before {
+      border-color: rgba(158, 158, 158, 0);
+      border-right-color: @settingsMenuBorderColor;
+      border-width: 11px;
+      margin-top: -11px;
+    }
+  }
   &.hxl-bite-small{
     .content{
       min-height: 140px;
@@ -57,4 +242,63 @@
 
 h1 {
   font-size: 100px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider*/
+.checkbox-slider {
+  position: relative; width: 30px;
+  -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.checkbox-slider-checkbox {
+  display: none;
+}
+.checkbox-slider-label {
+  display: block; overflow: hidden; cursor: pointer;
+  border: 2px solid transparent; border-radius: 28px;
+}
+.checkbox-slider-inner {
+  display: block; width: 200%; margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+}
+.checkbox-slider-inner:before, .checkbox-slider-inner:after {
+  display: block; float: left; width: 50%; height: 16px; padding: 0; line-height: 16px;
+  font-size: 16px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+  box-sizing: border-box;
+}
+.checkbox-slider-inner:before {
+  content: "";
+  padding-left: 10px;
+  background-color: #007CE0; color: #FFFFFF;
+}
+.checkbox-slider-inner:after {
+  content: "";
+  padding-right: 10px;
+  background-color: @grayColor; color: #666666;
+  text-align: right;
+}
+.checkbox-slider-switch {
+  display: block; width: 20px; margin: 0px;
+  background: #FFFFFF;
+  position: absolute; top: 0; bottom: 0;
+  right: 10px;
+  border: 2px solid @grayColor; border-radius: 28px;
+  transition: all 0.3s ease-in 0s;
+}
+.checkbox-slider-checkbox:checked + .checkbox-slider-label .checkbox-slider-inner {
+  margin-left: 0;
+}
+.checkbox-slider-checkbox:checked + .checkbox-slider-label .checkbox-slider-switch {
+  right: 0px;
+  border-color: @blueColor;
 }

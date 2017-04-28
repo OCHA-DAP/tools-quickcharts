@@ -8,10 +8,22 @@ import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { DomEventsService } from '../../shared/dom-events.service';
+import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 
 @Injectable()
 export class BiteService {
   public url: string;
+  private nextId: number = 0;
+
+  private static findBiteInArray(bite: Bite, bites: Bite[]): number {
+    let index = -1;
+    for (let i = 0; i < bites.length; i++) {
+      if (bite === bites[i]) {
+        index = i;
+      }
+    }
+    return index;
+  }
 
   constructor(private recipeService: RecipeService, private cookBookService: CookBookService,
               private logger: Logger, private persistService: PersistService,
@@ -19,6 +31,11 @@ export class BiteService {
 
   public init(url: string) {
     this.url = url;
+  }
+
+  public getNextId(): number {
+    this.nextId = this.nextId + 1;
+    return this.nextId;
   }
 
   private loadBites(): Observable<Bite[]> {
@@ -40,23 +57,28 @@ export class BiteService {
       );
   }
 
-  saveBites(biteList: Bite[]) {
-    let modifiedBiteList = this.unpopulateListOfBites(biteList);
-    this.persistService.save(modifiedBiteList)
-      .subscribe(
-        (successful: boolean) => {
-          this.logger.log('Result of bites saved: ' + successful);
-          this.domEventService.sendSavedEvent();
-        },
-        error => this.logger.error('Save failed: ' + error)
-      );
+  saveBites(biteList: Bite[]): Observable<boolean> {
+    const modifiedBiteList = this.unpopulateListOfBites(biteList);
+    return this.persistService.save(modifiedBiteList);
   }
 
-  exportBitesToURL(biteList: Bite[]): string {
+  private filterPathWithoutParams(path: string): string {
+    if (path) {
+      const index = path.indexOf(';');
+      return path.slice(0, index);
+    }
+    return '';
+  }
+
+  exportBitesToURL(protocol: string, hostname: string, path: string, biteList: Bite[]): string {
     biteList = biteList ? biteList : [];
 
-    let modifiedBiteList = this.unpopulateListOfBites(biteList);
-    return encodeURIComponent(JSON.stringify(modifiedBiteList));
+    const modifiedBiteList = this.unpopulateListOfBites(biteList);
+    const embeddedConfig = encodeURIComponent(JSON.stringify(modifiedBiteList));
+    const url = encodeURIComponent(this.appConfigService.get('url'));
+    const pathWithoutParams = this.filterPathWithoutParams(path);
+
+    return `${protocol}//${hostname}${pathWithoutParams};url=${url};embeddedConfig=${embeddedConfig}`;
   }
 
   /**
@@ -66,10 +88,15 @@ export class BiteService {
    */
   private unpopulateListOfBites(biteList: Bite[]): Bite[] {
 
-    /* This is an ugly hack to not modify the original bites by cloning them */
-    let modifiedBiteList = JSON.parse(JSON.stringify(biteList));
+    /* Do not modify the original bites by cloning them */
+    const modifiedBiteList: Bite[] = this.cloneObjectLiteral(biteList) as Bite[];
     modifiedBiteList.forEach(bite => BiteLogicFactory.createBiteLogic(bite).unpopulateBite());
     return modifiedBiteList;
+  }
+
+  private cloneObjectLiteral(obj: {}): {} {
+    /* Hack to clone an object */
+    return JSON.parse(JSON.stringify(obj));
   }
 
   generateAvailableBites(): Observable<Bite> {
@@ -87,4 +114,100 @@ export class BiteService {
   resetBite(bite: Bite): Bite {
     return this.recipeService.resetBite(bite);
   }
+
+  addBite(bite: Bite, bites: Bite[], availableBites: Bite[], replaceIndex?: number) {
+
+    // /* Removing bite from list of available bites */
+    // const index = BiteService.findBiteInArray(bite, availableBites);
+    // availableBites.splice(index, 1);
+
+    const clonedBite = this.cloneObjectLiteral(bite) as Bite;
+
+    this.initBite(clonedBite)
+      .subscribe(
+        b => {
+          if (replaceIndex == null) {
+            bites.push(b);
+          } else {
+            bites[replaceIndex] = b;
+          }
+        },
+        err => {
+          this.logger.error('Can\'t process bite due to:' + err);
+          // availableBites.push(bite);
+        }
+      );
+  }
+
+  /**
+   *
+   * @param oldBite bite to be removed from bites list and added to availableBites
+   * @param newBite bite to be added to bites list and removed from availableBites
+   * @param bites
+   * @param availableBites
+   */
+  switchBites(oldBite: Bite, newBite: Bite, bites: Bite[], availableBites: Bite[]) {
+    if (bites) {
+      const index: number = BiteService.findBiteInArray(oldBite, bites);
+      if (index >= 0) {
+        // BiteLogicFactory.createBiteLogic(oldBite).unpopulateBite();
+        // availableBites.push(oldBite);
+        this.addBite(newBite, bites, availableBites, index);
+      }
+    }
+  }
+
+  generateBiteSelectionMenu(availableBites: Bite[]): SimpleDropdownItem[] {
+    const categoryListMap: {[key: string]: SimpleDropdownItem[]} = {};
+    if (availableBites) {
+      for (let i = 0; i < availableBites.length; i++) {
+        const b = availableBites[i];
+
+        let categoryList: SimpleDropdownItem[] = categoryListMap[b.displayCategory];
+        /* Initializing category list */
+        if (!categoryList) {
+          categoryList = [
+            {
+              displayValue: b.displayCategory,
+              type: 'header',
+              payload: null
+            }
+          ];
+          categoryListMap[b.displayCategory] = categoryList;
+        }
+        categoryList.push({
+          displayValue: b.title,
+          type: 'menuitem',
+          payload: b
+        });
+      }
+
+      /* Add dividers */
+      for (const key in categoryListMap) {
+        if (categoryListMap.hasOwnProperty(key)) {
+          const categoryList = categoryListMap[key];
+          categoryList.push({
+            displayValue: null,
+            type: 'divider',
+            payload: null
+          });
+        }
+      }
+
+    }
+
+    /* Concatenate all menu items into one list */
+    let result: SimpleDropdownItem[] = [];
+    for (const key in categoryListMap) {
+      if (categoryListMap.hasOwnProperty(key)) {
+        result = result.concat(categoryListMap[key]);
+      }
+    }
+
+    /* No need for separator at the end */
+    result.pop();
+
+    return result;
+  }
+
 }

@@ -1,6 +1,46 @@
-<div *ngIf="edit" class="row list-header">
-  <div class="col-xs-12"><span class="list-header-title">Select (up to 6) visualisations</span></div>
+<div>
+  <div class="row list-header">
+    <div class="col-xs-11"><span class="list-header-title">Smart Charts</span></div>
+    <div class="col-xs-1 right-menu">
+      <simple-dropdown [glyphiconClass]="'glyphicon-open'" [items]="smartChartsMenu" (selected)="doSaveAction($event)">
+      </simple-dropdown>
+      <div class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: 'static'}"
+        tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="width: 500px;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">Embed Smart Charts</h4>
+              <button type="button" class="close pull-right" aria-label="Close" (click)="staticModal.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="text-align: left;">
+              Please copy the url below to be able to embed the smart charts:
+              <input type="text" readonly [(ngModel)]="embedUrl" style="width: 100%;" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" bsModal #savedModal="bs-modal" [config]="{backdrop: 'static'}"
+           tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="width: 500px;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title pull-left">Save Configuration</h4>
+              <button type="button" class="close pull-right" aria-label="Close" (click)="savedModal.hide()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="text-align: left;">
+              {{savedModalMessage}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
 <div
   [sortablejs]="biteList"
   [sortablejsOptions]="sortableMain"
@@ -8,27 +48,45 @@
 >
   <div
     class="col-xs-4"
-    *ngFor="let bite of biteList"
+    *ngFor="let bite of biteList; let idx = index;"
   >
-    <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [edit]="edit" (onDelete)="deleteBite($event)"></hxl-bite>
+    <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [edit]="edit"
+              [availableBites]="availableBites" [index]="idx + 1"
+              (onDelete)="deleteBite($event)" (onSwitch)="switchBite($event)">
+    </hxl-bite>
   </div>
 </div>
 
-<div *ngIf="edit">
-  <div class="row list-header">
-    <div class="col-xs-12"><span class="list-header-title">Available visualizations</span></div>
-  </div>
-  <div class="row available-bites">
-    <div class="col-xs-12" *ngIf="edit">
-      <!--<h2>Available items:</h2>-->
-      <div class="row">
-        <div
-          class="col-xs-3"
-          *ngFor="let bite of availableBites"
-        >
-          <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+
+<!--<div *ngIf="edit && hxlUnsupported === false; else hxlUnsupportedMessage">-->
+  <!--<div class="row list-header">-->
+    <!--<div class="col-xs-12"><span class="list-header-title">Available visualizations</span></div>-->
+  <!--</div>-->
+  <!--<div class="row available-bites">-->
+    <!--<div class="col-xs-12">-->
+      <!--&lt;!&ndash;<h2>Available items:</h2>&ndash;&gt;-->
+      <!--<div class="row">-->
+        <!--<div-->
+          <!--class="col-xs-3"-->
+          <!--*ngFor="let bite of availableBites"-->
+        <!--&gt;-->
+          <!--<hxl-bite [listIsFull]="listIsFull" [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</div>-->
+
+<!--<ng-template *ngIf="edit && hxlUnsupported === false" #hxlUnsupportedMessage>-->
+  <!--<div class="row list-header">-->
+    <!--<div class="col-xs-12"><span class="list-header-title">Smart Charts can not be displayed</span></div>-->
+  <!--</div>-->
+  <!--<div class="row">-->
+    <!--<div class="col-xs-12">-->
+      <!--<span>Your files contains HXL tags which are not supported by Smart Charts. If you have any questions or suggestions, or if you would like further information, please don't hesitate to contact us</span>-->
+    <!--</div>-->
+  <!--</div>-->
+<!--</ng-template>-->
+
+
+
