@@ -79,7 +79,11 @@ export class BiteService {
     const path = this.appConfigService.get('loc_pathname');
 
     const modifiedBiteList = this.unpopulateListOfBites(biteList);
-    const embeddedConfig = encodeURIComponent(JSON.stringify(modifiedBiteList));
+    let embeddedConfig = encodeURIComponent(JSON.stringify(modifiedBiteList));
+
+    /* Dealing with parenthesis which are not encoded by encodeURIComponent */
+    embeddedConfig = embeddedConfig.replace(/\(/g, '%28').replace(/\)/g, '%29');
+
     const url = encodeURIComponent(this.appConfigService.get('url'));
     const pathWithoutParams = this.filterPathWithoutParams(path);
 
