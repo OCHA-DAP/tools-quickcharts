@@ -36,10 +36,19 @@ export class AnalyticsService {
 
   public trackView() {
     const category = 'hxl preview';
-    let url = (window.location !== window.parent.location)
-      ? document.referrer
-      : document.location.href;
-    let pageTitle = window.parent ? window.parent.document.title : window.document.title;
+    let url: string;
+    let pageTitle: string;
+    try {
+      url = (window.location !== window.parent.location)
+        ? document.referrer
+        : document.location.href;
+      pageTitle = window.parent ? window.parent.document.title : window.document.title;
+    } catch (Exception) {
+      /* we don't have access to the parent due to cross-origin */
+      url = document.referrer;
+      pageTitle = window.document.title;
+      this.logger.log(`in security error because of cross origin - url is ${url} and pageTitle is ${pageTitle}`);
+    }
     let gaData = {
       type: 'pageview',
       category: category,
