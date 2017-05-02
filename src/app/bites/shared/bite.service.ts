@@ -70,15 +70,29 @@ export class BiteService {
     return '';
   }
 
-  exportBitesToURL(protocol: string, hostname: string, path: string, biteList: Bite[]): string {
+  exportBitesToURL(biteList: Bite[], isSingleWidgetMode?: boolean): string {
     biteList = biteList ? biteList : [];
 
+    const protocol = this.appConfigService.get('loc_protocol');
+    const hostname = this.appConfigService.get('loc_hostname');
+    let port = this.appConfigService.get('loc_port');
+    const path = this.appConfigService.get('loc_pathname');
+
     const modifiedBiteList = this.unpopulateListOfBites(biteList);
-    const embeddedConfig = encodeURIComponent(JSON.stringify(modifiedBiteList));
+    let embeddedConfig = encodeURIComponent(JSON.stringify(modifiedBiteList));
+
+    /* Dealing with parenthesis which are not encoded by encodeURIComponent */
+    embeddedConfig = embeddedConfig.replace(/\(/g, '%28').replace(/\)/g, '%29');
+
     const url = encodeURIComponent(this.appConfigService.get('url'));
     const pathWithoutParams = this.filterPathWithoutParams(path);
 
-    return `${protocol}//${hostname}${pathWithoutParams};url=${url};embeddedConfig=${embeddedConfig}`;
+    const singleWidgetMode = isSingleWidgetMode ? ';singleWidgetMode=true' : '';
+
+    port = port ? ':' + port : '';
+
+
+    return `${protocol}//${hostname}${port}${pathWithoutParams};url=${url};embeddedConfig=${embeddedConfig}${singleWidgetMode}`;
   }
 
   /**

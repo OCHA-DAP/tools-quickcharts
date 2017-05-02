@@ -1,42 +1,18 @@
 <div>
-  <div class="row list-header">
+  <div class="row list-header" *ngIf="!singleWidgetMode">
     <div class="col-xs-11"><span class="list-header-title">Smart Charts</span></div>
     <div class="col-xs-1 right-menu">
       <simple-dropdown [glyphiconClass]="'glyphicon-open'" [items]="smartChartsMenu" (selected)="doSaveAction($event)">
       </simple-dropdown>
-      <div class="modal fade" bsModal #staticModal="bs-modal" [config]="{backdrop: 'static'}"
-        tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm" style="width: 500px;">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title pull-left">Embed Smart Charts</h4>
-              <button type="button" class="close pull-right" aria-label="Close" (click)="staticModal.hide()">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body" style="text-align: left;">
-              Please copy the url below to be able to embed the smart charts:
-              <input type="text" readonly [(ngModel)]="embedUrl" style="width: 100%;" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" bsModal #savedModal="bs-modal" [config]="{backdrop: 'static'}"
-           tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm" style="width: 500px;">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title pull-left">Save Configuration</h4>
-              <button type="button" class="close pull-right" aria-label="Close" (click)="savedModal.hide()">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body" style="text-align: left;">
-              {{savedModalMessage}}
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <simple-modal [title]="'Embed Smart Charts'" #embedLinkModal>
+        Please copy the url below to be able to embed the smart charts:
+        <input type="text" readonly [(ngModel)]="embedUrl" style="width: 100%;" />
+      </simple-modal>
+      <simple-modal [title]="'Save Configuration'" #savedModal>
+        {{savedModalMessage}}
+      </simple-modal>
+
     </div>
   </div>
 </div>
@@ -47,12 +23,13 @@
   class="row"
 >
   <div
-    class="col-xs-4"
+    class="col-xs-12 col-sm-4"
     *ngFor="let bite of biteList; let idx = index;"
   >
     <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [edit]="edit"
               [availableBites]="availableBites" [index]="idx + 1"
-              (onDelete)="deleteBite($event)" (onSwitch)="switchBite($event)">
+              (onDelete)="deleteBite($event)" (onSwitch)="switchBite($event)"
+              (onEmbedUrlCreate)="singleEmbedUrlCreated($event)">
     </hxl-bite>
   </div>
 </div>

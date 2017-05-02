@@ -40,6 +40,9 @@ export class BiteComponent implements OnInit {
   @Output()
   onSwitch = new EventEmitter<{oldBite: Bite, newBite: Bite}>();
 
+  @Output()
+  onEmbedUrlCreate = new EventEmitter<string>();
+
   @ViewChild(ContentChartComponent)
   private chartComponent: ContentChartComponent;
 
@@ -98,10 +101,15 @@ export class BiteComponent implements OnInit {
   settingsModelChanged(model) {
     this.logger.log(JSON.stringify(model));
   }
+
+  createEmbedLink() {
+    const embedUrl = this.biteService.exportBitesToURL([this.bite], true);
+    this.onEmbedUrlCreate.emit(embedUrl);
+  }
 }
 
 class SettingsModel {
-  private maxDescriptionLength = 20;
+  private maxDescriptionLength = 200;
   public descriptionRemaining: number;
   private descriptionStr: string;
 
