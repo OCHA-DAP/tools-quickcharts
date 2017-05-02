@@ -65,7 +65,7 @@
               </div>
               <hr/>
             </div>
-            <div class="section" *ngIf="bite.type != classTypes.ToplineBite">
+            <div class="section" *ngIf="(bite.type != classTypes.ToplineBite) && (!bite.pieChart)">
               <div class="section-title">
                 Axis & Grid
               </div>
@@ -105,7 +105,8 @@
                 </label>
                 <div>
                   <input type="text" placeholder="X Axis Label"
-                         [(ngModel)]="settingsModel.xAxisLabel" name="xAxisLabel">
+                         [(ngModel)]="settingsModel.xAxisLabel"
+                         name="xAxisLabel">
                 </div>
               </div>
               <hr/>

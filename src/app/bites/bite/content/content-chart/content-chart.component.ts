@@ -17,8 +17,6 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   elementRef: ElementRef;
   maxNumberOfValues = 7;
 
-  pieThreshold = 4;
-
   constructor(elementRef: ElementRef) {
     this.elementRef = elementRef;
   }
@@ -33,7 +31,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   }
 
   protected overwriteXAxisLabel() {
-    if (this.bite.dataTitle && this.bite.values.length > this.pieThreshold) {
+    if (this.bite.dataTitle && !this.bite.pieChart) {
       this.bite.values[0] = this.bite.dataTitle;
     }
   }
@@ -74,7 +72,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     const values = this.bite.values;
     const categories = this.bite.categories;
 
-    if (values.length > (this.pieThreshold + 1)) { // first value is a label
+    if (!this.bite.pieChart) {
       config.data = {
         columns: [values],
         type: 'bar'
@@ -90,6 +88,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         columns: pieValues,
         type: 'pie'
       };
+      config.axis.rotated = false; // we don't allow it for pie
       config.tooltip = {
         format: {
           // title: function (d) { return 'Data ' + d; },

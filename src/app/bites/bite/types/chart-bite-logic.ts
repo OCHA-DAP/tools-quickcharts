@@ -31,6 +31,8 @@ export class ChartBiteLogic extends BiteLogic {
         this.bite.categories.push(hxlData[i][aggColIndex]);
       }
 
+      this.bite.pieChart = !(this.bite.values.length > 5);
+
       this.bite.init = true;
     } else {
       throw `${this.bite.ingredient.valueColumn} or ${this.bite.ingredient.aggregateColumn}`
