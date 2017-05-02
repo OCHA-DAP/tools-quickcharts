@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-declare let window;
+// declare let window;
 
 @Injectable()
 export class DomEventsService {
@@ -16,9 +16,9 @@ export class DomEventsService {
   }
 
   public sendDomEventOnIframeParent(eventName) {
-    if (window.parent) {
-      window.parent.document.body.dispatchEvent(new CustomEvent(eventName, {'detail': ''}));
-    }
+    // if (window.parent) {
+    //   window.parent.document.body.dispatchEvent(new CustomEvent(eventName, {'detail': ''}));
+    // }
   }
 
 }

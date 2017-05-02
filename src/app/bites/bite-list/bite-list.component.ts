@@ -6,9 +6,7 @@ import {Logger} from 'angular2-logger/core';
 import {AppConfigService} from '../../shared/app-config.service';
 import { AsyncSubject, Observable } from 'rxjs';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
-import { ModalDirective } from 'ngx-bootstrap';
-
-declare const window: any;
+import { SimpleModalComponent } from '../../common/component/simple-modal/simple-modal.component';
 
 @Component({
   selector: 'hxl-bite-list',
@@ -36,12 +34,16 @@ export class BiteListComponent implements OnInit {
   };
 
   @ViewChild('savedModal')
-  private savedModal: ModalDirective;
+  private savedModal: SimpleModalComponent;
   private savedModalMessage: string;
 
-  @ViewChild('staticModal')
-  private staticModal;
+  @ViewChild('embedLinkModal')
+  private embedLinkModal: SimpleModalComponent;
+
   private embedUrl;
+
+  /* Used for when only one widget is embedded in a page */
+  singleWidgetMode: boolean;
 
   // get displayableAvailableBites(): {displayValue: string, payload: Bite}[] {
   //   return this.availableBites.map( b => {
@@ -97,6 +99,8 @@ export class BiteListComponent implements OnInit {
         }
       );
     }
+
+    this.singleWidgetMode = this.appConfig.get('singleWidgetMode') === 'true';
   }
 
   // Deprecated in HXL Preview v2
@@ -224,13 +228,17 @@ export class BiteListComponent implements OnInit {
     return observable;
   }
 
+  singleEmbedUrlCreated(event: string) {
+    this.embedUrl = event;
+    this.embedLinkModal.show();
+  }
+
   doSaveAction(action: string) {
-    const loc = window.location;
     this.logger.log(action + ' - ' +
-      this.biteService.exportBitesToURL(loc.protocol, loc.hostname, loc.pathname, this.biteList));
+      this.biteService.exportBitesToURL(this.biteList));
     if (action === 'embed') {
-      this.embedUrl = this.biteService.exportBitesToURL(loc.protocol, loc.hostname, loc.pathname, this.biteList);
-      this.staticModal.show();
+      this.embedUrl = this.biteService.exportBitesToURL(this.biteList);
+      this.embedLinkModal.show();
     } else if (action === 'save-views') {
       this.biteService.saveBites(this.biteList).subscribe(
         (successful: boolean) => {

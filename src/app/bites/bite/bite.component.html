@@ -40,8 +40,10 @@
   </div>
   <div class="footer">
     <div class="pull-left">
-      <i class="glyphicon glyphicon-open"></i>
-      Export
+      <a href="javascript:void(0)" (click)="createEmbedLink()">
+        <i class="glyphicon glyphicon-open"></i>
+        Export
+      </a>
     </div>
     <form #settingsForm="ngForm" (ngModelChange)="settingsModelChanged($event)">
       <div class="pull-right">
