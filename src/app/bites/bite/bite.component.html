@@ -156,7 +156,7 @@
               </div>
               <hr/>
             </div>
-            <div class="section" *ngIf="bite.type != classTypes.ToplineBite">
+            <div class="section">
               <div class="section-title">
                 Display preference
               </div>
@@ -181,9 +181,9 @@
                 </label>
                 <input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">
               </div>
-              <div class="element-group" *ngIf="bite.type != classTypes.ToplineBite">
+              <div class="element-group">
                 <label>
-                  Chart description
+                  Description
                 </label>
                 <textarea
                   [(ngModel)]="settingsModel.description"
