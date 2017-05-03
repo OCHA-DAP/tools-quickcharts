@@ -66,7 +66,10 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         }
       },
       pie: {},
-      tooltip: {}
+      tooltip: {},
+      color: {
+        pattern: ['#1ebfb3', '#0077ce', '#f2645a', '#9C27B0']
+      }
     };
 
     const values = this.bite.values;
