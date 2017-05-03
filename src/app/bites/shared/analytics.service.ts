@@ -18,17 +18,21 @@ export class AnalyticsService {
 
   public init() {
     try {
-      let key = this.appConfig.get('googleAnalyticsKey');
-      ga('create', key, 'auto');
-      this.gaInitialised = true;
+      const key = this.appConfig.get('googleAnalyticsKey');
+      if (key) {
+        ga('create', key, 'auto');
+        this.gaInitialised = true;
+      }
     } catch (err) {
       this.logger.info('Can\'t initialize Google Analytics: ' + err);
     }
 
     try {
-      let key = this.appConfig.get('mixpanelKey');
-      mixpanel.init(key);
-      this.mpInitialised = true;
+      const key = this.appConfig.get('mixpanelKey');
+      if (key) {
+        mixpanel.init(key);
+        this.mpInitialised = true;
+      }
     } catch (err) {
       this.logger.info('Can\'t initialize Mixpanel: ' + err);
     }
