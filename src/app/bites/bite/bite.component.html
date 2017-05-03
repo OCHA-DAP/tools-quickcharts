@@ -65,11 +65,11 @@
               </div>
               <hr/>
             </div>
-            <div class="section" *ngIf="bite.type != classTypes.ToplineBite">
+            <div class="section" *ngIf="(bite.type != classTypes.ToplineBite) && (!bite.pieChart)">
               <div class="section-title">
                 Axis & Grid
               </div>
-              <div class="element-group">
+              <div class="element-group" *ngIf="bite.type == classTypes.ChartBite">
                 <label >
                   Reverse Axis
                 </label>
@@ -105,7 +105,8 @@
                 </label>
                 <div>
                   <input type="text" placeholder="X Axis Label"
-                         [(ngModel)]="settingsModel.xAxisLabel" name="xAxisLabel">
+                         [(ngModel)]="settingsModel.xAxisLabel"
+                         name="xAxisLabel">
                 </div>
               </div>
               <hr/>
@@ -155,7 +156,7 @@
               </div>
               <hr/>
             </div>
-            <div class="section" *ngIf="bite.type != classTypes.ToplineBite">
+            <div class="section">
               <div class="section-title">
                 Display preference
               </div>
@@ -180,9 +181,9 @@
                 </label>
                 <input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">
               </div>
-              <div class="element-group" *ngIf="bite.type != classTypes.ToplineBite">
+              <div class="element-group">
                 <label>
-                  Chart description
+                  Description
                 </label>
                 <textarea
                   [(ngModel)]="settingsModel.description"
