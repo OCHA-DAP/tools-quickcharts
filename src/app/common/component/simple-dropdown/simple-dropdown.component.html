@@ -16,7 +16,10 @@
 
       <li *ngIf="item.type=='header'" class="dropdown-header">{{item.displayValue}}</li>
       <li *ngIf="item.type=='menuitem'" role="menuitem">
-        <a class="dropdown-item" href="javascript:void(0)" (click)="itemSelected(item.payload)"> {{item.displayValue}}</a>
+        <a class="dropdown-item" href="javascript:void(0)" (click)="itemSelected(item.payload)"
+           title="{{item.displayValue}}">
+          {{truncate(item.displayValue)}}
+        </a>
       </li>
       <li *ngIf="item.type=='divider'" class="divider" role="separator"></li>
     </ng-template>
