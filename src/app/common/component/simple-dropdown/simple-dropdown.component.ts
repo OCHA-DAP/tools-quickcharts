@@ -38,4 +38,9 @@ export class SimpleDropdownComponent implements OnInit {
     return false;
   }
 
+  truncate(value: string): string {
+    const maxLength = 40;
+    return value.slice(0, maxLength) + (value.length > maxLength ? '...' : '');
+  }
+
 }

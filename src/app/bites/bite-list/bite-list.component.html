@@ -5,16 +5,17 @@
       <simple-dropdown [glyphiconClass]="'glyphicon-open'" [items]="smartChartsMenu" (selected)="doSaveAction($event)">
       </simple-dropdown>
 
-      <simple-modal [title]="'Embed Smart Charts'" #embedLinkModal>
-        Please copy the url below to be able to embed the smart charts:
-        <input type="text" readonly [(ngModel)]="embedUrl" style="width: 100%;" />
-      </simple-modal>
       <simple-modal [title]="'Save Configuration'" #savedModal>
         {{savedModalMessage}}
       </simple-modal>
 
     </div>
   </div>
+  <simple-modal [title]="'Embed Smart Charts'" #embedLinkModal>
+    Please copy the url below to be able to embed the smart charts.
+    <a href="{{embedUrl}}" target="_blank">See here</a>:
+    <input type="text" readonly [(ngModel)]="embedUrl" style="width: 100%;" />
+  </simple-modal>
 </div>
 
 <div
@@ -23,7 +24,8 @@
   class="row"
 >
   <div
-    class="col-xs-12 col-sm-4"
+    class="col-xs-12"
+    [class.col-md-4]="!singleWidgetMode"
     *ngFor="let bite of biteList; let idx = index;"
   >
     <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [edit]="edit"

@@ -10,6 +10,7 @@ export class ChartBite extends Bite {
 
   public swapAxis = true;
   public showGrid = true;
+  public pieChart = false;
 
   static type(): string {
     return 'chart';
