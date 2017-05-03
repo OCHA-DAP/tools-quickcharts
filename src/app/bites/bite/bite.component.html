@@ -5,7 +5,7 @@
   [class.settings-open]="settingsDisplay"
 >
   <div class="title">
-    <div class="title-content">{{bite.title}}</div>
+    <div class="title-content" title="{{bite.title}}">{{bite.title}}</div>
 
     <div class="title-menu">
       <simple-dropdown [items]="displayableAvailableBites" (selected)="switchBite($event)"></simple-dropdown>

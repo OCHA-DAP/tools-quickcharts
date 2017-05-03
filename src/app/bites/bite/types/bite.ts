@@ -39,7 +39,8 @@ export abstract class Bite {
   }
 
   public setTitle(title: string) {
-    this.title = title.slice(0, 35) + (title.length > 35 ? '...' : '');
+    // this.title = title.slice(0, 35) + (title.length > 35 ? '...' : '');
+    this.title = title;
   }
 
 }
