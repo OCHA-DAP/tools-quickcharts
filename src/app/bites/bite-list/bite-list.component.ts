@@ -40,6 +40,9 @@ export class BiteListComponent implements OnInit {
   @ViewChild('embedLinkModal')
   private embedLinkModal: SimpleModalComponent;
 
+  @ViewChild('embedLinkModalInput')
+  private embedLinkModalInput: HTMLInputElement;
+
   private embedUrl;
 
   /* Used for when only one widget is embedded in a page */
