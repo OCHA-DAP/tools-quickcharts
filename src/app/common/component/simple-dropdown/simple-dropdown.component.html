@@ -1,5 +1,6 @@
 <span *ngIf="items && items.length > 0" dropdown container="body">
-  <a *ngIf="!buttonText; else dropdownButton" href dropdownToggle (click)="false">
+  <a *ngIf="!buttonText; else dropdownButton" href dropdownToggle (click)="false" class="hdx-dropdown-link">
+    <span *ngIf="linkText">{{linkText}}</span>
     <i *ngIf="!glyphiconClass; else customGlyphicon" class="glyphicon glyphicon-triangle-bottom"></i>
     <ng-template #customGlyphicon>
       <i class="glyphicon {{glyphiconClass}}"></i>

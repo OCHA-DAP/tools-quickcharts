@@ -24,6 +24,9 @@ export class SimpleDropdownComponent implements OnInit {
   buttonText: string;
 
   @Input()
+  linkText: string;
+
+  @Input()
   glyphiconClass: string;
 
   constructor(private logger: Logger) {

@@ -1,8 +1,9 @@
 <div>
   <div class="row list-header" *ngIf="!singleWidgetMode">
-    <div class="col-xs-11"><span class="list-header-title">Smart Charts</span></div>
-    <div class="col-xs-1 right-menu">
-      <simple-dropdown [glyphiconClass]="'glyphicon-open'" [items]="smartChartsMenu" (selected)="doSaveAction($event)">
+    <div class="col-xs-10"><span class="list-header-title">Smart Charts</span></div>
+    <div class="col-xs-2 right-menu">
+      <simple-dropdown [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="smartChartsMenu"
+                       [linkText]="'More actions'" (selected)="doSaveAction($event)">
       </simple-dropdown>
 
       <simple-modal [title]="'Save Configuration'" #savedModal>
