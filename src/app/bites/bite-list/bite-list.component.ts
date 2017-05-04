@@ -240,7 +240,7 @@ export class BiteListComponent implements OnInit {
     this.logger.log(action + ' - ' +
       this.biteService.exportBitesToURL(this.biteList));
     if (action === 'embed') {
-      this.embedUrl = this.biteService.exportBitesToURL(this.biteList);
+      this.embedUrl = this.generateIframeUrl(this.biteService.exportBitesToURL(this.biteList));
       this.embedLinkModal.show();
     } else if (action === 'save-views') {
       this.biteService.saveBites(this.biteList).subscribe(
@@ -255,6 +255,11 @@ export class BiteListComponent implements OnInit {
         }
       );
     }
+  }
+
+  generateIframeUrl(src: string) {
+    const result = '<iframe  src="' + src + '" style="border:none; width:100%; min-height:500px"></iframe>';
+    return result;
   }
 
   // this should be depracated/removed. Functionality copied to this.generateAvailableBites()
