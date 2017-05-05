@@ -133,22 +133,94 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
 
   render(): void {
     const c3_chart = c3.generate(this.generateOptions());
-    d3.select(this.elementRef.nativeElement.children[0]).select('svg')
-      .on('wheel.zoom', function() {
-        const delta = this.bite.swapAxis ? d3.event.wheelDeltaY : d3.event.wheelDeltaX;
-        c3_chart.internal.brush.extent([0, this.maxNumberOfValues]).update();
-        let leftMargin = c3_chart.internal.brush.leftMargin;
-        leftMargin = leftMargin - delta / 100;
-        if (leftMargin < 0) {
-          leftMargin = 0;
+    // Reasonable defaults
+    const PIXEL_STEP  = 10;
+    const LINE_HEIGHT = 40;
+    const PAGE_HEIGHT = 800;
+
+    function normalizeWheel(/*object*/ event) /*object*/ {
+      let sX = 0, sY = 0,       // spinX, spinY
+        pX = 0, pY = 0;       // pixelX, pixelY
+
+      // Legacy
+      if ('detail'      in event) { sY = event.detail; }
+      if ('wheelDelta'  in event) { sY = -event.wheelDelta / 120; }
+      if ('wheelDeltaY' in event) { sY = -event.wheelDeltaY / 120; }
+      if ('wheelDeltaX' in event) { sX = -event.wheelDeltaX / 120; }
+
+      // side scrolling on FF with DOMMouseScroll
+      if ( 'axis' in event && event.axis === event.HORIZONTAL_AXIS ) {
+        sX = sY;
+        sY = 0;
+      }
+
+      pX = sX * PIXEL_STEP;
+      pY = sY * PIXEL_STEP;
+
+      if ('deltaY' in event) { pY = event.deltaY; }
+      if ('deltaX' in event) { pX = event.deltaX; }
+
+      if ((pX || pY) && event.deltaMode) {
+        if (event.deltaMode == 1) {          // delta in LINE units
+          pX *= LINE_HEIGHT;
+          pY *= LINE_HEIGHT;
+        } else {                             // delta in PAGE units
+          pX *= PAGE_HEIGHT;
+          pY *= PAGE_HEIGHT;
         }
-        if (leftMargin + this.maxNumberOfValues > this.bite.values.length) {
-          leftMargin = this.bite.values.length - this.maxNumberOfValues;
-        }
-        c3_chart.internal.brush.leftMargin = leftMargin;
-        c3_chart.internal.brush.extent([leftMargin, leftMargin + this.maxNumberOfValues]);
+      }
+
+      // Fall-back if spin cannot be determined
+      if (pX && !sX) { sX = (pX < 1) ? -1 : 1; }
+      if (pY && !sY) { sY = (pY < 1) ? -1 : 1; }
+
+      return { spinX  : sX,
+        spinY  : sY,
+        pixelX : pX,
+        pixelY : pY };
+    }
+
+    const zoomHandler = function() {
+      const event = d3.event;
+      event.preventDefault();
+      event.stopPropagation();
+      const eventDelta = normalizeWheel(event);
+
+      const delta = -1*(this.bite.swapAxis ? eventDelta.pixelY : eventDelta.pixelX);
+
+      if (!c3_chart.internal.brush.leftMargin) {
+        c3_chart.internal.brush.leftMargin = 0;
+        c3_chart.internal.brush.leftMarginRedraw = 0;
+      }
+      // c3_chart.internal.brush.extent([0, this.maxNumberOfValues]).update();
+      let leftMargin = c3_chart.internal.brush.leftMargin;
+      leftMargin = leftMargin - delta / 10;
+      if (leftMargin < 0) {
+        leftMargin = 0;
+      }
+      if (leftMargin + this.maxNumberOfValues > this.bite.values.length) {
+        leftMargin = this.bite.values.length - this.maxNumberOfValues;
+      }
+      c3_chart.internal.brush.leftMargin = leftMargin;
+      c3_chart.internal.brush.extent([leftMargin, leftMargin + this.maxNumberOfValues]);
+      let dif = c3_chart.internal.brush.leftMarginRedraw - c3_chart.internal.brush.leftMargin;
+      if (dif < 0) {
+        dif *= -1;
+      }
+      if (dif > 0.1) {
         c3_chart.internal.redrawForBrush();
-      }.bind(this)) ;
+        c3_chart.internal.brush.leftMarginRedraw = c3_chart.internal.brush.leftMargin;
+        // console.log('Redraw for delta: ' + delta / 10);
+      } else {
+        // console.log('Skipped redraw');
+      }
+
+    };
+
+    d3.select(this.elementRef.nativeElement.children[0]).select('svg')
+      .on('wheel.zoom', zoomHandler.bind(this))
+      .on('mousewheel.zoom', zoomHandler.bind(this))
+      .on('DOMMouseScroll.zoom', zoomHandler.bind(this));
     if (this.bite.values.length > this.maxNumberOfValues) {
       c3_chart.internal.brush.leftMargin = 0;
       c3_chart.internal.brush.extent([0, this.maxNumberOfValues]).update();
