@@ -10,5 +10,5 @@ export const environment = {
   googleAnalyticsKey: 'UA-48221887-3',
   prodMixpanelKey: '99035923ee0a67880e6c05ab92b6cbc0', // actually hdx-server project not prod
   testMixpanelKey: '875bfe50f9cb981f4e2817832c83c165',
-  prodHostname: '172.17.42.1' // used by analytics code to decide which key to use
+  prodHostname: 'data.humdata.org' // used by analytics code to decide which key to use
 };
