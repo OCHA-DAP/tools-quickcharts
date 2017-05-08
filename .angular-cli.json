@@ -13,6 +13,7 @@
       "main": "main.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
+      "testTsconfig": "tsconfig.spec.json",
       "prefix": "hxl",
       "mobile": false,
       "styles": [
