@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
 import { AppConfigService } from '../../shared/app-config.service';
-declare var ga: any;
-declare var mixpanel: any;
+declare const ga: any;
+declare const mixpanel: any;
 
 /**
  * Service that will try to abstract sending the analytics events
@@ -28,7 +28,8 @@ export class AnalyticsService {
     }
 
     try {
-      const key = this.appConfig.get('mixpanelKey');
+      const key = this.appConfig.thisIsProd() ?
+        this.appConfig.get('prodMixpanelKey') : this.appConfig.get('testMixpanelKey');
       if (key) {
         mixpanel.init(key);
         this.mpInitialised = true;
@@ -40,6 +41,24 @@ export class AnalyticsService {
 
   public trackView() {
     const category = 'hxl preview';
+    const {url, pageTitle} = this.extractPageInfo();
+    const gaData = {
+      type: 'pageview',
+      category: category,
+      action: 'view',
+      label: pageTitle || ''
+    };
+    const mpData = {
+      category: category,
+      metadata: {
+        url: url,
+        pageTitle: pageTitle,
+      }
+    };
+    this.send(gaData, mpData);
+  }
+
+  private extractPageInfo() {
     let url: string;
     let pageTitle: string;
     try {
@@ -53,20 +72,7 @@ export class AnalyticsService {
       pageTitle = window.document.title;
       this.logger.log(`in security error because of cross origin - url is ${url} and pageTitle is ${pageTitle}`);
     }
-    let gaData = {
-      type: 'pageview',
-      category: category,
-      action: 'view',
-      label: pageTitle || ''
-    };
-    let mpData = {
-      category: category,
-      metadata: {
-        url: url,
-        pageTitle: pageTitle,
-      }
-    };
-    this.send(gaData, mpData);
+    return {url, pageTitle};
   }
 
   public trackSave() {
@@ -74,16 +80,13 @@ export class AnalyticsService {
   }
 
   public trackEventCategory(category: string) {
-    let url = (window.location !== window.parent.location)
-      ? document.referrer
-      : document.location.href;
-    let pageTitle = window.parent ? window.parent.document.title : window.document.title;
-    let gaData = {
+    const {url, pageTitle} = this.extractPageInfo();
+    const gaData = {
       type: 'event',
       category: category,
       label: pageTitle || ''
     };
-    let mpData = {
+    const mpData = {
       category: category,
       metadata: {
         url: url,

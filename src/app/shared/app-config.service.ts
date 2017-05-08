@@ -36,4 +36,8 @@ export class AppConfigService {
     }
   }
 
+  public thisIsProd() {
+    return this.get('loc_hostname') === this.get('prodHostname');
+  }
+
 }
