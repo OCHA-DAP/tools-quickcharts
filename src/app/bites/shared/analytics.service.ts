@@ -14,13 +14,16 @@ export class AnalyticsService {
   private gaInitialised = false;
   private mpInitialised = false;
 
+  public gaToken: string;
+  public mpToken: string;
+
   constructor(private logger: Logger, private appConfig: AppConfigService) { }
 
   public init() {
     try {
-      const key = this.appConfig.get('googleAnalyticsKey');
-      if (key) {
-        ga('create', key, 'auto');
+      this.gaToken = this.appConfig.get('googleAnalyticsKey');
+      if (this.gaToken) {
+        ga('create', this.gaToken, 'auto');
         this.gaInitialised = true;
       }
     } catch (err) {
@@ -28,15 +31,19 @@ export class AnalyticsService {
     }
 
     try {
-      const key = this.appConfig.thisIsProd() ?
+      this.mpToken = this.appConfig.thisIsProd() ?
         this.appConfig.get('prodMixpanelKey') : this.appConfig.get('testMixpanelKey');
-      if (key) {
-        mixpanel.init(key);
+      if (this.mpToken) {
+        mixpanel.init(this.mpToken);
         this.mpInitialised = true;
       }
     } catch (err) {
       this.logger.info('Can\'t initialize Mixpanel: ' + err);
     }
+  }
+
+  public isInitialized(): boolean {
+    return this.gaInitialised && this.mpInitialised;
   }
 
   public trackView() {

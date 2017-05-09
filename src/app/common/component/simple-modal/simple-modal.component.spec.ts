@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SimpleModalComponent } from './simple-modal.component';
+import { ModalModule } from 'ngx-bootstrap';
 
 describe('SimpleModalComponent', () => {
   let component: SimpleModalComponent;
@@ -8,7 +9,8 @@ describe('SimpleModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SimpleModalComponent ]
+      declarations: [ SimpleModalComponent ],
+      imports: [ModalModule.forRoot()]
     })
     .compileComponents();
   }));

@@ -15,4 +15,30 @@ describe('Service: Analytics', () => {
   it('should ...', inject([AnalyticsService], (service: AnalyticsService) => {
     expect(service).toBeTruthy();
   }));
+
+  it('should use correct tokens', inject([AnalyticsService, AppConfigService],
+    (service: AnalyticsService, configService: AppConfigService) => {
+
+    configService.init({
+      googleAnalyticsKey: 'ga-token',
+      prodMixpanelKey: 'mp-prod-token',
+      testMixpanelKey: 'mp-test-token',
+      prodHostname: 'data.humdata.org'
+    });
+
+    service.init();
+    expect(service.mpToken).toBe('mp-test-token');
+
+    configService.init({
+      googleAnalyticsKey: 'ga-token',
+      prodMixpanelKey: 'mp-prod-token',
+      testMixpanelKey: 'mp-test-token',
+      prodHostname: 'localhost'
+    });
+
+      service.init();
+      expect(service.mpToken).toBe('mp-prod-token');
+
+  }));
+
 });
