@@ -44,6 +44,7 @@ export class BiteListComponent implements OnInit {
   private embedLinkModalInput: HTMLInputElement;
 
   private embedUrl;
+  private iframeUrl;
 
   /* Used for when only one widget is embedded in a page */
   singleWidgetMode: boolean;
@@ -233,14 +234,16 @@ export class BiteListComponent implements OnInit {
 
   singleEmbedUrlCreated(event: string) {
     this.embedUrl = event;
+    this.iframeUrl = this.generateIframeUrl(this.embedUrl);
     this.embedLinkModal.show();
   }
 
   doSaveAction(action: string) {
-    this.logger.log(action + ' - ' +
-      this.biteService.exportBitesToURL(this.biteList));
+    // this.logger.log(action + ' - ' +
+    //   this.biteService.exportBitesToURL(this.biteList));
     if (action === 'embed') {
-      this.embedUrl = this.generateIframeUrl(this.biteService.exportBitesToURL(this.biteList));
+      this.embedUrl = this.biteService.exportBitesToURL(this.biteList);
+      this.iframeUrl = this.generateIframeUrl(this.embedUrl);
       this.embedLinkModal.show();
     } else if (action === 'save-views') {
       this.biteService.saveBites(this.biteList).subscribe(
