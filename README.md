@@ -1,4 +1,5 @@
-# HXL Bites
+[![Build Status](https://travis-ci.org/OCHA-DAP/hdx-hxl-preview.svg?branch=master)](https://travis-ci.org/OCHA-DAP/hdx-hxl-preview)
+# HXL Bites 
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.16.
 
