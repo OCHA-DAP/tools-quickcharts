@@ -9,11 +9,15 @@ import { AppConfigService } from '../../shared/app-config.service';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { DomEventsService } from '../../shared/dom-events.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
+import { PersisUtil } from './persist/persist-util';
 
 @Injectable()
 export class BiteService {
+
   public url: string;
   private nextId: number = 0;
+
+  private persistUtil: PersisUtil;
 
   private static findBiteInArray(bite: Bite, bites: Bite[]): number {
     let index = -1;
@@ -27,7 +31,9 @@ export class BiteService {
 
   constructor(private recipeService: RecipeService, private cookBookService: CookBookService,
               private logger: Logger, private persistService: PersistService,
-              private appConfigService: AppConfigService, private domEventService: DomEventsService) { }
+              private appConfigService: AppConfigService, private domEventService: DomEventsService) {
+    this.persistUtil = new PersisUtil(logger);
+  }
 
   public init(url: string) {
     this.url = url;
@@ -39,9 +45,9 @@ export class BiteService {
   }
 
   private loadBites(): Observable<Bite[]> {
-    let embeddedConfig = this.appConfigService.get('embeddedConfig');
+    const embeddedConfig = this.appConfigService.get('embeddedConfig');
     if (embeddedConfig && embeddedConfig.length) {
-      return Observable.of(JSON.parse(embeddedConfig));
+      return Observable.of(this.persistUtil.configToBitelist(embeddedConfig));
     } else {
       return this.persistService.load();
     }
@@ -79,7 +85,7 @@ export class BiteService {
     const path = this.appConfigService.get('loc_pathname');
 
     const modifiedBiteList = this.unpopulateListOfBites(biteList);
-    let embeddedConfig = encodeURIComponent(JSON.stringify(modifiedBiteList));
+    let embeddedConfig = encodeURIComponent(this.persistUtil.bitelistToConfig(modifiedBiteList));
 
     /* Dealing with parenthesis which are not encoded by encodeURIComponent */
     embeddedConfig = embeddedConfig.replace(/\(/g, '%28').replace(/\)/g, '%29');
