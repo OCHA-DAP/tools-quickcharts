@@ -15,7 +15,7 @@
   <simple-modal [title]="'Embed HXL Preview'" #embedLinkModal>
     Please copy the code below to embed the hxl preview.
     <a href="{{embedUrl}}" target="_blank">See example here</a>:
-    <input type="text" onfocus="this.setSelectionRange(0, this.value.length)" onClick="this.setSelectionRange(0, this.value.length)" readonly [(ngModel)]="embedUrl" style="width: 100%;" />
+    <input type="text" onfocus="this.setSelectionRange(0, this.value.length)" onClick="this.setSelectionRange(0, this.value.length)" readonly [(ngModel)]="iframeUrl" style="width: 100%;" />
   </simple-modal>
 </div>
 
