@@ -1,35 +1,15 @@
 <div
   class="hxl-bite"
-  [class.hxl-bite-edit]="edit"
-  [class.hxl-bite-small]="add"
   [class.settings-open]="settingsDisplay"
 >
   <div class="title">
     <div class="title-content" title="{{bite.title}}">{{bite.title}}</div>
-
     <div class="title-menu">
-      <simple-dropdown [items]="displayableAvailableBites" (selected)="switchBite($event)"></simple-dropdown>
-      <i
-        *ngIf="add && !listIsFull"
-        style="color: green;"
-        class="glyphicon glyphicon-plus"
-        (click)="addBite($event);"
-      ></i>
-      <i
-        *ngIf="add && listIsFull"
-        style="color: lightgray;"
-        class="glyphicon glyphicon-plus"
-      ></i>
-      <i
-        *ngIf="edit"
-        style="color: red;"
-        class="glyphicon glyphicon-remove"
-        (click)="deleteBite($event);"
-      ></i>
+      <hxl-simple-dropdown [items]="displayableAvailableBites" (selected)="switchBite($event)"></hxl-simple-dropdown>
     </div>
   </div>
   <div class="content" [ngSwitch]="bite.type">
-    <hxl-content-topline *ngSwitchCase="classTypes.ToplineBite" [bite]="bite" [edit]="edit"></hxl-content-topline>
+    <hxl-content-topline *ngSwitchCase="classTypes.ToplineBite" [bite]="bite"></hxl-content-topline>
     <hxl-content-chart *ngSwitchCase="classTypes.ChartBite" [bite]="bite"></hxl-content-chart>
     <hxl-content-timeseries-chart *ngSwitchCase="classTypes.TimeseriesChartBite" [bite]="bite"></hxl-content-timeseries-chart>
   </div>

@@ -5,7 +5,7 @@ import { ContentToplineComponent } from './content-topline.component';
 
 describe('Component: ContentTopline', () => {
   it('should create an instance', () => {
-    let component = new ContentToplineComponent();
+    const component = new ContentToplineComponent();
     expect(component).toBeTruthy();
   });
 });

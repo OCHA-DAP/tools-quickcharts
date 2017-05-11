@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
 import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { PersistService } from '../persist.service';
 import { Bite } from '../../bite/types/bite';
 import { AppConfigService } from '../../../shared/app-config.service';
@@ -24,30 +24,30 @@ export class HdxPersistService extends PersistService {
   }
 
   save(bites: Bite[]): Observable<boolean> {
-    let mapFunction = (response: Response) => {
-      let jsonResponse = response.json();
+    const mapFunction = (response: Response) => {
+      const jsonResponse = response.json();
       if ( jsonResponse && jsonResponse.hasOwnProperty('success') && jsonResponse.success ) {
         return true;
       }
       return false;
     };
 
-    let neededConfigs = this.getDomainAndViewId(true);
+    const neededConfigs = this.getDomainAndViewId(true);
 
-    let url = neededConfigs.hdxDomain + HdxPersistService.SAVE_PATH;
+    const url = neededConfigs.hdxDomain + HdxPersistService.SAVE_PATH;
     this.logger.info('The save url is: ' + url);
 
-    let hxlPreviewConfig = JSON.stringify(bites);
+    const hxlPreviewConfig = JSON.stringify(bites);
     this.analytics.trackSave();
     return this.http.post(url, {id: neededConfigs.resourceViewId, hxl_preview_config: hxlPreviewConfig})
       .map(mapFunction).catch(err => this.handleError(err));
   }
 
   load(): Observable<Bite[]> {
-    let mapFunction = (response: Response) => {
-      let jsonResponse = response.json();
+    const mapFunction = (response: Response) => {
+      const jsonResponse = response.json();
       if ( jsonResponse && jsonResponse.hasOwnProperty('success') && jsonResponse.success ) {
-        let hxlPreviewConfig = jsonResponse.result.hxl_preview_config;
+        const hxlPreviewConfig = jsonResponse.result.hxl_preview_config;
         if (hxlPreviewConfig) {
           return JSON.parse(hxlPreviewConfig);
         }
@@ -55,22 +55,22 @@ export class HdxPersistService extends PersistService {
       return [];
     };
 
-    let neededConfigs = this.getDomainAndViewId(false);
+    const neededConfigs = this.getDomainAndViewId(false);
 
-    if (!neededConfigs.hdxDomain || !neededConfigs.resourceViewId){
+    if (!neededConfigs.hdxDomain || !neededConfigs.resourceViewId) {
       return Observable.from([]);
     }
-    let url = neededConfigs.hdxDomain + HdxPersistService.LOAD_PATH + neededConfigs.resourceViewId;
+    const url = neededConfigs.hdxDomain + HdxPersistService.LOAD_PATH + neededConfigs.resourceViewId;
 
     return this.http.get(url).map(mapFunction.bind(this)).catch(err => this.handleError(err));
   }
 
   private getDomainAndViewId(isSave) {
-    let hdxDomain = this.appConfig.get('hdx_domain');
-    let resourceViewId = this.appConfig.get('resource_view_id');
+    const hdxDomain = this.appConfig.get('hdx_domain');
+    const resourceViewId = this.appConfig.get('resource_view_id');
 
     if (isSave && (!hdxDomain || !resourceViewId)) {
-      throw 'The hdx domain and the resource view need to be specified in order to save the config';
+      throw new Error('The hdx domain and the resource view need to be specified in order to save the config');
     }
     return {hdxDomain: hdxDomain, resourceViewId: resourceViewId};
   }

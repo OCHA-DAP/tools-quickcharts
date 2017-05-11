@@ -31,7 +31,7 @@ export abstract class BiteLogic {
   protected findHxlTagIndex(hxlTag: string, hxlData: any[][]): number {
     if (hxlData && hxlData.length > 2) {
       for (let i = 0; i < hxlData[1].length; i++) {
-        let currentTag: string = hxlData[1][i];
+        const currentTag: string = hxlData[1][i];
         if (currentTag === hxlTag) {
           return i;
         }
@@ -50,7 +50,7 @@ export abstract class BiteLogic {
   }
 
   protected buildImportantPropertiesList(): string[] {
-    let importantProperties: string[] = [];
+    const importantProperties: string[] = [];
     importantProperties.push(this.bite.initialTitle, this.bite.type);
     importantProperties.push(this.bite.ingredient.valueColumn, this.bite.ingredient.aggregateColumn);
     return importantProperties;
@@ -76,7 +76,7 @@ export abstract class BiteLogic {
     let hash = 0;
     if (strList) {
       for (let i = 0; i < strList.length; i++) {
-        let curStr = strList[i];
+        const curStr = strList[i];
         hash = this.strHash(curStr, hash);
       }
     }

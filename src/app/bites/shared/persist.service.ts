@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Bite } from '../bite/types/bite';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export abstract class PersistService {

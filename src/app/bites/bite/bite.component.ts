@@ -23,10 +23,6 @@ export class BiteComponent implements OnInit {
   @Input()
   bite: Bite;
   @Input()
-  add: boolean;
-  @Input()
-  edit: boolean;
-  @Input()
   index: number;
   @Input()
   listIsFull: boolean;
@@ -68,14 +64,6 @@ export class BiteComponent implements OnInit {
   ngOnInit() {
     this.displayableAvailableBites = this.biteService.generateBiteSelectionMenu(this.availableBites);
     this.settingsModel = new SettingsModel(this.bite, this.biteService, this);
-  }
-
-  addBite() {
-    this.onAdd.emit(this.bite);
-  }
-
-  deleteBite() {
-    this.onDelete.emit(this.bite);
   }
 
   switchBite(newBite: Bite) {

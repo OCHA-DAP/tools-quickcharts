@@ -67,8 +67,8 @@ export class TimeseriesChartBiteLogic extends ChartBiteLogic {
       this.bite.values = [categories, values];
       this.bite.init = true;
     } else {
-      throw `${this.bite.ingredient.valueColumn} or ${this.bite.ingredient.aggregateColumn}`
-      + 'not found in hxl proxy response';
+      throw new Error(`${this.bite.ingredient.valueColumn} or ${this.bite.ingredient.aggregateColumn}`
+      + 'not found in hxl proxy response');
     }
   }
 

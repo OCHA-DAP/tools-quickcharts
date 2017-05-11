@@ -3,17 +3,17 @@ import { Bite } from '../bite/types/bite';
 import { RecipeService } from './recipe.service';
 import { Logger } from 'angular2-logger/core';
 import { CookBookService } from './cook-book.service';
-import { Observable } from 'rxjs';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { DomEventsService } from '../../shared/dom-events.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class BiteService {
   public url: string;
-  private nextId: number = 0;
+  private nextId = 0;
 
   private static findBiteInArray(bite: Bite, bites: Bite[]): number {
     let index = -1;
@@ -39,7 +39,7 @@ export class BiteService {
   }
 
   private loadBites(): Observable<Bite[]> {
-    let embeddedConfig = this.appConfigService.get('embeddedConfig');
+    const embeddedConfig = this.appConfigService.get('embeddedConfig');
     if (embeddedConfig && embeddedConfig.length) {
       return Observable.of(JSON.parse(embeddedConfig));
     } else {

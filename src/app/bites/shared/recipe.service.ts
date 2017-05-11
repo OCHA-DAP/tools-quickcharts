@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Bite } from '../bite/types/bite';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { HxlproxyService } from './hxlproxy.service';
 import { Logger } from 'angular2-logger/core';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
@@ -48,7 +48,7 @@ export class RecipeService {
   }
 
   processAll(bites: Bite[], datasetUrl: string): Observable<Bite> {
-    let observables: Observable<Bite>[] = bites.map( bite => this.myProcessBite(bite, datasetUrl) );
+    const observables: Observable<Bite>[] = bites.map( bite => this.myProcessBite(bite, datasetUrl) );
 
     return Observable.concat(...observables);
   }

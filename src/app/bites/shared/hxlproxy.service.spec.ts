@@ -41,12 +41,12 @@ describe('Service: Hxlproxy', () => {
   });
 
   it('should ... throw error when meta rows missing', () => {
-    let response = [];
+    const response = [];
     mockbackend.connections.subscribe(connection => {
       connection.mockRespond(new Response(new ResponseOptions({body: JSON.stringify(response)})));
     });
 
-    let proxy: HxlproxyService = service;
+    const proxy: HxlproxyService = service;
     let errorThrown = false;
     try {
       proxy.fetchMetaRows('test.csv').subscribe(row => {
@@ -60,8 +60,8 @@ describe('Service: Hxlproxy', () => {
   });
 
   it('should ... work with mocked data', () => {
-    let proxy: HxlproxyService = service;
-    let response = '[' +
+    const proxy: HxlproxyService = service;
+    const response = '[' +
       '["id", "ident", "type", "name", "latitude_deg", "longitude_deg", "elevation_ft", "continent", ' +
       '"iso_country", "iso_region", "municipality", "scheduled_service", "gps_code", "iata_code", ' +
       '"local_code", "home_link", "wikipedia_link", "keywords", "score", "last_updated"],' +

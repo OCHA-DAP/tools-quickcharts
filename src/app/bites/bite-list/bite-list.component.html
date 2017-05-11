@@ -1,22 +1,22 @@
 <div>
   <div class="row list-header" *ngIf="!singleWidgetMode">
-    <div class="col-xs-10"><span class="list-header-title">HXL Preview</span></div>
+    <div class="col-xs-10"><span class="list-header-title">Smart Charts</span></div>
     <div class="col-xs-2 right-menu">
-      <simple-dropdown [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="smartChartsMenu"
+      <hxl-simple-dropdown [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="smartChartsMenu"
                        [linkText]="'More actions'" (selected)="doSaveAction($event)">
-      </simple-dropdown>
+      </hxl-simple-dropdown>
 
-      <simple-modal [title]="'Save Configuration'" #savedModal>
+      <hxl-simple-modal [title]="'Save Configuration'" #savedModal>
         {{savedModalMessage}}
-      </simple-modal>
+      </hxl-simple-modal>
 
     </div>
   </div>
-  <simple-modal [title]="'Embed HXL Preview'" #embedLinkModal>
-    Please copy the code below to embed the hxl preview.
+  <hxl-simple-modal [title]="'Embed Smart Charts'" #embedLinkModal>
+    Please copy the code below to embed the smart charts.
     <a href="{{embedUrl}}" target="_blank">See example here</a>:
     <input type="text" onfocus="this.setSelectionRange(0, this.value.length)" onClick="this.setSelectionRange(0, this.value.length)" readonly [(ngModel)]="embedUrl" style="width: 100%;" />
-  </simple-modal>
+  </hxl-simple-modal>
 </div>
 
 <div
@@ -29,44 +29,11 @@
     [class.col-md-4]="!singleWidgetMode"
     *ngFor="let bite of biteList; let idx = index;"
   >
-    <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [edit]="edit"
+    <hxl-bite [listIsFull]="listIsFull" [bite]="bite"
               [availableBites]="availableBites" [index]="idx + 1"
               (onDelete)="deleteBite($event)" (onSwitch)="switchBite($event)"
               (onEmbedUrlCreate)="singleEmbedUrlCreated($event)">
     </hxl-bite>
   </div>
 </div>
-
-
-<!--<div *ngIf="edit && hxlUnsupported === false; else hxlUnsupportedMessage">-->
-  <!--<div class="row list-header">-->
-    <!--<div class="col-xs-12"><span class="list-header-title">Available visualizations</span></div>-->
-  <!--</div>-->
-  <!--<div class="row available-bites">-->
-    <!--<div class="col-xs-12">-->
-      <!--&lt;!&ndash;<h2>Available items:</h2>&ndash;&gt;-->
-      <!--<div class="row">-->
-        <!--<div-->
-          <!--class="col-xs-3"-->
-          <!--*ngFor="let bite of availableBites"-->
-        <!--&gt;-->
-          <!--<hxl-bite [listIsFull]="listIsFull" [bite]="bite" [add]="true" (onAdd)="addBite($event)"></hxl-bite>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</div>-->
-
-<!--<ng-template *ngIf="edit && hxlUnsupported === false" #hxlUnsupportedMessage>-->
-  <!--<div class="row list-header">-->
-    <!--<div class="col-xs-12"><span class="list-header-title">HXL Preview can not be displayed</span></div>-->
-  <!--</div>-->
-  <!--<div class="row">-->
-    <!--<div class="col-xs-12">-->
-      <!--<span>Your files contains HXL tags which are not supported by HXL Preview. If you have any questions or suggestions, or if you would like further information, please don't hesitate to contact us</span>-->
-    <!--</div>-->
-  <!--</div>-->
-<!--</ng-template>-->
-
-
 
