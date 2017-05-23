@@ -107,7 +107,7 @@ export class BiteListComponent implements OnInit {
     this.singleWidgetMode = this.appConfig.get('singleWidgetMode') === 'true';
   }
 
-  // Deprecated in HXL Preview v2
+  // Deprecated in Quick Charts v2
   // private addLoadedBiteToList(bite: Bite): void {
   //   this.biteList.push(bite);
   //   if (this.biteList.length >= +this.appConfig.get('maxBites')) {
@@ -221,7 +221,7 @@ export class BiteListComponent implements OnInit {
           () => {
             this.logger.log('on COMPLETE...');
             if (this.availableBites && this.biteList && this.availableBites.length === 0 && this.biteList.length === 0) {
-              // Your files contains HXL tags which are not supported by HXL Preview
+              // Your files contains HXL tags which are not supported by Quick Charts
               this.hxlUnsupported = true;
             }
             observable.next(true);
@@ -284,7 +284,7 @@ export class BiteListComponent implements OnInit {
           () => {
             this.logger.log('on COMPLETE...');
             if (this.availableBites && this.biteList && this.availableBites.length === 0 && this.biteList.length === 0) {
-              // Your files contains HXL tags which are not supported by Smart Charts
+              // Your files contains HXL tags which are not supported by Quick Charts
               this.hxlUnsupported = true;
             }
           }

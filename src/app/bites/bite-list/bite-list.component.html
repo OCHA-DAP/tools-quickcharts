@@ -1,6 +1,6 @@
 <div>
   <div class="row list-header" *ngIf="!singleWidgetMode">
-    <div class="col-xs-10"><span class="list-header-title">HXL Preview</span></div>
+    <div class="col-xs-10"><span class="list-header-title">Quick Charts</span></div>
     <div class="col-xs-2 right-menu">
       <simple-dropdown [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="smartChartsMenu"
                        [linkText]="'More actions'" (selected)="doSaveAction($event)">
@@ -12,8 +12,8 @@
 
     </div>
   </div>
-  <simple-modal [title]="'Embed HXL Preview'" #embedLinkModal>
-    Please copy the code below to embed the hxl preview.
+  <simple-modal [title]="'Embed Quick Charts'" #embedLinkModal>
+    Please copy the code below to embed the smart charts.
     <a href="{{embedUrl}}" target="_blank">See example here</a>:
     <input type="text" onfocus="this.setSelectionRange(0, this.value.length)" onClick="this.setSelectionRange(0, this.value.length)" readonly [(ngModel)]="iframeUrl" style="width: 100%;" />
   </simple-modal>
@@ -59,11 +59,11 @@
 
 <!--<ng-template *ngIf="edit && hxlUnsupported === false" #hxlUnsupportedMessage>-->
   <!--<div class="row list-header">-->
-    <!--<div class="col-xs-12"><span class="list-header-title">HXL Preview can not be displayed</span></div>-->
+    <!--<div class="col-xs-12"><span class="list-header-title">Quick Charts can not be displayed</span></div>-->
   <!--</div>-->
   <!--<div class="row">-->
     <!--<div class="col-xs-12">-->
-      <!--<span>Your files contains HXL tags which are not supported by HXL Preview. If you have any questions or suggestions, or if you would like further information, please don't hesitate to contact us</span>-->
+      <!--<span>Your files contains HXL tags which are not supported by Quick Charts. If you have any questions or suggestions, or if you would like further information, please don't hesitate to contact us</span>-->
     <!--</div>-->
   <!--</div>-->
 <!--</ng-template>-->
