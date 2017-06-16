@@ -53,7 +53,8 @@
         <div class="settings-menu-shadow" [class.open]="settingsDisplay" (click)="toggleSettings(this);"></div>
         <div class="settings-menu dropdown-menu"
            [class.open]="settingsDisplay"
-           [class.arrow-right]="index % 3 == 0"
+           [class.arrow-right]="(index % 3 == 0) || (singleBite && poweredByDisplay)"
+           [class.arrow-single-embed]="(singleBite && poweredByDisplay)"
            [class.arrow-left]="index % 3 > 0">
           <div class="scrollable-content">
             <div class="section">

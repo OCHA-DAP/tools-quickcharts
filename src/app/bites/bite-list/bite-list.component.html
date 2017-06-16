@@ -30,7 +30,7 @@
     *ngFor="let bite of biteList; let idx = index;"
   >
     <hxl-bite [listIsFull]="listIsFull" [bite]="bite" [edit]="edit"
-              [availableBites]="availableBites" [index]="idx + 1"
+              [availableBites]="availableBites" [index]="idx + 1" [singleBite]="biteList.length === 1"
               (onDelete)="deleteBite($event)" (onSwitch)="switchBite($event)"
               (onEmbedUrlCreate)="singleEmbedUrlCreated($event)">
     </hxl-bite>

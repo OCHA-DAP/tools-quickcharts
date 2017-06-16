@@ -29,6 +29,8 @@ export class BiteComponent implements OnInit {
   @Input()
   index: number;
   @Input()
+  singleBite: boolean;
+  @Input()
   listIsFull: boolean;
   @Input()
   availableBites: Bite[];
