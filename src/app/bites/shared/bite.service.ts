@@ -230,4 +230,22 @@ export class BiteService {
     return result;
   }
 
+  getPoweredByDisplay(): Boolean {
+    const embeddedConfig = this.appConfigService.get('embeddedConfig');
+    if (embeddedConfig && embeddedConfig.length) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  getPoweredBySource(): String {
+    return this.appConfigService.get('embeddedSource');
+  }
+  getPoweredByUrl(): String {
+    return this.appConfigService.get('embeddedUrl');
+  }
+  getPoweredByDate(): String {
+    return this.appConfigService.get('embeddedDate');
+  }
 }
