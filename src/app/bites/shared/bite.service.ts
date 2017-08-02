@@ -97,8 +97,13 @@ export class BiteService {
 
     port = port ? ':' + port : '';
 
+    const embeddedSource = encodeURIComponent(this.appConfigService.get('embeddedSource'));
+    const embeddedUrl = encodeURIComponent(this.appConfigService.get('embeddedUrl'));
+    const embeddedDate = encodeURIComponent(this.appConfigService.get('embeddedDate'));
 
-    return `${protocol}//${hostname}${port}${pathWithoutParams};url=${url};embeddedConfig=${embeddedConfig}${singleWidgetMode}`;
+    return `${protocol}//${hostname}${port}${pathWithoutParams};` +
+           `url=${url};embeddedSource=${embeddedSource};embeddedUrl=${embeddedUrl};embeddedDate=${embeddedDate};` +
+           `embeddedConfig=${embeddedConfig}${singleWidgetMode}`;
   }
 
   /**
@@ -240,12 +245,12 @@ export class BiteService {
   }
 
   getPoweredBySource(): String {
-    return this.appConfigService.get('embeddedSource');
+    return decodeURIComponent(this.appConfigService.get('embeddedSource'));
   }
   getPoweredByUrl(): String {
     return this.appConfigService.get('embeddedUrl');
   }
   getPoweredByDate(): String {
-    return this.appConfigService.get('embeddedDate');
+    return decodeURIComponent(this.appConfigService.get('embeddedDate'));
   }
 }
