@@ -6,6 +6,7 @@ import { PersistService } from '../persist.service';
 import { Bite } from '../../bite/types/bite';
 import { AppConfigService } from '../../../shared/app-config.service';
 import { AnalyticsService } from '../analytics.service';
+import { PersisUtil } from './persist-util';
 
 /**
  * This persister assumes we have the following configurations available:
@@ -18,9 +19,12 @@ export class HdxPersistService extends PersistService {
   private static SAVE_PATH = '/api/action/resource_view_update';
   private static LOAD_PATH = '/api/action/resource_view_show?id=';
 
+  private persistUtil: PersisUtil;
+
   constructor(private logger: Logger, private http: Http, private appConfig: AppConfigService,
               private analytics: AnalyticsService) {
     super();
+    this.persistUtil = new PersisUtil(logger);
   }
 
   save(bites: Bite[]): Observable<boolean> {
@@ -37,7 +41,7 @@ export class HdxPersistService extends PersistService {
     const url = neededConfigs.hdxDomain + HdxPersistService.SAVE_PATH;
     this.logger.info('The save url is: ' + url);
 
-    const hxlPreviewConfig = JSON.stringify(bites);
+    const hxlPreviewConfig = this.persistUtil.bitelistToConfig(bites);
     this.analytics.trackSave();
     return this.http.post(url, {id: neededConfigs.resourceViewId, hxl_preview_config: hxlPreviewConfig})
       .map(mapFunction).catch(err => this.handleError(err));
@@ -49,7 +53,7 @@ export class HdxPersistService extends PersistService {
       if ( jsonResponse && jsonResponse.hasOwnProperty('success') && jsonResponse.success ) {
         const hxlPreviewConfig = jsonResponse.result.hxl_preview_config;
         if (hxlPreviewConfig) {
-          return JSON.parse(hxlPreviewConfig);
+          return this.persistUtil.configToBitelist(hxlPreviewConfig);
         }
       }
       return [];

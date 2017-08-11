@@ -188,7 +188,7 @@ export class BiteListComponent implements OnInit {
           () => {
             this.logger.log('on COMPLETE...');
             if (this.availableBites && this.biteList && this.availableBites.length === 0 && this.biteList.length === 0) {
-              // Your files contains HXL tags which are not supported by Smart Charts
+              // Your files contains HXL tags which are not supported by Quick Charts
               this.hxlUnsupported = true;
             }
             observable.next(true);

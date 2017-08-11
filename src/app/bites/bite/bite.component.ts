@@ -25,6 +25,8 @@ export class BiteComponent implements OnInit {
   @Input()
   index: number;
   @Input()
+  singleBite: boolean;
+  @Input()
   listIsFull: boolean;
   @Input()
   availableBites: Bite[];
@@ -48,6 +50,10 @@ export class BiteComponent implements OnInit {
   classTypes: any = {};
   private settingsDisplay: Boolean = false;
   private uuid: number;
+  private poweredByDisplay: Boolean = false;
+  private poweredBySource: String;
+  private poweredByUrl: String;
+  private poweredByDate: String;
 
   displayableAvailableBites: SimpleDropdownItem[];
 
@@ -58,7 +64,10 @@ export class BiteComponent implements OnInit {
     this.classTypes.ChartBite = ChartBite.type();
     this.classTypes.TimeseriesChartBite = TimeseriesChartBite.type();
     this.uuid = biteService.getNextId();
-
+    this.poweredByDisplay = biteService.getPoweredByDisplay();
+    this.poweredBySource = biteService.getPoweredBySource();
+    this.poweredByUrl = biteService.getPoweredByUrl();
+    this.poweredByDate = biteService.getPoweredByDate();
   }
 
   ngOnInit() {

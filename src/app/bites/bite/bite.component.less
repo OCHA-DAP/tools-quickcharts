@@ -91,6 +91,96 @@
       font-size: 16px;
     }
 
+    .powered-by {
+      .sourceSansProFont(400, 12px);
+      color: @grayColor;
+      cursor: pointer;
+      position: relative;
+      padding-top:10px; //hover into popup
+      display: none;
+
+      &.display {
+        display: inline;
+      }
+
+      &:hover {
+        .img-span {
+          .img-gray {
+            display: none;
+          }
+          .img-color {
+            display: inline;
+          }
+        }
+        .settings-menu {
+          display: block;
+        }
+      }
+
+      .img-span {
+        .img-gray {
+          display: inline;
+        }
+        .img-color {
+          display: none;
+        }
+      }
+      img {
+        margin-left: 3px;
+        margin-right: 5px;
+        height: 16px;
+
+        background: url("/src/assets/images/hdx-gray.png");
+        background-size: 100% 16px;
+      }
+    }
+    .settings-menu.powered-by-menu {
+      color: @grayColor;
+      //display: block;
+      height: auto;
+      min-width: 185px;
+      width: 185px;
+      left: auto;
+      right: -25px;
+      top: auto;
+      bottom: 25px;
+      padding: 10px;
+      margin: 0;
+      .sourceSansProFont(400, 12px);
+
+      background: #ffffff;
+      border: 1px solid #cccccc;
+
+      .black-color {
+        color: @blackColor;
+      }
+
+      &:after, &:before {
+        top: auto;
+        bottom: -22px;
+        left: 135px;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+
+      &:after {
+        border-color: rgba(255, 255, 255, 0);
+        border-top-color: #ffffff;
+        border-width: 11px;
+        margin-left: -11px;
+      }
+      &:before {
+        border-color: rgba(204, 204, 204, 0);
+        border-top-color: #cccccc;
+        border-width: 12px;
+        margin-left: -12px;
+        margin-bottom: -2px;
+      }
+    }
     .glyphicon-cog{
       cursor: pointer;
       &.open {
@@ -215,6 +305,11 @@
       &:before {
         border-color: rgba(158, 158, 158, 0);
         border-left-color: @settingsMenuBorderColor;
+      }
+
+      &.arrow-single-embed {
+        left: auto;
+        right: 35px;
       }
     }
 

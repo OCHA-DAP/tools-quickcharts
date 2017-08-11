@@ -27,13 +27,26 @@
     </div>
     <form #settingsForm="ngForm" (ngModelChange)="settingsModelChanged($event)">
       <div class="pull-right">
+        <span class="powered-by" [class.display]="poweredByDisplay" *ngIf="poweredByDisplay">
+          <div class="settings-menu powered-by-menu dropdown-menu" >
+              Source:
+              <div class="black-color">{{ poweredBySource }}</div>
+              <div><a href="{{ poweredByUrl }}" target="_blank">Data</a> - {{ poweredByDate }}</div>
+          </div>
+          Powered by
+          <span class="img-span">
+            <img class="img-gray" src="./assets/images/hdx-gray.png">
+            <img class="img-color" src="./assets/images/hdx-color.png">
+          </span>
+        </span>
         <span>
           <i (click)="toggleSettings(this)" class="glyphicon glyphicon-cog" [class.open]="settingsDisplay"></i>
         </span>
         <div class="settings-menu-shadow" [class.open]="settingsDisplay" (click)="toggleSettings(this);"></div>
         <div class="settings-menu dropdown-menu"
            [class.open]="settingsDisplay"
-           [class.arrow-right]="index % 3 == 0"
+           [class.arrow-right]="(index % 3 == 0) || (singleBite && poweredByDisplay)"
+           [class.arrow-single-embed]="(singleBite && poweredByDisplay)"
            [class.arrow-left]="index % 3 > 0">
           <div class="scrollable-content">
             <div class="section">

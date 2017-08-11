@@ -8,12 +8,16 @@ import { AppConfigService } from '../../shared/app-config.service';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { DomEventsService } from '../../shared/dom-events.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
+import { PersisUtil } from './persist/persist-util';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class BiteService {
+
   public url: string;
   private nextId = 0;
+
+  private persistUtil: PersisUtil;
 
   private static findBiteInArray(bite: Bite, bites: Bite[]): number {
     let index = -1;
@@ -27,7 +31,9 @@ export class BiteService {
 
   constructor(private recipeService: RecipeService, private cookBookService: CookBookService,
               private logger: Logger, private persistService: PersistService,
-              private appConfigService: AppConfigService, private domEventService: DomEventsService) { }
+              private appConfigService: AppConfigService, private domEventService: DomEventsService) {
+    this.persistUtil = new PersisUtil(logger);
+  }
 
   public init(url: string) {
     this.url = url;
@@ -41,7 +47,7 @@ export class BiteService {
   private loadBites(): Observable<Bite[]> {
     const embeddedConfig = this.appConfigService.get('embeddedConfig');
     if (embeddedConfig && embeddedConfig.length) {
-      return Observable.of(JSON.parse(embeddedConfig));
+      return Observable.of(this.persistUtil.configToBitelist(embeddedConfig));
     } else {
       return this.persistService.load();
     }
@@ -79,7 +85,7 @@ export class BiteService {
     const path = this.appConfigService.get('loc_pathname');
 
     const modifiedBiteList = this.unpopulateListOfBites(biteList);
-    let embeddedConfig = encodeURIComponent(JSON.stringify(modifiedBiteList));
+    let embeddedConfig = encodeURIComponent(this.persistUtil.bitelistToConfig(modifiedBiteList));
 
     /* Dealing with parenthesis which are not encoded by encodeURIComponent */
     embeddedConfig = embeddedConfig.replace(/\(/g, '%28').replace(/\)/g, '%29');
@@ -91,8 +97,13 @@ export class BiteService {
 
     port = port ? ':' + port : '';
 
+    const embeddedSource = encodeURIComponent(this.appConfigService.get('embeddedSource'));
+    const embeddedUrl = encodeURIComponent(this.appConfigService.get('embeddedUrl'));
+    const embeddedDate = encodeURIComponent(this.appConfigService.get('embeddedDate'));
 
-    return `${protocol}//${hostname}${port}${pathWithoutParams};url=${url};embeddedConfig=${embeddedConfig}${singleWidgetMode}`;
+    return `${protocol}//${hostname}${port}${pathWithoutParams};` +
+           `url=${url};embeddedSource=${embeddedSource};embeddedUrl=${embeddedUrl};embeddedDate=${embeddedDate};` +
+           `embeddedConfig=${embeddedConfig}${singleWidgetMode}`;
   }
 
   /**
@@ -224,4 +235,22 @@ export class BiteService {
     return result;
   }
 
+  getPoweredByDisplay(): Boolean {
+    const embeddedConfig = this.appConfigService.get('embeddedConfig');
+    if (embeddedConfig && embeddedConfig.length) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  getPoweredBySource(): String {
+    return decodeURIComponent(this.appConfigService.get('embeddedSource'));
+  }
+  getPoweredByUrl(): String {
+    return this.appConfigService.get('embeddedUrl');
+  }
+  getPoweredByDate(): String {
+    return decodeURIComponent(this.appConfigService.get('embeddedDate'));
+  }
 }
