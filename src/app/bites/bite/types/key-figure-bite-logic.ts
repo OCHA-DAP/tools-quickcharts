@@ -34,7 +34,7 @@ export class KeyFigureBiteLogic extends BiteLogic {
       this.computeBiteUnit(false);
       this.bite.init = true;
     } else {
-      throw `${this.bite.ingredient.valueColumn} not found in hxl proxy response`;
+      throw new Error(`${this.bite.ingredient.valueColumn} not found in hxl proxy response`);
     }
     return this;
   }

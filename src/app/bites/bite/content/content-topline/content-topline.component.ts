@@ -10,8 +10,6 @@ import { KeyFigureBite } from '../../types/key-figure-bite';
 export class ContentToplineComponent implements OnInit {
   @Input()
   bite: KeyFigureBite;
-  @Input()
-  edit: boolean;
 
   constructor() { }
 

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
 import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/mergeMap';
-import { Observable, AsyncSubject } from 'rxjs';
 import { SumChartTransformer } from './hxlproxy-transformers/sum-chart-transformer';
 import { Bite } from '../bite/types/bite';
 import { AbstractHxlTransformer } from './hxlproxy-transformers/abstract-hxl-transformer';
@@ -12,6 +11,9 @@ import { CountChartTransformer } from './hxlproxy-transformers/count-chart-trans
 import { DistinctCountChartTransformer } from './hxlproxy-transformers/distinct-count-chart-transformer';
 import { TimeseriesChartTransformer } from './hxlproxy-transformers/timeseries-chart-transformer';
 import { FilterSettingTransformer } from './hxlproxy-transformers/filter-setting-transformer';
+import { Observable } from 'rxjs/Observable';
+import { AsyncSubject } from 'rxjs/AsyncSubject';
+import 'rxjs/Rx';
 
 @Injectable()
 export class HxlproxyService {
@@ -34,7 +36,7 @@ export class HxlproxyService {
     let myObservable: Observable<string[][]>;
     if (this.metaRows) {
       this.logger.log('Using cached metarows');
-      let mySubject = new AsyncSubject<string[][]>();
+      const mySubject = new AsyncSubject<string[][]>();
       mySubject.next(this.metaRows);
       mySubject.complete();
       myObservable = mySubject;
@@ -100,7 +102,7 @@ export class HxlproxyService {
   }
 
   private processMetaRowResponse(response: Response): string[][] {
-    let ret = response.json();
+    const ret = response.json();
 
     // let ret = [json[0], json[1]];
     this.logger.log('Response is: ' + ret);
@@ -112,7 +114,7 @@ export class HxlproxyService {
         this.tagToTitleMap[ret[1][i]] = ret[0][i];
       }
     } else {
-      throw 'There should be 2 meta rows';
+      throw new Error('There should be 2 meta rows');
     }
 
     return ret;

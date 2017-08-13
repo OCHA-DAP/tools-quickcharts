@@ -22,7 +22,7 @@ describe('Service: AppConfig', () => {
       KEY2 = 'key2',
       VAL2 = 'val2';
 
-    let params: Params = {};
+    const params: Params = {};
     params[KEY1] = VAL1;
     params[KEY2] = VAL2;
 

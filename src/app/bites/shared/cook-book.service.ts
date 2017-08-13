@@ -11,6 +11,8 @@ import { AggregateFunctionOptions } from '../bite/types/ingredients';
 import { Observable } from 'rxjs/Observable';
 import { AppConfigService } from '../../shared/app-config.service';
 import { TimeseriesChartBite } from '../bite/types/timeseries-chart-bite';
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/Rx';
 
 @Injectable()
 export class CookBookService {
@@ -147,25 +149,25 @@ export class CookBookService {
       this.cookBooks = [recipeUrl];
     }
 
-    let cookBooksObs: Array<Observable<Response>> = this.cookBooks.map(book => this.http.get(book));
-    let biteConfigs: Observable<BiteConfig[]> = cookBooksObs
+    const cookBooksObs: Array<Observable<Response>> = this.cookBooks.map(book => this.http.get(book));
+    const biteConfigs: Observable<BiteConfig[]> = cookBooksObs
       .reduce((prev, current, idx) => prev.merge(current))
       .flatMap((res: Response) => res.json())
       .map((biteConfig) => <BiteConfig>biteConfig)
       .toArray();
       // .subscribe(json => console.log(json);
-    let metaRows = this.hxlproxyService.fetchMetaRows(url);
+    const metaRows = this.hxlproxyService.fetchMetaRows(url);
 
-    let bites: Observable<Bite> = Observable.forkJoin(
+    const bites: Observable<Bite> = Observable.forkJoin(
       biteConfigs,
       metaRows
     )
       .flatMap(
         res => {
-          let configs: BiteConfig[] = res[0];
-          let rows = res[1];
-          let columnNames: string[] = rows[0];
-          let hxlTags: string[] = rows[1];
+          const configs: BiteConfig[] = res[0];
+          const rows = res[1];
+          const columnNames: string[] = rows[0];
+          const hxlTags: string[] = rows[1];
 
           return this.determineAvailableBites(columnNames, hxlTags, configs);
         }

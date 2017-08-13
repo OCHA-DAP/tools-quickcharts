@@ -3,19 +3,19 @@ import { Bite } from '../bite/types/bite';
 import { RecipeService } from './recipe.service';
 import { Logger } from 'angular2-logger/core';
 import { CookBookService } from './cook-book.service';
-import { Observable } from 'rxjs';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
 import { DomEventsService } from '../../shared/dom-events.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { PersisUtil } from './persist/persist-util';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class BiteService {
 
   public url: string;
-  private nextId: number = 0;
+  private nextId = 0;
 
   private persistUtil: PersisUtil;
 
