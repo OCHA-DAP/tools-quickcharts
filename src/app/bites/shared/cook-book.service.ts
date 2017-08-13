@@ -11,6 +11,8 @@ import { AggregateFunctionOptions } from '../bite/types/ingredients';
 import { Observable } from 'rxjs/Observable';
 import { AppConfigService } from '../../shared/app-config.service';
 import { TimeseriesChartBite } from '../bite/types/timeseries-chart-bite';
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/Rx';
 
 @Injectable()
 export class CookBookService {

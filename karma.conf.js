@@ -35,6 +35,11 @@ module.exports = function (config) {
     autoWatch: true,
     browsers: ['PhantomJS'],
     mime: { 'text/x-typescript': ['ts','tsx'] }, //fix for Chrome 55 on Mac
-    singleRun: false
+    singleRun: false,
+    angularCli: {
+      config: './angular-cli.json',
+      environment: 'dev',
+      sourcemap: true
+    }
   });
 };

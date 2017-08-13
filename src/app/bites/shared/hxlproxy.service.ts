@@ -13,6 +13,7 @@ import { TimeseriesChartTransformer } from './hxlproxy-transformers/timeseries-c
 import { FilterSettingTransformer } from './hxlproxy-transformers/filter-setting-transformer';
 import { Observable } from 'rxjs/Observable';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
+import 'rxjs/Rx';
 
 @Injectable()
 export class HxlproxyService {

@@ -7,6 +7,8 @@ import { Bite } from '../../bite/types/bite';
 import { AppConfigService } from '../../../shared/app-config.service';
 import { AnalyticsService } from '../analytics.service';
 import { PersisUtil } from './persist-util';
+import 'rxjs/add/operator/catch';
+import 'rxjs/Rx';
 
 /**
  * This persister assumes we have the following configurations available:

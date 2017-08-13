@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { HxlproxyService } from './hxlproxy.service';
 import { Logger } from 'angular2-logger/core';
 import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
+import 'rxjs/add/observable/concat';
+import 'rxjs/Rx';
 
 @Injectable()
 export class RecipeService {

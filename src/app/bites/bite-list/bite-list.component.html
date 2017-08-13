@@ -12,7 +12,7 @@
 
     </div>
   </div>
-  <simple-modal [title]="'Embed Quick Charts'" #embedLinkModal>
+  <hxl-simple-modal [title]="'Embed Quick Charts'" #embedLinkModal>
     Please copy the code below to embed the smart charts.
     <a href="{{embedUrl}}" target="_blank">See example here</a>:
     <input type="text" onfocus="this.setSelectionRange(0, this.value.length)" onClick="this.setSelectionRange(0, this.value.length)" readonly [(ngModel)]="iframeUrl" style="width: 100%;" />
