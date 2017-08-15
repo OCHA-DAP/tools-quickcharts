@@ -8,7 +8,7 @@ export interface SimpleDropdownItem {
 }
 
 @Component({
-  selector: 'simple-dropdown',
+  selector: 'hxl-simple-dropdown',
   templateUrl: './simple-dropdown.component.html',
   styleUrls: ['./simple-dropdown.component.less']
 })

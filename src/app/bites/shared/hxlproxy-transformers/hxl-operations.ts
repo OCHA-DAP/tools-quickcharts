@@ -85,7 +85,7 @@ export class CountOperation extends AbstractOperation {
     if (aggColumns.length === 0) {
       aggColumns.push('#fake_column');
     }
-    let operations = [`${operation}(${valueCol})`];
+    const operations = [`${operation}(${valueCol})`];
     super(new CountRecipe(aggColumns, operations));
   }
 
@@ -93,7 +93,7 @@ export class CountOperation extends AbstractOperation {
 
 export class RenameOperation extends AbstractOperation {
   constructor(oldTag: string, newTag: string, newHeader: string) {
-    let myNewHeader = newHeader ? newHeader : '';
+    const myNewHeader = newHeader ? newHeader : '';
     super(new RenameRecipe(`${oldTag}:${myNewHeader}${newTag}`));
   }
 }

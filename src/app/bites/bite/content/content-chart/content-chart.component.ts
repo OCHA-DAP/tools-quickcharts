@@ -161,7 +161,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       if ('deltaX' in event) { pX = event.deltaX; }
 
       if ((pX || pY) && event.deltaMode) {
-        if (event.deltaMode == 1) {          // delta in LINE units
+        if (event.deltaMode === 1) {          // delta in LINE units
           pX *= LINE_HEIGHT;
           pY *= LINE_HEIGHT;
         } else {                             // delta in PAGE units
@@ -186,7 +186,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       event.stopPropagation();
       const eventDelta = normalizeWheel(event);
 
-      const delta = -1*(this.bite.swapAxis ? eventDelta.pixelY : eventDelta.pixelX);
+      const delta = -1 * (this.bite.swapAxis ? eventDelta.pixelY : eventDelta.pixelX);
 
       if (!c3_chart.internal.brush.leftMargin) {
         c3_chart.internal.brush.leftMargin = 0;

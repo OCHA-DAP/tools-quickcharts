@@ -1,12 +1,13 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {Bite} from '../bite/types/bite';
 import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
 import {Logger} from 'angular2-logger/core';
 import {AppConfigService} from '../../shared/app-config.service';
-import { AsyncSubject, Observable } from 'rxjs';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { SimpleModalComponent } from '../../common/component/simple-modal/simple-modal.component';
+import { Observable } from 'rxjs/Observable';
+import { AsyncSubject } from 'rxjs/AsyncSubject';
 
 @Component({
   selector: 'hxl-bite-list',
@@ -17,8 +18,6 @@ export class BiteListComponent implements OnInit {
 
   biteList: Array<Bite>;
   availableBites: Array<Bite>;
-  @Input()
-  edit: boolean;
 
   listIsFull: boolean;
 
@@ -40,20 +39,11 @@ export class BiteListComponent implements OnInit {
   @ViewChild('embedLinkModal')
   private embedLinkModal: SimpleModalComponent;
 
-  @ViewChild('embedLinkModalInput')
-  private embedLinkModalInput: HTMLInputElement;
-
   private embedUrl;
   private iframeUrl;
 
   /* Used for when only one widget is embedded in a page */
   singleWidgetMode: boolean;
-
-  // get displayableAvailableBites(): {displayValue: string, payload: Bite}[] {
-  //   return this.availableBites.map( b => {
-  //     return {displayValue: b.title, payload: b};
-  //   });
-  // }
 
   constructor(private biteService: BiteService, private appConfig: AppConfigService, private logger: Logger) {
     this.biteList = [];
@@ -80,9 +70,6 @@ export class BiteListComponent implements OnInit {
   ngOnInit() {
     this.logger.info('BiteListComponent on init');
     this.generateAvailableBites().subscribe(() => this.load());
-    if (this.edit) {
-      this.onEdit();
-    }
 
     if (this.appConfig.get('has_modify_permission') === 'true') {
       this.smartChartsMenu.splice(0, 0,
@@ -107,14 +94,6 @@ export class BiteListComponent implements OnInit {
     this.singleWidgetMode = this.appConfig.get('singleWidgetMode') === 'true';
   }
 
-  // Deprecated in Quick Charts v2
-  // private addLoadedBiteToList(bite: Bite): void {
-  //   this.biteList.push(bite);
-  //   if (this.biteList.length >= +this.appConfig.get('maxBites')) {
-  //     this.listIsFull = true;
-  //   }
-  // }
-
   private removeLoadedBiteToList(bite: Bite): void {
     this.biteList = this.biteList.filter(b => b !== bite);
     if (this.biteList.length <= +this.appConfig.get('maxBites')) {
@@ -126,18 +105,6 @@ export class BiteListComponent implements OnInit {
     this.biteService.getBites().subscribe(
       (bite: Bite) => {
         this.logger.log('Processing bite ' + JSON.stringify(bite));
-
-        // if (this.availableBites) {
-        //   let removeIndex = -1;
-        //   this.availableBites.forEach((availableBite, idx) => {
-        //     if (availableBite.hashCode === bite.hashCode) {
-        //       removeIndex = idx;
-        //     }
-        //   });
-        //   if (removeIndex >= 0) {
-        //     this.availableBites.splice(removeIndex, 1);
-        //   }
-        // }
 
         this.biteList.push(bite);
         this.logger.log('biteList ' + JSON.stringify(this.biteList));
@@ -263,43 +230,5 @@ export class BiteListComponent implements OnInit {
   generateIframeUrl(src: string) {
     const result = '<iframe  src="' + src + '" style="border:none; width:100%; min-height:500px"></iframe>';
     return result;
-  }
-
-  // this should be depracated/removed. Functionality copied to this.generateAvailableBites()
-  onEdit() {
-    if (!this.availableBites) {
-      this.availableBites = [];
-      const loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
-      this.biteService.generateAvailableBites()
-        .subscribe(
-          bite => {
-            this.logger.log('Available bite ' + JSON.stringify(bite));
-            if (loadedHashCodeList.indexOf(bite.hashCode) < 0) {
-              this.availableBites.push(bite);
-            }
-          },
-          errObj => {
-            this.logger.log('in ERROR...');
-          },
-          () => {
-            this.logger.log('on COMPLETE...');
-            if (this.availableBites && this.biteList && this.availableBites.length === 0 && this.biteList.length === 0) {
-              // Your files contains HXL tags which are not supported by Quick Charts
-              this.hxlUnsupported = true;
-            }
-          }
-        );
-    }
-  }
-
-  onSave() {
-    this.biteService.saveBites(this.biteList);
-  }
-
-  onReset() {
-    this.logger.log('Reset toggled ... not doing anything for now');
-    // this.load();
-    this.biteService.resetBites();
-
   }
 }

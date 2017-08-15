@@ -22,7 +22,7 @@ export class InlineEditComponent implements OnInit, ControlValueAccessor {
   @Input()
   public editMode: string;
   @Input()
-  public textArea: boolean = false;
+  public textArea = false;
   @Input()
   public placeholder: string;
   @Input()
@@ -31,9 +31,9 @@ export class InlineEditComponent implements OnInit, ControlValueAccessor {
   public onSave: EventEmitter<any> = new EventEmitter();
 
   // internal data model
-  private _value: string = '';
+  private _value = '';
   private preValue: string;
-  editing: boolean = false;
+  editing = false;
 
   public onChange: any = Function.prototype;
   public onTouched: any = Function.prototype;

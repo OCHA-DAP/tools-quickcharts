@@ -1,13 +1,13 @@
-.. HXL Preview documentation master file, created by
+.. Smart Charts documentation master file, created by
    sphinx-quickstart on Thu Feb  2 07:58:03 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to HXL Preview's documentation!
-=======================================
+Welcome to the Smart Charts documentation!
+==========================================
 
 When a user uploads a HXLated data set to HDX they are presented with the option to show an auto generated dashboard giving insights into and overviews of their data.
-This dashboard is produced by the HXL Preview.
+This dashboard is produced by the Smart Charts.
 
 Terminology
 -----------
