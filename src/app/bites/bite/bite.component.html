@@ -8,11 +8,16 @@
       <hxl-simple-dropdown [items]="displayableAvailableBites" (selected)="switchBite($event)"></hxl-simple-dropdown>
     </div>
   </div>
-  <div class="content" [ngSwitch]="bite.type">
-    <hxl-content-topline *ngSwitchCase="classTypes.ToplineBite" [bite]="bite"></hxl-content-topline>
-    <hxl-content-chart *ngSwitchCase="classTypes.ChartBite" [bite]="bite"></hxl-content-chart>
-    <hxl-content-timeseries-chart *ngSwitchCase="classTypes.TimeseriesChartBite" [bite]="bite"></hxl-content-timeseries-chart>
+  <div *ngIf="!bite.errorMsg; else errorMessage">
+    <div class="content" [ngSwitch]="bite.type">
+      <hxl-content-topline *ngSwitchCase="classTypes.ToplineBite" [bite]="bite"></hxl-content-topline>
+      <hxl-content-chart *ngSwitchCase="classTypes.ChartBite" [bite]="bite"></hxl-content-chart>
+      <hxl-content-timeseries-chart *ngSwitchCase="classTypes.TimeseriesChartBite" [bite]="bite"></hxl-content-timeseries-chart>
+    </div>
   </div>
+  <ng-template #errorMessage>
+    <div class="content">{{bite.errorMsg}}</div>
+  </ng-template>
   <div class="description">
     <div class="description-content">
       {{ bite.description }}

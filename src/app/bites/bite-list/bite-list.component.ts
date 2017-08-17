@@ -71,7 +71,7 @@ export class BiteListComponent implements OnInit {
     this.logger.info('BiteListComponent on init');
     this.generateAvailableBites().subscribe(() => this.load());
 
-    if (this.appConfig.get('is_logged_in') === 'true') {
+    if (this.appConfig.get('has_modify_permission') === 'true') {
       this.smartChartsMenu.splice(0, 0,
         {
           displayValue: 'ADMIN SETTINGS',

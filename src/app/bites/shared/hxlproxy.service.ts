@@ -72,17 +72,23 @@ export class HxlproxyService {
         // this.logger.log(recipesStr);
 
         const biteLogic = BiteLogicFactory.createBiteLogic(bite);
+        const responseToBiteMapping = (response: Response) =>
+            biteLogic.populateWithHxlProxyInfo(response.json(), this.tagToTitleMap).getBite();
 
-        return this.makeCallToHxlProxy<Bite>([{key: 'recipe', value: recipesStr}],
-          (response: Response) => biteLogic.populateWithHxlProxyInfo(response.json(), this.tagToTitleMap).getBite()
-        );
+        const onErrorBiteProcessor = () => {
+          biteLogic.getBite().errorMsg = 'Error while retrieving data values';
+          return Observable.of(biteLogic.getBite());
+        }
+
+        return this.makeCallToHxlProxy<Bite>([{key: 'recipe', value: recipesStr}], responseToBiteMapping, onErrorBiteProcessor);
       }
     );
   }
 
 
   private makeCallToHxlProxy<T>(params: {key: string, value: string}[],
-                             mapFunction: (response: Response) => T): Observable<T> {
+                             mapFunction: (response: Response) => T,
+                             errorHandler?: () => Observable<T>): Observable<T> {
 
     // let myMapFunction: (response: Response) => T;
     // if (mapFunction) {
@@ -98,7 +104,7 @@ export class HxlproxyService {
       }
     }
     this.logger.log('The call will be made to: ', url);
-    return this.http.get(url).map(mapFunction.bind(this)).catch(err => this.handleError(err));
+    return this.http.get(url).map(mapFunction.bind(this)).catch(err => this.handleError(err, errorHandler));
   }
 
   private processMetaRowResponse(response: Response): string[][] {
@@ -124,7 +130,7 @@ export class HxlproxyService {
   //   this.logger.log('Test response is: ' + result);
   // }
 
-  private handleError (error: Response | any) {
+  private handleError (error: Response | any, errorHandler?: () => Observable<any>) {
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
@@ -133,8 +139,9 @@ export class HxlproxyService {
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
-    this.logger.error(errMsg);
-    return Observable.throw(errMsg);
+    console.error('ERR! ' + errMsg);
+    const retValue = errorHandler ? errorHandler() : Observable.throw(errMsg);
+    return retValue;
   }
 
 }
