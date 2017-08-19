@@ -133,9 +133,13 @@ export class HxlproxyService {
   private handleError (error: Response | any, errorHandler?: () => Observable<any>) {
     let errMsg: string;
     if (error instanceof Response) {
-      const body = error.json() || '';
-      const err = body.error || JSON.stringify(body);
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+      try{
+        const body = error.json() || '';
+        const err = body.error || JSON.stringify(body);
+        errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+      } catch(e) {
+        errMsg = e.toString();
+      }
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
