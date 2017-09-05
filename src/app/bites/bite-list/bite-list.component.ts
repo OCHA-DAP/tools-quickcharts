@@ -8,6 +8,8 @@ import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simpl
 import { SimpleModalComponent } from '../../common/component/simple-modal/simple-modal.component';
 import { Observable } from 'rxjs/Observable';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
+import { HttpService } from '../../shared/http.service';
+import { Http } from '@angular/http';
 
 @Component({
   selector: 'hxl-bite-list',
@@ -22,6 +24,7 @@ export class BiteListComponent implements OnInit {
   listIsFull: boolean;
 
   hxlUnsupported: boolean;
+  spinnerActive = false;
 
   smartChartsMenu: SimpleDropdownItem[];
 
@@ -45,11 +48,17 @@ export class BiteListComponent implements OnInit {
   /* Used for when only one widget is embedded in a page */
   singleWidgetMode: boolean;
 
-  constructor(private biteService: BiteService, private appConfig: AppConfigService, private logger: Logger) {
+  constructor(private biteService: BiteService, private appConfig: AppConfigService, private logger: Logger, http: Http) {
     this.biteList = [];
     this.listIsFull = false;
     this.logger = logger;
     this.hxlUnsupported = false;
+    const httpService: HttpService = <HttpService>http;
+    this.spinnerActive = httpService.loadingChange.value;
+    httpService.loadingChange.debounceTime(1000).subscribe((value) => {
+      this.spinnerActive = value;
+      console.log('SPINNER ACTIVE CHANGE;');
+    });
 
     this.smartChartsMenu = [
       {

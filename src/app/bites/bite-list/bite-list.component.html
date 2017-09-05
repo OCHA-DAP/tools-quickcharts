@@ -1,6 +1,6 @@
 <div>
   <div class="row list-header" *ngIf="!singleWidgetMode">
-    <div class="col-xs-10"><span class="list-header-title">Quick Charts</span></div>
+    <div class="col-xs-10"><span class="list-header-title">Quick Charts</span> <i *ngIf="spinnerActive"><img class="img-color" src="./assets/images/loading-spinner.gif"> Loading ...</i></div>
     <div class="col-xs-2 right-menu">
       <hxl-simple-dropdown [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="smartChartsMenu"
                        [linkText]="'More actions'" (selected)="doSaveAction($event)">
