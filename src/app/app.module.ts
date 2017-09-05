@@ -27,7 +27,7 @@ import { HttpService } from './shared/http.service';
     LOG_LOGGER_PROVIDERS,
     {
       provide: Http,
-      useFactory: (backend: XHRBackend, options: RequestOptions) => {
+      useFactory: function (backend: XHRBackend, options: RequestOptions) {
         return new HttpService(backend, options);
       },
       deps: [XHRBackend, RequestOptions]
