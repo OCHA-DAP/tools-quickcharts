@@ -14,11 +14,13 @@ import { HttpService } from './shared/http.service';
 
 export const HTTP_SERVICE_PROVIDERS: any = {
   provide: Http,
-  useFactory: function (backend: XHRBackend, options: RequestOptions) {
-    return new HttpService(backend, options);
-  },
+  useFactory: httpFactory,
   deps: [XHRBackend, RequestOptions]
 };
+
+export function httpFactory(backend: XHRBackend, options: RequestOptions) {
+  return new HttpService(backend, options);
+}
 
 @NgModule({
   declarations: [
