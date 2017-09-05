@@ -12,6 +12,14 @@ import { AnalyticsService } from './bites/shared/analytics.service';
 import { LOG_LOGGER_PROVIDERS } from 'angular2-logger/app/core/providers';
 import { HttpService } from './shared/http.service';
 
+export const HTTP_SERVICE_PROVIDERS: any = {
+  provide: Http,
+  useFactory: function (backend: XHRBackend, options: RequestOptions) {
+    return new HttpService(backend, options);
+  },
+  deps: [XHRBackend, RequestOptions]
+};
+
 @NgModule({
   declarations: [
     AppComponent
@@ -25,13 +33,7 @@ import { HttpService } from './shared/http.service';
   ],
   providers: [
     LOG_LOGGER_PROVIDERS,
-    {
-      provide: Http,
-      useFactory: function (backend: XHRBackend, options: RequestOptions) {
-        return new HttpService(backend, options);
-      },
-      deps: [XHRBackend, RequestOptions]
-    },
+    HTTP_SERVICE_PROVIDERS,
     AppConfigService,
     AnalyticsService,
     DomEventsService
