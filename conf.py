@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Smart Charts documentation build configuration file, created by
+# Quick Charts documentation build configuration file, created by
 # sphinx-quickstart on Thu Feb  2 07:58:03 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -55,7 +55,7 @@ source_suffix = ['.rst']
 master_doc = 'index'
 
 # General information about the project.
-project = u'Smart Charts'
+project = u'Quick Charts'
 copyright = u'2017, HDX Team'
 author = u'HDX Team'
 
@@ -140,7 +140,7 @@ html_theme = 'alabaster'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = u'Smart Charts vversion'
+# html_title = u'Quick Charts vversion'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -266,7 +266,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'HXLPreview.tex', u'Smart Charts Documentation',
+    (master_doc, 'HXLPreview.tex', u'Quick Charts Documentation',
      u'HDX Team', 'manual'),
 ]
 
@@ -308,7 +308,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'hxlpreview', u'Smart Charts Documentation',
+    (master_doc, 'hxlpreview', u'Quick Charts Documentation',
      [author], 1)
 ]
 
@@ -323,7 +323,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'HXLPreview', u'Smart Charts Documentation',
+    (master_doc, 'HXLPreview', u'Quick Charts Documentation',
      author, 'HXLPreview', 'One line description of project.',
      'Miscellaneous'),
 ]
