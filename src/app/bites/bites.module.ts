@@ -18,6 +18,7 @@ import { HdxPersistService } from './shared/persist/hdx-persist.service';
 import { ContentTimeseriesChartComponent } from './bite/content/content-timeseries-chart/content-timeseries-chart.component';
 import { CommonModule as MyCommonModule } from '../common/common.module';
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
+import { SimpleModule } from 'hdxtools-ng-lib';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
     SortablejsModule,
     FormsModule,
     MyCommonModule,
+    SimpleModule,
     BsDropdownModule.forRoot(),
     ModalModule.forRoot()
   ],

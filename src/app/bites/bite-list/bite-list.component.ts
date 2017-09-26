@@ -5,7 +5,7 @@ import {BiteService} from '../shared/bite.service';
 import {Logger} from 'angular2-logger/core';
 import {AppConfigService} from '../../shared/app-config.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
-import { SimpleModalComponent } from '../../common/component/simple-modal/simple-modal.component';
+import { SimpleModalComponent } from 'hdxtools-ng-lib';
 import { Observable } from 'rxjs/Observable';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { HttpService } from '../../shared/http.service';

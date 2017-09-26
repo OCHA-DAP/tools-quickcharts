@@ -3,7 +3,7 @@ import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 import { SimpleDropdownComponent } from './component/simple-dropdown/simple-dropdown.component';
 import { CommonModule as CoreCommonModule } from '@angular/common';
 import { NumberFormatPipe } from './pipe/number-format.pipe';
-import { SimpleModalComponent } from './component/simple-modal/simple-modal.component';
+// import { SimpleModalComponent } from './component/simple-modal/simple-modal.component';
 
 @NgModule({
   imports: [
@@ -11,7 +11,7 @@ import { SimpleModalComponent } from './component/simple-modal/simple-modal.comp
     BsDropdownModule.forRoot(),
     ModalModule.forRoot()
   ],
-  declarations: [SimpleDropdownComponent, NumberFormatPipe, SimpleModalComponent],
-  exports: [SimpleDropdownComponent, NumberFormatPipe, SimpleModalComponent]
+  declarations: [SimpleDropdownComponent, NumberFormatPipe],
+  exports: [SimpleDropdownComponent, NumberFormatPipe]
 })
 export class CommonModule { }
