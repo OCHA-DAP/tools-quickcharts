@@ -26,45 +26,48 @@ export class HttpService extends Http {
   }
 
   intercept(observable: Observable<Response>): Observable<Response> {
-    console.log('In the intercept routine..');
+    // console.log('In the intercept routine..');
     this.turnOnModal();
     return observable
       // .catch((err, source) => {
       //   console.log('Caught error: ' + err);
       // })
       .do((res: Response) => {
-        console.log('Response: ' + res);
+        // console.log('Response: ' + res);
       }, (err: any) => {
-        console.log('Caught error: ' + err);
+        // console.log('Caught error: ' + err);
       })
       .finally(() => {
-        console.log('Finally.. delaying, though.');
-        this.turnOffModal();
-        // const timer = Observable.timer(500);
-        // timer.subscribe(t => {
-        //   this.turnOffModal();
-        // });
+        // console.log('Finally.. delaying, though.');
+        // this.turnOffModal();
+        const timer = Observable.timer(300);
+        timer.subscribe(t => {
+          this.turnOffModal();
+        });
       });
   }
 
   private turnOnModal() {
     this.pendingRequests++;
+    // console.log('In the turn on: ' + this.pendingRequests);
     if (!this.showLoading) {
       // $('body').spin('modal', '#FFFFFF', 'rgba(51, 51, 51, 0.1)');
-      console.log('Turned on modal');
+      // console.log('Turned on modal');
     }
     this.changeShowLoading(true);
   }
 
   private turnOffModal() {
+    if (this.pendingRequests > 0) {
+      this.pendingRequests--;
+    }
+    // console.log('In the turn off: ' + this.pendingRequests);
     if (this.pendingRequests <= 0) {
       if (this.showLoading) {
         // $('body').spin('modal', '#FFFFFF', 'rgba(51, 51, 51, 0.1)');
       }
       this.changeShowLoading(false);
-      console.log('Turned off modal');
-    } else {
-      this.pendingRequests--;
+      // console.log('Turned off modal');
     }
   }
 }
