@@ -9,8 +9,8 @@ import { ContentChartComponent } from './bite/content/content-chart/content-char
 import { BiteService } from './shared/bite.service';
 import { SortablejsModule } from 'angular-sortablejs';
 import { RecipeService } from './shared/recipe.service';
-import { HxlproxyService } from './shared/hxlproxy.service';
-import { CookBookService } from './shared/cook-book.service';
+import { HxlproxyService } from 'hdxtools-ng-lib';
+import { CookBookService } from 'hdxtools-ng-lib';
 import { InlineEditComponent } from './shared/inline-edit/inline-edit.component';
 import { FormsModule } from '@angular/forms';
 import { PersistService } from './shared/persist.service';

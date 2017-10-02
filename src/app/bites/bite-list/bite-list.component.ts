@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {Bite} from '../bite/types/bite';
+import {Bite} from 'hdxtools-ng-lib';
 import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
 import {Logger} from 'angular2-logger/core';

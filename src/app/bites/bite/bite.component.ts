@@ -1,16 +1,16 @@
 import { Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import {Input, Output} from '@angular/core';
-import { Bite } from './types/bite';
-import { KeyFigureBite } from './types/key-figure-bite';
-import { ChartBite } from './types/chart-bite';
-import { TimeseriesChartBite } from './types/timeseries-chart-bite';
+import { Bite } from 'hdxtools-ng-lib';
+import { KeyFigureBite } from 'hdxtools-ng-lib';
+import { ChartBite } from 'hdxtools-ng-lib';
+import { TimeseriesChartBite } from 'hdxtools-ng-lib';
 import { Logger } from 'angular2-logger/core';
 import { BiteService } from 'app/bites/shared/bite.service';
 import { ContentChartComponent } from './content/content-chart/content-chart.component';
 import { ContentTimeseriesChartComponent } from './content/content-timeseries-chart/content-timeseries-chart.component';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
-import { BiteLogicFactory } from './types/bite-logic-factory';
-import { KeyFigureBiteLogic } from './types/key-figure-bite-logic';
+import { BiteLogicFactory } from 'hdxtools-ng-lib';
+import { KeyFigureBiteLogic } from 'hdxtools-ng-lib';
 
 @Component({
   selector: 'hxl-bite',

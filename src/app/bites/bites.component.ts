@@ -1,3 +1,4 @@
+import { HxlproxyService } from 'hdxtools-ng-lib';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterState, ActivatedRoute, Params } from '@angular/router';
 import { Logger } from 'angular2-logger/core';
@@ -16,7 +17,8 @@ export class BitesComponent implements OnInit {
   private state: RouterState;
 
   constructor(router: Router, private logger: Logger, private biteService: BiteService,
-              private appConfigService: AppConfigService, private analyticsService: AnalyticsService) {
+              private appConfigService: AppConfigService, private analyticsService: AnalyticsService,
+              private hxlProxyService: HxlproxyService) {
     this.onlyViewMode = false;
     this.state = router.routerState;
     this.recipeUrl = 'undefined';
@@ -31,6 +33,7 @@ export class BitesComponent implements OnInit {
         this.appConfigService.init(params);
         this.analyticsService.init();
         this.analyticsService.trackView();
+        this.hxlProxyService.init({'hxlProxy': this.appConfigService.get('hxlProxy')});
         const onlyViewMode = this.appConfigService.get('onlyViewMode');
         if (onlyViewMode === 'true') {
           this.onlyViewMode = true;

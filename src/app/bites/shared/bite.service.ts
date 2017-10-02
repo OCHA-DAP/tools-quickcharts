@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Bite } from '../bite/types/bite';
+import { Bite } from 'hdxtools-ng-lib';
 import { RecipeService } from './recipe.service';
 import { Logger } from 'angular2-logger/core';
-import { CookBookService } from './cook-book.service';
+import { CookBookService } from 'hdxtools-ng-lib';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
-import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
+import { BiteLogicFactory } from 'hdxtools-ng-lib';
 import { DomEventsService } from '../../shared/dom-events.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { PersisUtil } from './persist/persist-util';
@@ -125,7 +125,8 @@ export class BiteService {
   }
 
   generateAvailableBites(): Observable<Bite> {
-    return this.cookBookService.load(this.url);
+    console.log('Recipe url is:' + this.appConfigService.get('recipeUrl'));
+    return this.cookBookService.load(this.url, this.appConfigService.get('recipeUrl'));
   }
 
   initBite(bite: Bite): Observable<Bite> {

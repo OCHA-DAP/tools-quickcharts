@@ -1,4 +1,4 @@
-import { Bite } from '../../bite/types/bite';
+import { Bite } from 'hdxtools-ng-lib';
 
 export interface HxlPreviewConfig {
   configVersion: number;
