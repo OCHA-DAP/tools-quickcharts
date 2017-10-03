@@ -55,7 +55,7 @@ export class BiteListComponent implements OnInit {
     this.hxlUnsupported = false;
     const httpService: HttpService = <HttpService>http;
     this.spinnerActive = httpService.loadingChange.value;
-    httpService.loadingChange.debounceTime(1000).subscribe((value) => {
+    httpService.loadingChange.distinctUntilChanged().debounce(val => Observable.timer(val ? 100 : 800)).subscribe((value) => {
       this.spinnerActive = value;
       console.log('SPINNER ACTIVE CHANGE;');
     });
