@@ -27,6 +27,8 @@ export class BiteComponent implements OnInit {
   @Input()
   singleBite: boolean;
   @Input()
+  toolsMode: boolean;
+  @Input()
   listIsFull: boolean;
   @Input()
   availableBites: Bite[];

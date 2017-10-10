@@ -6,7 +6,10 @@
   (click)="edit(value)"
   [hidden]="(editing) || (!editMode)"
   [class.from-text-area]="textArea"
-> {{ value || placeholder }} </a>
+>
+  {{ value || placeholder }}
+  <i *ngIf="showEditIcon" class="glyphicon glyphicon-pencil"></i>
+</a>
 <input
   #editControl
   *ngIf="!textArea"
