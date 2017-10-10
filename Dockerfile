@@ -3,7 +3,7 @@ FROM alpine:3.6 AS builder
 ENV NPM_CONFIG_PROGRESS=false \
     NPM_CONFIG_SPIN=false
 
-WORKDIR /srv/wizard
+WORKDIR /srv/hxlpreview
 
 COPY . .
 
@@ -15,7 +15,7 @@ RUN apk add --update-cache \
         nano && \
     npm install -g @angular/cli && \
     npm install && \
-    ng build --prod -bh /wizard/
+    ng build --prod -bh /hxlpreview/
 
 FROM alpine:3.6
 
@@ -24,6 +24,6 @@ RUN apk add --update nginx && \
 
 COPY ./docker/default.conf /etc/nginx/conf.d/
 
-COPY --from=builder /srv/wizard/dist /var/www
+COPY --from=builder /srv/hxlpreview/dist /var/www
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
