@@ -36,7 +36,7 @@ export class BitesComponent implements OnInit {
           this.onlyViewMode = true;
         }
 
-        this.biteService.init(this.appConfigService.get('url'));
+        this.biteService.init();
       }
     );
   }
