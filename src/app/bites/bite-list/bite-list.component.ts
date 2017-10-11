@@ -41,8 +41,8 @@ export class BiteListComponent implements OnInit {
   @ViewChild('embedLinkModal')
   private embedLinkModal: SimpleModalComponent;
 
-  private embedUrl;
-  private iframeUrl;
+  embedUrl: string;
+  iframeUrl: string;
 
   /* Used for when only one widget is embedded in a page */
   singleWidgetMode: boolean;

@@ -67,7 +67,7 @@
               </div>
               <hr/>
             </div>
-            <div class="section" *ngIf="(bite.type != classTypes.ToplineBite) && (!bite.pieChart)">
+            <div class="section" *ngIf="(bite.type != classTypes.ToplineBite) && (!asChartBite(bite).pieChart)">
               <div class="section-title">
                 Axis & Grid
               </div>
