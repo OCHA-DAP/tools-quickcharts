@@ -25,7 +25,7 @@
   </div>
   <div class="footer">
     <div class="pull-left">
-      <a href="javascript:void(0)" (click)="createEmbedLink()">
+      <a *ngIf="!toolsMode" href="javascript:void(0)" (click)="createEmbedLink()">
         <i class="glyphicon glyphicon-open"></i>
         Export
       </a>
@@ -33,10 +33,14 @@
     <form #settingsForm="ngForm" (ngModelChange)="settingsModelChanged($event)">
       <div class="pull-right">
         <span class="powered-by" [class.display]="poweredByDisplay" *ngIf="poweredByDisplay">
-          <div class="settings-menu powered-by-menu dropdown-menu" >
+          <div *ngIf="poweredBySource != 'undefined' || poweredByUrl != 'undefined' || poweredByDate != 'undefined'" class="settings-menu powered-by-menu dropdown-menu" >
+            <div *ngIf="poweredBySource != 'undefined'">
               Source:
               <div class="black-color">{{ poweredBySource }}</div>
+            </div>
+            <div *ngIf="poweredByUrl != 'undefined' && poweredByDate != 'undefined'">
               <div><a href="{{ poweredByUrl }}" target="_blank">Data</a> - {{ poweredByDate }}</div>
+            </div>
           </div>
           Powered by
           <span class="img-span">
@@ -63,7 +67,7 @@
               </div>
               <hr/>
             </div>
-            <div class="section" *ngIf="(bite.type != classTypes.ToplineBite) && (!bite.pieChart)">
+            <div class="section" *ngIf="(bite.type != classTypes.ToplineBite) && (!asChartBite(bite).pieChart)">
               <div class="section-title">
                 Axis & Grid
               </div>

@@ -13,7 +13,7 @@ import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class BiteService {
-
+  public quickChartsTitle = 'Quick Charts';
   public url: string;
   private nextId = 0;
 
@@ -35,8 +35,12 @@ export class BiteService {
     this.persistUtil = new PersisUtil(logger);
   }
 
-  public init(url: string) {
-    this.url = url;
+  public init() {
+    this.url = this.appConfigService.get('url');
+    const title = this.appConfigService.get('embeddedTitle');
+    if (title) {
+      this.quickChartsTitle = title;
+    }
   }
 
   public getNextId(): number {
@@ -100,10 +104,11 @@ export class BiteService {
     const embeddedSource = encodeURIComponent(this.appConfigService.get('embeddedSource'));
     const embeddedUrl = encodeURIComponent(this.appConfigService.get('embeddedUrl'));
     const embeddedDate = encodeURIComponent(this.appConfigService.get('embeddedDate'));
+    const embeddedTitle = this.quickChartsTitle;
 
     return `${protocol}//${hostname}${port}${pathWithoutParams};` +
            `url=${url};embeddedSource=${embeddedSource};embeddedUrl=${embeddedUrl};embeddedDate=${embeddedDate};` +
-           `embeddedConfig=${embeddedConfig}${singleWidgetMode}`;
+           `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}`;
   }
 
   /**

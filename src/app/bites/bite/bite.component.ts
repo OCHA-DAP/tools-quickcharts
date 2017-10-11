@@ -27,6 +27,8 @@ export class BiteComponent implements OnInit {
   @Input()
   singleBite: boolean;
   @Input()
+  toolsMode: boolean;
+  @Input()
   listIsFull: boolean;
   @Input()
   availableBites: Bite[];
@@ -48,9 +50,9 @@ export class BiteComponent implements OnInit {
   private timeseriesComponent: ContentTimeseriesChartComponent;
 
   classTypes: any = {};
-  private settingsDisplay: Boolean = false;
+  settingsDisplay: Boolean = false;
   private uuid: number;
-  private poweredByDisplay: Boolean = false;
+  poweredByDisplay: Boolean = false;
   private poweredBySource: String;
   private poweredByUrl: String;
   private poweredByDate: String;
@@ -102,6 +104,10 @@ export class BiteComponent implements OnInit {
   createEmbedLink() {
     const embedUrl = this.biteService.exportBitesToURL([this.bite], true);
     this.onEmbedUrlCreate.emit(embedUrl);
+  }
+
+  asChartBite(bite: Bite): ChartBite {
+    return <ChartBite>bite;
   }
 }
 

@@ -1,7 +1,11 @@
 <div>
   <div class="row list-header" *ngIf="!singleWidgetMode">
-    <div class="col-xs-10"><span class="list-header-title">Quick Charts</span> <i *ngIf="spinnerActive"><img class="img-color" src="./assets/images/loading-spinner.gif"> Loading ...</i></div>
-    <div class="col-xs-2 right-menu">
+    <div class="col-xs-10">
+      <hxl-inline-edit id="list-header-title" class="list-header-title" [(ngModel)]="biteService.quickChartsTitle" [editMode]="toolsMode" [placeholder]="'...'" [showEditIcon]="true" [maxEditorWidth]="'80%'"></hxl-inline-edit>
+      <!--<span class="list-header-title">Quick Charts</span>-->
+      <i *ngIf="spinnerActive"><img class="img-color" src="./assets/images/loading-spinner.gif"> Loading ...</i>
+    </div>
+    <div class="col-xs-2 right-menu" *ngIf="!toolsMode">
       <hxl-simple-dropdown [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="smartChartsMenu"
                        [linkText]="'More actions'" (selected)="doSaveAction($event)">
       </hxl-simple-dropdown>
@@ -15,7 +19,7 @@
   <hxl-simple-modal [title]="'Embed Quick Charts'" #embedLinkModal>
     Please copy the code below to embed the quick charts.
     <a href="{{embedUrl}}" target="_blank">See example here</a>:
-    <input type="text" onfocus="this.setSelectionRange(0, this.value.length)" onClick="this.setSelectionRange(0, this.value.length)" readonly [(ngModel)]="iframeUrl" style="width: 100%;" />
+    <input type="text" onfocus="this.setSelectionRange(0, 0); this.setSelectionRange(0, this.value.length)" onClick="this.setSelectionRange(0, 0); this.setSelectionRange(0, this.value.length)" readonly [(ngModel)]="iframeUrl" style="width: 100%;" />
   </hxl-simple-modal>
 </div>
 
@@ -30,7 +34,8 @@
     *ngFor="let bite of biteList; let idx = index;"
   >
     <hxl-bite [listIsFull]="listIsFull" [bite]="bite"
-              [availableBites]="availableBites" [index]="idx + 1" [singleBite]="biteList.length === 1"
+              [availableBites]="availableBites" [index]="idx + 1"
+              [singleBite]="biteList.length === 1" [toolsMode]="toolsMode"
               (onDelete)="deleteBite($event)" (onSwitch)="switchBite($event)"
               (onEmbedUrlCreate)="singleEmbedUrlCreated($event)">
     </hxl-bite>

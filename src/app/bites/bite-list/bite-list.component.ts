@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
 import {Bite} from 'hdxtools-ng-lib';
+import { Component, HostListener, NgZone, OnInit, ViewChild } from '@angular/core';
 import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
 import {Logger} from 'angular2-logger/core';
@@ -17,7 +17,6 @@ import { Http } from '@angular/http';
   styleUrls: ['./bite-list.component.less']
 })
 export class BiteListComponent implements OnInit {
-
   biteList: Array<Bite>;
   availableBites: Array<Bite>;
 
@@ -42,20 +41,40 @@ export class BiteListComponent implements OnInit {
   @ViewChild('embedLinkModal')
   private embedLinkModal: SimpleModalComponent;
 
-  private embedUrl;
-  private iframeUrl;
+  embedUrl: string;
+  iframeUrl: string;
 
   /* Used for when only one widget is embedded in a page */
   singleWidgetMode: boolean;
+  toolsMode: boolean;
 
-  constructor(private biteService: BiteService, private appConfig: AppConfigService, private logger: Logger, http: Http) {
+  @HostListener('window:message', ['$event'])
+  onEmbedUrl($event) {
+    const action = $event.data;
+    const GET_EMBED_URL = 'getEmbedUrl:';
+    if (action && action.startsWith && action.startsWith(GET_EMBED_URL)) {
+      if (window.parent) {
+        console.log('Sending event back to parent :)');
+        const parentOrigin: string = action.slice(GET_EMBED_URL.length);
+        // console.log(`Parent Origin: ${parentOrigin}`);
+        const url = this.getEmbedLink();
+        window.parent.postMessage(`embedUrl:${url}`, parentOrigin);
+        return;
+      }
+    }
+    console.log('Unknown message: ' + $event.data);
+  }
+
+  constructor(public biteService: BiteService, private appConfig: AppConfigService, private logger: Logger, http: Http, zone: NgZone) {
+    // window['angularComponentRef'] = {component: this, zone: zone};
+
     this.biteList = [];
     this.listIsFull = false;
     this.logger = logger;
     this.hxlUnsupported = false;
     const httpService: HttpService = <HttpService>http;
     this.spinnerActive = httpService.loadingChange.value;
-    httpService.loadingChange.debounceTime(1000).subscribe((value) => {
+    httpService.loadingChange.distinctUntilChanged().debounce(val => Observable.timer(val ? 100 : 800)).subscribe((value) => {
       this.spinnerActive = value;
       console.log('SPINNER ACTIVE CHANGE;');
     });
@@ -101,6 +120,7 @@ export class BiteListComponent implements OnInit {
     }
 
     this.singleWidgetMode = this.appConfig.get('singleWidgetMode') === 'true';
+    this.toolsMode = this.appConfig.get('toolsMode') === 'true';
   }
 
   private removeLoadedBiteToList(bite: Bite): void {
@@ -212,6 +232,10 @@ export class BiteListComponent implements OnInit {
     this.embedUrl = event;
     this.iframeUrl = this.generateIframeUrl(this.embedUrl);
     this.embedLinkModal.show();
+  }
+
+  getEmbedLink() {
+    return this.biteService.exportBitesToURL(this.biteList);
   }
 
   doSaveAction(action: string) {

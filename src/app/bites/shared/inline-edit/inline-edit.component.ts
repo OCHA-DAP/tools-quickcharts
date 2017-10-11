@@ -24,6 +24,8 @@ export class InlineEditComponent implements OnInit, ControlValueAccessor {
   @Input()
   public textArea = false;
   @Input()
+  public showEditIcon = false;
+  @Input()
   public placeholder: string;
   @Input()
   public maxEditorWidth: string;
