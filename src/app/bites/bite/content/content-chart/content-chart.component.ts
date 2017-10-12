@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
-import { ChartBite } from '../../types/chart-bite';
+import { ChartBite } from 'hdxtools-ng-lib';
 import { Input } from '@angular/core';
 
 declare const c3: any;

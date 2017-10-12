@@ -3,7 +3,7 @@ import { Logger } from 'angular2-logger/core';
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { PersistService } from '../persist.service';
-import { Bite } from '../../bite/types/bite';
+import { Bite } from 'hdxtools-ng-lib';
 import { AppConfigService } from '../../../shared/app-config.service';
 import { AnalyticsService } from '../analytics.service';
 import { PersisUtil } from './persist-util';

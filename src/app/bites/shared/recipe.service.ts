@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Bite } from '../bite/types/bite';
+import { Bite } from 'hdxtools-ng-lib';
 import { Observable } from 'rxjs/Observable';
-import { HxlproxyService } from './hxlproxy.service';
+import { HxlproxyService } from 'hdxtools-ng-lib';
 import { Logger } from 'angular2-logger/core';
-import { BiteLogicFactory } from '../bite/types/bite-logic-factory';
+import { BiteLogicFactory } from 'hdxtools-ng-lib';
 import 'rxjs/add/observable/concat';
 import 'rxjs/Rx';
 
