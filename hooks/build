@@ -1,0 +1,7 @@
+
+BASE_HREF="/hxlpreview"
+if [ "$SOURCE_BRANCH" == "tools" ]; then
+    BASE_HREF="/quickcharts/app"
+fi
+
+docker build --build-arg BASE_HREF=$BASE_HREF -t $IMAGE_NAME .
