@@ -24,7 +24,7 @@ FROM alpine:3.6
 
 RUN apk add --update nginx && \
     mkdir -p /run/nginx && \
-    sed -i "s/{{BASE_HREF}}/$BASE_HREF" ./docker/default.conf
+    sed -i "s/{{BASE_HREF}}/$BASE_HREF/" ./docker/default.conf
 
 COPY ./docker/default.conf /etc/nginx/conf.d/
 
