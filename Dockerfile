@@ -3,8 +3,8 @@ FROM alpine:3.6 AS builder
 ENV NPM_CONFIG_PROGRESS=false \
     NPM_CONFIG_SPIN=false
 
-ARG BASE_HREF=/hxlpreview \
-    BUILD_ENV=production
+ARG BASE_HREF=/hxlpreview
+ARG BUILD_ENV=production
 
 WORKDIR /srv/hxlpreview
 
