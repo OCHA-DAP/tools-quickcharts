@@ -1,8 +1,10 @@
 #!/bin/sh
 
 BASE_HREF="/hxlpreview"
+BUILD_ENV=production
 if [ "$SOURCE_BRANCH" == "tools" ]; then
     BASE_HREF="/quickcharts/app"
+    BUILD_ENV=tools
 fi
 
-docker build --build-arg BASE_HREF=$BASE_HREF -t $IMAGE_NAME .
+docker build --build-arg BASE_HREF=$BASE_HREF --build-arg BUILD_ENV=$BUILD_ENV -t $IMAGE_NAME .

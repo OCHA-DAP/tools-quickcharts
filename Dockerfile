@@ -3,7 +3,8 @@ FROM alpine:3.6 AS builder
 ENV NPM_CONFIG_PROGRESS=false \
     NPM_CONFIG_SPIN=false
 
-ARG BASE_HREF=/hxlpreview
+ARG BASE_HREF=/hxlpreview \
+    BUILD_ENV=production
 
 WORKDIR /srv/hxlpreview
 
@@ -17,7 +18,7 @@ RUN apk add --update-cache \
         nano && \
     npm install -g @angular/cli && \
     npm install && \
-    ng build --prod -bh $BASE_HREF/
+    ng build --target=production --environment=$BUILD_ENV  --aot=false -bh $BASE_HREF/
 
 FROM alpine:3.6
 
