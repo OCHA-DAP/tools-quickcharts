@@ -22,11 +22,12 @@ RUN apk add --update-cache \
 
 FROM alpine:3.6
 
+COPY ./docker/default.conf /tmp
+
 RUN apk add --update nginx && \
     mkdir -p /run/nginx && \
-    sed -i "s/{{BASE_HREF}}/$BASE_HREF/" ./docker/default.conf
-
-COPY ./docker/default.conf /etc/nginx/conf.d/
+    sed -i "s/{{BASE_HREF}}/$BASE_HREF" /tmp/default.conf && \
+    mv /tmp/default.conf /etc/nginx/conf.d
 
 COPY --from=builder /srv/hxlpreview/dist /var/www
 
