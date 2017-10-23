@@ -92,12 +92,15 @@
     }
 
     .powered-by {
-      .sourceSansProFont(400, 12px);
-      color: @grayColor;
-      cursor: pointer;
-      position: relative;
-      padding-top:10px; //hover into popup
       display: none;
+
+      &, a {
+        .sourceSansProFont(400, 12px);
+        color: @grayColor;
+        cursor: pointer;
+        position: relative;
+        padding-top:10px; //hover into popup
+      }
 
       &.display {
         display: inline;
