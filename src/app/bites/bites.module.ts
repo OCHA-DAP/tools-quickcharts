@@ -11,6 +11,7 @@ import { SortablejsModule } from 'angular-sortablejs';
 import { RecipeService } from './shared/recipe.service';
 import { HxlproxyService } from 'hdxtools-ng-lib';
 import { CookBookService } from 'hdxtools-ng-lib';
+import { AnalyticsService } from 'hdxtools-ng-lib';
 import { InlineEditComponent } from './shared/inline-edit/inline-edit.component';
 import { FormsModule } from '@angular/forms';
 import { PersistService } from './shared/persist.service';
@@ -42,6 +43,7 @@ import { SimpleModule } from 'hdxtools-ng-lib';
     RecipeService,
     HxlproxyService,
     CookBookService,
+    AnalyticsService,
     {
       provide: PersistService,
       useClass: HdxPersistService
