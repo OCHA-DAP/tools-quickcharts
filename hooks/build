@@ -1,0 +1,12 @@
+#!/bin/bash
+
+BASE_HREF="/hxlpreview"
+BUILD_ENV=prod
+
+if [ "$SOURCE_BRANCH" == "tools" ]; then
+    BASE_HREF="/quickcharts/app"
+    BUILD_ENV=tools
+fi
+
+echo "Starting curtom build with BASE_HREF=$BASE_HREF and BUILD_ENV=$BUILD_ENV..."
+docker build --build-arg BASE_HREF=$BASE_HREF --build-arg BUILD_ENV=$BUILD_ENV -t $IMAGE_NAME .
