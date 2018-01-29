@@ -13,15 +13,17 @@ declare const mixpanel: any;
  */
 @Injectable()
 export class AnalyticsService {
+  public mpToken: string;
+  public gaToken: string;
 
   constructor(private logger: Logger, private appConfig: AppConfigService, private genericAnalyticsService: GenericAnalyticsService) { }
 
   public init() {
-    const gaToken = this.appConfig.get('googleAnalyticsKey');
-    const mpToken = this.appConfig.thisIsProd() ?
+    this.gaToken = this.appConfig.get('googleAnalyticsKey');
+    this.mpToken = this.appConfig.thisIsProd() ?
         this.appConfig.get('prodMixpanelKey') : this.appConfig.get('testMixpanelKey');
 
-    this.genericAnalyticsService.init(gaToken, mpToken);
+    this.genericAnalyticsService.init(this.gaToken, this.mpToken);
   }
 
   public trackView() {
