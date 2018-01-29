@@ -1,12 +1,25 @@
 #!/bin/bash
 
-BASE_HREF="/hxlpreview"
-BUILD_ENV=prod
+# BASE_HREF="/hxlpreview"
+# BUILD_ENV=prod
 
-if [ "$SOURCE_BRANCH" == "tools" ]; then
-    BASE_HREF="/quickcharts/app"
-    BUILD_ENV=tools
-fi
+# if [ "$SOURCE_BRANCH" == "tools" ]; then
+#     BASE_HREF="/quickcharts/app"
+#     BUILD_ENV=tools
+# fi
 
-echo "Starting curtom build with BASE_HREF=$BASE_HREF and BUILD_ENV=$BUILD_ENV..."
-docker build --build-arg BASE_HREF=$BASE_HREF --build-arg BUILD_ENV=$BUILD_ENV -t $IMAGE_NAME .
+# echo "Starting custom build with BASE_HREF=$BASE_HREF and BUILD_ENV=$BUILD_ENV..."
+# docker build --build-arg BASE_HREF=$BASE_HREF --build-arg BUILD_ENV=$BUILD_ENV -t $IMAGE_NAME .
+
+echo "Building quickcharts (tools) image..."
+docker build \
+    --build-arg BASE_HREF="/quickcharts/app" \
+    --build-arg BUILD_ENV=tools \
+    -t ${DOCKER_REPO}:${SOURCE_BRANCH}-tools .
+
+echo "Building hxlpreview (ckan) image..."
+docker build \
+    --build-arg BASE_HREF="/hxlpreview" \
+    --build-arg BUILD_ENV=prod  
+    -t ${DOCKER_REPO}:${SOURCE_BRANCH}-ckan .
+
