@@ -1,0 +1,5 @@
+echo "Pushing ckan tag..."
+docker push ${DOCKER_REPO}:${SOURCE_BRANCH}-ckan
+
+echo "Pushing tools tag..."
+docker push ${DOCKER_REPO}:${SOURCE_BRANCH}-tools
