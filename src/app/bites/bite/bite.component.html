@@ -33,7 +33,7 @@
     <form #settingsForm="ngForm" (ngModelChange)="settingsModelChanged($event)">
       <div class="pull-right">
         <span class="powered-by" [class.display]="poweredByDisplay" *ngIf="poweredByDisplay">
-          <a href="/quickcharts/" target="_blank">
+          <a href="https://tools.humdata.org/quickcharts/" target="_blank">
             <div *ngIf="poweredBySource != 'undefined' || poweredByUrl != 'undefined' || poweredByDate != 'undefined'" class="settings-menu powered-by-menu dropdown-menu" >
               <div *ngIf="poweredBySource != 'undefined'">
                 Source:
