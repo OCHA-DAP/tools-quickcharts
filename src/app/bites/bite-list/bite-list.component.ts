@@ -24,6 +24,7 @@ export class BiteListComponent implements OnInit {
 
   hxlUnsupported: boolean;
   spinnerActive = false;
+  resetMode = false;
 
   smartChartsMenu: SimpleDropdownItem[];
 
@@ -96,8 +97,7 @@ export class BiteListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.logger.info('BiteListComponent on init');
-    this.generateAvailableBites().subscribe(() => this.load());
+    this.init();
 
     if (this.appConfig.get('has_modify_permission') === 'true') {
       this.smartChartsMenu.splice(0, 0,
@@ -131,24 +131,28 @@ export class BiteListComponent implements OnInit {
   }
 
   private load() {
-    this.biteService.getBites().subscribe(
-      (bite: Bite) => {
-        this.logger.log('Processing bite ' + JSON.stringify(bite));
+    if (!this.resetMode) {
+      this.biteService.getBites().subscribe(
+        (bite: Bite) => {
+          this.logger.log('Processing bite ' + JSON.stringify(bite));
 
-        this.biteList.push(bite);
-        this.logger.log('biteList ' + JSON.stringify(this.biteList));
-      },
-      errObj => {
-        this.logger.log('load>getBites>in ERROR...');
-      },
-      () => {
-        this.logger.log('load>getBites>on COMPLETE...');
+          this.biteList.push(bite);
+          this.logger.log('biteList ' + JSON.stringify(this.biteList));
+        },
+        errObj => {
+          this.logger.log('load>getBites>in ERROR...');
+        },
+        () => {
+          this.logger.log('load>getBites>on COMPLETE...');
 
-        if (this.availableBites && this.biteList && this.availableBites.length !== 0 && this.biteList.length === 0) {
-          this.loadDefaultBites();
+          if (this.availableBites && this.biteList && this.availableBites.length !== 0 && this.biteList.length === 0) {
+            this.loadDefaultBites();
+          }
         }
-      }
-    );
+      );
+    } else {
+      this.loadDefaultBites();
+    }
   }
 
   // loads 3 bites as default when no other bites are saved
@@ -183,6 +187,13 @@ export class BiteListComponent implements OnInit {
     this.addBite(orderedBites[1]);
     this.addBite(orderedBites[2]);
 
+  }
+
+  init() {
+    this.availableBites = null;
+    this.biteList = [];
+    this.logger.info('BiteListComponent on init');
+    this.generateAvailableBites().subscribe(() => this.load());
   }
 
   addBite(bite: Bite) {
@@ -246,7 +257,8 @@ export class BiteListComponent implements OnInit {
       this.iframeUrl = this.generateIframeUrl(this.embedUrl);
       this.embedLinkModal.show();
     } else if (action === 'save-views') {
-      this.biteService.saveBites(this.biteList).subscribe(
+      const biteListToSave = this.resetMode ? [] : this.biteList;
+      this.biteService.saveBites(biteListToSave).subscribe(
         (successful: boolean) => {
           this.logger.log('Result of bites saved: ' + successful);
           this.savedModalMessage = 'Your configuration was saved on the server !';
