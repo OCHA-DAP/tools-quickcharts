@@ -17,7 +17,6 @@
       "prefix": "hxl",
       "mobile": false,
       "styles": [
-        "../node_modules/bootstrap/dist/css/bootstrap.min.css",
         "../node_modules/c3/c3.min.css",
         "styles.less"
       ],
