@@ -1,5 +1,7 @@
 FROM alpine:3.6 AS builder
 
+EXPOSE 80
+
 ENV NPM_CONFIG_PROGRESS=false \
     NPM_CONFIG_SPIN=false
 
