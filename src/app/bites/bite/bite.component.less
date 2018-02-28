@@ -7,6 +7,22 @@
   border-bottom: 1px solid #eee;
   position: relative;
 
+  //propagate chart style into child components
+  /deep/ .c3 > svg {
+    .c3-axis {
+      fill: @darkGrayColor;
+      > .tick {
+        fill: @darkGrayColor;
+        > line {
+          stroke: @grayColor;
+        }
+      }
+      > path {
+        stroke: @grayColor;
+      }
+    }
+  }
+
   &.settings-open {
     border-color: @blueColor;
   }
