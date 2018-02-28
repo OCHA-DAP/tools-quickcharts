@@ -46,6 +46,17 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     return string;
   }
 
+  protected tooltipFormatter(d, defaultTitleFormat, defaultValueFormat, color) {
+    const name = defaultTitleFormat(d[0].x);
+    const value = defaultValueFormat(d[0].value);
+    const tooltip = '' +
+      '<div class="c3-hxl-bites-tooltip">' +
+      ' <span class="name">' + name + '</span>' + ' <span class="value">' + value + '</span>' +
+      '</div>';
+
+    return tooltip;
+  }
+
   protected generateOptions(): {} {
     this.overwriteXAxisLabel();
 
@@ -81,7 +92,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         format: {
           title: function (x) { return this.bite.categories[x]; }.bind(this),
           value: undefined
-        }
+        },
+        contents: this.tooltipFormatter
       },
       color: {
         pattern: ['#1ebfb3', '#0077ce', '#f2645a', '#9C27B0']

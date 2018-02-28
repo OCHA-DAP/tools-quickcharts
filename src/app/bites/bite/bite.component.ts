@@ -11,7 +11,6 @@ import { ContentTimeseriesChartComponent } from './content/content-timeseries-ch
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { BiteLogicFactory } from 'hxl-preview-ng-lib';
 import { KeyFigureBiteLogic } from 'hxl-preview-ng-lib';
-import { environment } from '../../../environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({

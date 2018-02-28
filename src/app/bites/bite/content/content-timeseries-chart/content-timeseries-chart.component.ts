@@ -33,7 +33,8 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
         x: {
           type: 'timeseries',
           tick: {
-            count: 10,
+            count: 7,
+            rotate: 15,
             format: '%Y-%m-%d'
             // culling: {
             //   max: 4
@@ -52,6 +53,9 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
         y: {
           show: this.bite.showGrid
         }
+      },
+      tooltip: {
+        contents: this.tooltipFormatter
       },
       point: {
         show: false
