@@ -14,6 +14,7 @@
       > .tick {
         fill: @darkGrayColor;
         > line {
+          display: none;
           stroke: @grayColor;
         }
       }
@@ -105,6 +106,12 @@
     i {
       vertical-align: middle;
       font-size: 16px;
+    }
+
+    .left-section {
+       a ~ a {
+        margin-left: 5px;
+      }
     }
 
     .powered-by {

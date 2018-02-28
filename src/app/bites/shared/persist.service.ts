@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Bite } from 'hdxtools-ng-lib';
+import { Bite } from 'hxl-preview-ng-lib';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()

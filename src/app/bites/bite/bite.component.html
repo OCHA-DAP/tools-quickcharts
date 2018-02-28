@@ -24,10 +24,11 @@
     </div>
   </div>
   <div class="footer">
-    <div class="pull-left">
+    <div class="left-section pull-left">
       <a *ngIf="!toolsMode" href="javascript:void(0)" (click)="createEmbedLink()">
         <i class="glyphicon glyphicon-link"></i>
-        &nbsp;
+      </a>
+      <a href="javascript:void(0)" (click)="saveAsImage()">
         <i class="glyphicon glyphicon-save-file"></i>
       </a>
     </div>
@@ -79,9 +80,8 @@
                   Reverse Axis
                 </label>
                 <div class="checkbox-slider pull-right">
-                  <input [(ngModel)]="settingsModel.swapAxis"
-                         [checked]="settingsModel.swapAxis"
-                         (ngModelChange)="renderContent()"
+                  <input [checked]="settingsModel.swapAxis"
+                         (change)="settingsModel.swapAxis = $event.target.checked; renderContent()"
                          type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="reverse-axis-{{uuid}}">
                   <label class="checkbox-slider-label" for="reverse-axis-{{uuid}}">
                     <span class="checkbox-slider-inner"></span>
@@ -94,9 +94,8 @@
                   Show Grid
                 </label>
                 <div class="checkbox-slider pull-right">
-                  <input [(ngModel)]="settingsModel.showGrid"
-                         [checked]="settingsModel.showGrid"
-                         (ngModelChange)="renderContent()"
+                  <input [checked]="settingsModel.showGrid"
+                         (change)="settingsModel.showGrid = $event.target.checked; renderContent()"
                          type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="show-grid-{{uuid}}">
                   <label class="checkbox-slider-label" for="show-grid-{{uuid}}">
                     <span class="checkbox-slider-inner"></span>
