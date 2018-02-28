@@ -43,7 +43,8 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
         },
         y: {
           tick: {
-            rotate: 30
+            rotate: 30,
+            format: this.numberFormatter
           }
         }
       },

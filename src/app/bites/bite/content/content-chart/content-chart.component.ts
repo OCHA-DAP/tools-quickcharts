@@ -36,6 +36,16 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     }
   }
 
+  protected numberFormatter(value) {
+    const formatter = d3.format('.2s');
+    let string = formatter(value);
+    string = string.replace('G', 'B'); // Billions at more than 6 digits :)
+    if (string.endsWith('.0')) {
+      string = string.replace('.0', '');
+    }
+    return string;
+  }
+
   protected generateOptions(): {} {
     this.overwriteXAxisLabel();
 
@@ -56,7 +66,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         },
         y: {
           tick: {
-            rotate: 30
+            rotate: 30,
+            format: this.numberFormatter
           }
         }
       },
