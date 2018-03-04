@@ -9,9 +9,9 @@ import { ContentChartComponent } from './bite/content/content-chart/content-char
 import { BiteService } from './shared/bite.service';
 import { SortablejsModule } from 'angular-sortablejs';
 import { RecipeService } from './shared/recipe.service';
-import { HxlproxyService } from 'hdxtools-ng-lib';
-import { CookBookService } from 'hdxtools-ng-lib';
-import { AnalyticsService } from 'hdxtools-ng-lib';
+import { HxlproxyService } from 'hxl-preview-ng-lib';
+import { CookBookService } from 'hxl-preview-ng-lib';
+import { AnalyticsService } from 'hxl-preview-ng-lib';
 import { InlineEditComponent } from './shared/inline-edit/inline-edit.component';
 import { FormsModule } from '@angular/forms';
 import { PersistService } from './shared/persist.service';
@@ -19,7 +19,7 @@ import { HdxPersistService } from './shared/persist/hdx-persist.service';
 import { ContentTimeseriesChartComponent } from './bite/content/content-timeseries-chart/content-timeseries-chart.component';
 import { CommonModule as MyCommonModule } from '../common/common.module';
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
-import { SimpleModule } from 'hdxtools-ng-lib';
+import { SimpleModule } from 'hxl-preview-ng-lib';
 
 @NgModule({
   imports: [

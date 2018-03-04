@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
-import { AnalyticsService as GenericAnalyticsService, GA_PAGEVIEW } from 'hdxtools-ng-lib';
+import { AnalyticsService as GenericAnalyticsService, GA_PAGEVIEW } from 'hxl-preview-ng-lib';
 import { AppConfigService } from '../../shared/app-config.service';
 
 declare const ga: any;
