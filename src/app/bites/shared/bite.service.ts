@@ -10,6 +10,7 @@ import { DomEventsService } from '../../shared/dom-events.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { PersisUtil } from './persist/persist-util';
 import { Observable } from 'rxjs/Observable';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class BiteService {
@@ -78,6 +79,18 @@ export class BiteService {
       return path.slice(0, index);
     }
     return '';
+  }
+
+  saveAsImage(biteList: Bite[], isSingleWidgetMode?: boolean ) {
+    const snapService = environment.snapService;
+    const url = this.exportBitesToURL(biteList, isSingleWidgetMode);
+    const urlEncoded = encodeURIComponent(url);
+    const viewPortWidth = isSingleWidgetMode ? 500 : 1280;
+    const pngDownloadUrl = `${snapService}/png?viewport={"width": ${viewPortWidth}, "height": 1}&url=${urlEncoded}`;
+
+    setTimeout(() => {
+      window.open(pngDownloadUrl, '_blank');
+    }, 2);
   }
 
   exportBitesToURL(biteList: Bite[], isSingleWidgetMode?: boolean): string {

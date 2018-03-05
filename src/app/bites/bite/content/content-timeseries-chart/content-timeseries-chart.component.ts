@@ -33,8 +33,9 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
         x: {
           type: 'timeseries',
           tick: {
-            count: 10,
-            format: '%Y-%m-%d'
+            count: 7,
+            rotate: 15,
+            format: '%d %b %Y'
             // culling: {
             //   max: 4
             // }
@@ -43,7 +44,8 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
         },
         y: {
           tick: {
-            rotate: 30
+            rotate: 30,
+            format: this.numberFormatter
           }
         }
       },
@@ -52,8 +54,14 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
           show: this.bite.showGrid
         }
       },
+      tooltip: {
+        contents: this.tooltipFormatter.bind(this)
+      },
       point: {
         show: false
+      },
+      color: {
+        pattern: [this.bite.color]
       }
     };
   }

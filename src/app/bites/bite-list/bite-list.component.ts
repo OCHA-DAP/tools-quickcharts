@@ -89,6 +89,11 @@ export class BiteListComponent implements OnInit {
         displayValue: 'Embed',
         type: 'menuitem',
         payload: 'embed'
+      },
+      {
+        displayValue: 'Save as image',
+        type: 'menuitem',
+        payload: 'image'
       }
 
     ];
@@ -238,6 +243,11 @@ export class BiteListComponent implements OnInit {
     return this.biteService.exportBitesToURL(this.biteList);
   }
 
+  saveAsImage() {
+    return this.biteService.exportBitesToURL(this.biteList);
+  }
+
+
   doSaveAction(action: string) {
     // this.logger.log(action + ' - ' +
     //   this.biteService.exportBitesToURL(this.biteList));
@@ -245,6 +255,8 @@ export class BiteListComponent implements OnInit {
       this.embedUrl = this.biteService.exportBitesToURL(this.biteList);
       this.iframeUrl = this.generateIframeUrl(this.embedUrl);
       this.embedLinkModal.show();
+    } else if (action === 'image') {
+      this.biteService.saveAsImage(this.biteList);
     } else if (action === 'save-views') {
       this.biteService.saveBites(this.biteList).subscribe(
         (successful: boolean) => {

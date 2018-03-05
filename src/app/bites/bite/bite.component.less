@@ -7,6 +7,36 @@
   border-bottom: 1px solid #eee;
   position: relative;
 
+  //propagate chart style into child components
+  /deep/ .c3 > svg {
+    .c3-axis {
+      fill: @darkGrayColor;
+      > .tick {
+        fill: @darkGrayColor;
+        > line {
+          display: none;
+          stroke: @grayColor;
+        }
+      }
+      > path {
+        stroke: @grayColor;
+      }
+    }
+  }
+  /deep/ .c3-hxl-bites-tooltip {
+    background-color: rgba(255,255,255, 0.7);
+    border: 1px dashed @grayColor;
+    .name {
+      margin: 5px 0;
+      padding: 0 5px;
+    }
+    .value {
+      margin: 5px 0;
+      padding: 0 5px;
+      border-left: 1px dashed @grayColor;
+    }
+  }
+
   &.settings-open {
     border-color: @blueColor;
   }
@@ -89,6 +119,12 @@
     i {
       vertical-align: middle;
       font-size: 16px;
+    }
+
+    .left-section {
+       a ~ a {
+        margin-left: 5px;
+      }
     }
 
     .powered-by {
@@ -244,6 +280,29 @@
     .element-group {
       margin: @settingsMenuElementMargin 0;
       position: relative;
+    }
+
+    ul.color-picker {
+      list-style: none;
+      margin: 3px 0 0;
+      padding: 0;
+      line-height: 0;
+
+      .color-item {
+        display: inline-block;
+        cursor: pointer;
+        height: 15px;
+        width: 15px;
+        border: 2px solid @whiteColor;
+
+        &.color-item-selected {
+          border-color: @grayColor;
+        }
+      }
+    }
+
+    .change-sorting {
+      cursor: pointer;
     }
 
     .almost-fifty {
