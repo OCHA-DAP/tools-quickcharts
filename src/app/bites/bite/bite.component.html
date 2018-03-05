@@ -164,6 +164,55 @@
               <div class="section-title">
                 Display preference
               </div>
+              <div class="element-group" *ngIf="(bite.type != classTypes.ToplineBite) && (!asChartBite(bite).pieChart)">
+                <label >
+                  Sorting
+                </label>
+                <div class="pull-right">
+                  <div class="checkbox-slider pull-right">
+                    <input [checked]="settingsModel.sorting != null"
+                           (change)="toggleSorting(); renderContent()"
+                           type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="sorting-{{uuid}}">
+                    <label class="checkbox-slider-label" for="sorting-{{uuid}}">
+                      <span class="checkbox-slider-inner"></span>
+                      <span class="checkbox-slider-switch"></span>
+                    </label>
+                  </div>
+                  <i class="change-sorting glyphicon glyphicon-arrow-up" style="margin-bottom: 3px;"
+                    [ngClass]="{'glyphicon-arrow-down': settingsModel.sorting == 'DESC'}"
+                    [style.display]="(settingsModel.sorting === null ? 'none' : 'inline-block')"
+                    (click)="swapSorting()"></i>
+                </div>
+              </div>
+              <div class="element-group" *ngIf="(bite.type != classTypes.ToplineBite) && (!asChartBite(bite).pieChart)">
+                <label >
+                  Chart color
+                </label>
+                <div class="pull-right">
+                  <ul class="color-picker">
+                    <li *ngFor="let color of colorPattern" [ngStyle]="{'background-color': color}" class="color-item"
+                        [ngClass]="{'color-item-selected': color === settingsModel.customColor}"
+                        (click)="settingsModel.customColor = color; renderContent();">
+                    </li>
+                    <li class="color-item"
+                      [ngStyle]="{'background-color': (colorPattern.indexOf(settingsModel.customColor) >= 0) ? '#ffffff' : settingsModel.customColor}"
+                      [ngClass]="{'color-item-selected': (colorPattern.indexOf(settingsModel.customColor) == -1)}"
+                      (click)="showCustomColorSection()">
+                      <i class="glyphicon glyphicon-plus" style="display: table; font-size: 11px; margin-top: -1px; line-height: 1;"
+                        [ngStyle]="{'color': (colorPattern.indexOf(settingsModel.customColor) >= 0) ? '#888' : '#fff'}"></i>
+                    </li>
+                  </ul>
+                </div>
+                <div class="element-group" [style.display]="displayCustomColor ? 'block' : 'none'">
+                  <label for="custom-color-{{uuid}}">
+                    Custom color
+                  </label>
+                  <!--<input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">-->
+                  <input #customColorInput id="custom-color-{{uuid}}" [(ngModel)]="settingsModel.customColor"
+                         name="customColor" type="text"
+                         (blur)="hideCustomColorSection()">
+                </div>
+              </div>
               <!-- TODO: not implemented yet -->
               <div class="element-group" *ngIf="false && bite.type == classTypes.ToplineBite">
                 <label >

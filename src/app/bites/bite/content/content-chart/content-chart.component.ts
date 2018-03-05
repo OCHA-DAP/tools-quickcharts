@@ -47,7 +47,13 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   }
 
   protected tooltipFormatter(d, defaultTitleFormat, defaultValueFormat, color) {
-    const name = defaultTitleFormat(d[0].x);
+    const dX = d[0].x;
+    let name;
+    if (isNaN(dX) || dX instanceof Date) {
+      name = defaultTitleFormat(dX);
+    } else {
+      name = this.bite.categories[dX];
+    }
     const value = defaultValueFormat(d[0].value);
     const tooltip = '' +
       '<div class="c3-hxl-bites-tooltip">' +
@@ -60,6 +66,12 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   protected generateOptions(): {} {
     this.overwriteXAxisLabel();
 
+    const values = this.bite.values;
+    const categories = this.bite.categories;
+    let pattern = ChartBite.colorPattern;
+    if (!this.bite.pieChart) {
+      pattern = [this.bite.color];
+    }
     const config = {
       bindto: this.elementRef.nativeElement.children[0],
       data: {},
@@ -72,7 +84,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         x: {
           type: 'category',
           categories: this.bite.categories,
-          tick: {},
+          tick: {
+          },
           height: 50
         },
         y: {
@@ -93,15 +106,26 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
           title: function (x) { return this.bite.categories[x]; }.bind(this),
           value: undefined
         },
-        contents: this.tooltipFormatter
+        contents: this.tooltipFormatter.bind(this)
       },
       color: {
-        pattern: ['#1ebfb3', '#0077ce', '#f2645a', '#9C27B0']
+        pattern: pattern
       }
     };
 
-    const values = this.bite.values;
-    const categories = this.bite.categories;
+    const ascSort = function(a, b){
+      return a - b;
+    };
+    const descSort = function(a, b){
+      return b - a;
+    };
+    if (this.bite.sorting !== null) {
+      if (this.bite.sorting === 'ASC') {
+        this.bite.values.sort(ascSort);
+      } else {
+        this.bite.values.sort(descSort);
+      }
+    }
 
     if (!this.bite.pieChart) {
       config.data = {
@@ -135,21 +159,28 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       };
     }
 
+    const trimXValues = function (x) {
+      const maxLength = 15;
+      const value = categories[x];
+      if (value.length > maxLength) {
+        return value.substring(0, maxLength - 3) + '...';
+      } else {
+        return value;
+      }
+    };
+
     if (!this.bite.swapAxis) {
       config.axis.x.tick = {
         rotate: 20,
         width: 100,
-        format: function (x) {
-          const maxLength = 15;
-          const value = categories[x];
-          if (value.length > maxLength) {
-            return value.substring(0, maxLength - 3) + '...';
-          } else {
-            return value;
-          }
-        }
+        format: trimXValues
+      };
+    } else {
+      config.axis.x.tick = {
+        format: trimXValues
       };
     }
+
 
     return config;
   }

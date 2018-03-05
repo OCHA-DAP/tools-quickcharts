@@ -35,7 +35,7 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
           tick: {
             count: 7,
             rotate: 15,
-            format: '%Y-%m-%d'
+            format: '%d %b %Y'
             // culling: {
             //   max: 4
             // }
@@ -55,10 +55,13 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
         }
       },
       tooltip: {
-        contents: this.tooltipFormatter
+        contents: this.tooltipFormatter.bind(this)
       },
       point: {
         show: false
+      },
+      color: {
+        pattern: [this.bite.color]
       }
     };
   }

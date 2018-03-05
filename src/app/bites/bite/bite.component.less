@@ -282,6 +282,29 @@
       position: relative;
     }
 
+    ul.color-picker {
+      list-style: none;
+      margin: 3px 0 0;
+      padding: 0;
+      line-height: 0;
+
+      .color-item {
+        display: inline-block;
+        cursor: pointer;
+        height: 15px;
+        width: 15px;
+        border: 2px solid @whiteColor;
+
+        &.color-item-selected {
+          border-color: @grayColor;
+        }
+      }
+    }
+
+    .change-sorting {
+      cursor: pointer;
+    }
+
     .almost-fifty {
       width: 49%;
     }
