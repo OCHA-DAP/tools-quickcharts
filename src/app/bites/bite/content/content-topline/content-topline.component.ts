@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Input } from '@angular/core';
-import { KeyFigureBite } from 'hdxtools-ng-lib';
+import { KeyFigureBite } from 'hxl-preview-ng-lib';
 
 @Component({
   selector: 'hxl-content-topline',

@@ -1,11 +1,11 @@
-import {Bite} from 'hdxtools-ng-lib';
+import {Bite} from 'hxl-preview-ng-lib';
 import { Component, HostListener, NgZone, OnInit, ViewChild } from '@angular/core';
 import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
 import {Logger} from 'angular2-logger/core';
 import {AppConfigService} from '../../shared/app-config.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
-import { SimpleModalComponent } from 'hdxtools-ng-lib';
+import { SimpleModalComponent } from 'hxl-preview-ng-lib';
 import { Observable } from 'rxjs/Observable';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { HttpService } from '../../shared/http.service';
@@ -179,9 +179,9 @@ export class BiteListComponent implements OnInit {
     orderedBites = orderedBites.concat(listC);
 
     // filling the slots
-    this.addBite(orderedBites[0]);
-    this.addBite(orderedBites[1]);
-    this.addBite(orderedBites[2]);
+    for (let i = 0; i < 3 && i < orderedBites.length; i++) {
+      this.addBite(orderedBites[i]);
+    }
 
   }
 

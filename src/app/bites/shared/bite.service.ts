@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Bite } from 'hdxtools-ng-lib';
+import { Bite } from 'hxl-preview-ng-lib';
 import { RecipeService } from './recipe.service';
 import { Logger } from 'angular2-logger/core';
-import { CookBookService } from 'hdxtools-ng-lib';
+import { CookBookService } from 'hxl-preview-ng-lib';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
-import { BiteLogicFactory } from 'hdxtools-ng-lib';
+import { BiteLogicFactory } from 'hxl-preview-ng-lib';
 import { DomEventsService } from '../../shared/dom-events.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { PersisUtil } from './persist/persist-util';
