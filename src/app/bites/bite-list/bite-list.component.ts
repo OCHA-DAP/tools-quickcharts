@@ -184,9 +184,9 @@ export class BiteListComponent implements OnInit {
     orderedBites = orderedBites.concat(listC);
 
     // filling the slots
-    this.addBite(orderedBites[0]);
-    this.addBite(orderedBites[1]);
-    this.addBite(orderedBites[2]);
+    for (let i = 0; i < 3 && i < orderedBites.length; i++) {
+      this.addBite(orderedBites[i]);
+    }
 
   }
 
