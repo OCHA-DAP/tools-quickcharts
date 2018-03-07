@@ -1,16 +1,17 @@
-import { Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import {Input, Output} from '@angular/core';
-import { Bite } from 'hdxtools-ng-lib';
-import { KeyFigureBite } from 'hdxtools-ng-lib';
-import { ChartBite } from 'hdxtools-ng-lib';
-import { TimeseriesChartBite } from 'hdxtools-ng-lib';
+import { Bite } from 'hxl-preview-ng-lib';
+import { KeyFigureBite } from 'hxl-preview-ng-lib';
+import { ChartBite } from 'hxl-preview-ng-lib';
+import { TimeseriesChartBite } from 'hxl-preview-ng-lib';
 import { Logger } from 'angular2-logger/core';
 import { BiteService } from 'app/bites/shared/bite.service';
 import { ContentChartComponent } from './content/content-chart/content-chart.component';
 import { ContentTimeseriesChartComponent } from './content/content-timeseries-chart/content-timeseries-chart.component';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
-import { BiteLogicFactory } from 'hdxtools-ng-lib';
-import { KeyFigureBiteLogic } from 'hdxtools-ng-lib';
+import { BiteLogicFactory } from 'hxl-preview-ng-lib';
+import { KeyFigureBiteLogic } from 'hxl-preview-ng-lib';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'hxl-bite',
@@ -43,6 +44,10 @@ export class BiteComponent implements OnInit {
   @Output()
   onEmbedUrlCreate = new EventEmitter<string>();
 
+  @ViewChild('customColorInput')
+  private customColorInput: ElementRef;
+
+
   @ViewChild(ContentChartComponent)
   private chartComponent: ContentChartComponent;
 
@@ -56,12 +61,14 @@ export class BiteComponent implements OnInit {
   private poweredBySource: String;
   private poweredByUrl: String;
   private poweredByDate: String;
+  displayCustomColor: Boolean = false;
 
   displayableAvailableBites: SimpleDropdownItem[];
 
   settingsModel: SettingsModel;
+  private colorPattern: string[];
 
-  constructor(private logger: Logger, private biteService: BiteService) {
+  constructor(private logger: Logger, private biteService: BiteService, private sanitizer: DomSanitizer) {
     this.classTypes.ToplineBite = KeyFigureBite.type();
     this.classTypes.ChartBite = ChartBite.type();
     this.classTypes.TimeseriesChartBite = TimeseriesChartBite.type();
@@ -70,6 +77,7 @@ export class BiteComponent implements OnInit {
     this.poweredBySource = biteService.getPoweredBySource();
     this.poweredByUrl = biteService.getPoweredByUrl();
     this.poweredByDate = biteService.getPoweredByDate();
+    this.colorPattern = ChartBite.colorPattern;
   }
 
   ngOnInit() {
@@ -83,6 +91,39 @@ export class BiteComponent implements OnInit {
 
   toggleSettings(self) {
     this.settingsDisplay = !this.settingsDisplay;
+  }
+
+  showCustomColorSection() {
+    const bite: ChartBite = this.bite as ChartBite;
+    if (this.colorPattern.indexOf(bite.color) >= 0) {
+      bite.color = '#ffffff';
+    }
+    this.displayCustomColor = true;
+    setTimeout(() => {
+      this.customColorInput.nativeElement.focus();
+    }, 2);
+  }
+  toggleSorting() {
+    if (this.settingsModel.sorting === null) {
+      this.settingsModel.sorting = 'DESC';
+    } else {
+      this.settingsModel.sorting = null;
+    }
+    this.renderContent();
+  }
+
+  swapSorting() {
+    if (this.settingsModel.sorting === 'ASC') {
+      this.settingsModel.sorting = 'DESC';
+    } else {
+      this.settingsModel.sorting = 'ASC';
+    }
+    this.renderContent();
+  }
+
+  hideCustomColorSection() {
+    this.displayCustomColor = false;
+    this.renderContent();
   }
 
   getUUID() {
@@ -104,6 +145,10 @@ export class BiteComponent implements OnInit {
   createEmbedLink() {
     const embedUrl = this.biteService.exportBitesToURL([this.bite], true);
     this.onEmbedUrlCreate.emit(embedUrl);
+  }
+
+  saveAsImage() {
+    this.biteService.saveAsImage([this.bite], true);
   }
 
   asChartBite(bite: Bite): ChartBite {
@@ -245,6 +290,26 @@ class SettingsModel {
     } else {
       bite.unit = 'none';
     }
+  }
+
+  get customColor(): string {
+    const bite: ChartBite = this.bite as ChartBite;
+    return bite.color;
+  }
+
+  set customColor(color: string) {
+    const bite: ChartBite = this.bite as ChartBite;
+    bite.color = color;
+  }
+
+  get sorting(): string {
+    const bite: ChartBite = this.bite as ChartBite;
+    return bite.sorting;
+  }
+
+  set sorting(sorting: string) {
+    const bite: ChartBite = this.bite as ChartBite;
+    bite.sorting = sorting;
   }
 
   computeDescriptionLength() {

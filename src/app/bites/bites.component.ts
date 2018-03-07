@@ -1,4 +1,4 @@
-import { HxlproxyService } from 'hdxtools-ng-lib';
+import { HxlproxyService } from 'hxl-preview-ng-lib';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterState, ActivatedRoute, Params } from '@angular/router';
 import { Logger } from 'angular2-logger/core';

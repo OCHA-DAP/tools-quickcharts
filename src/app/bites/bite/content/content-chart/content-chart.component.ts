@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
-import { ChartBite } from 'hdxtools-ng-lib';
+import { ChartBite } from 'hxl-preview-ng-lib';
 import { Input } from '@angular/core';
 
 declare const c3: any;
@@ -36,9 +36,42 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     }
   }
 
+  protected numberFormatter(value) {
+    const formatter = d3.format('.2s');
+    let string = formatter(value);
+    string = string.replace('G', 'B'); // Billions at more than 6 digits :)
+    if (string.endsWith('.0')) {
+      string = string.replace('.0', '');
+    }
+    return string;
+  }
+
+  protected tooltipFormatter(d, defaultTitleFormat, defaultValueFormat, color) {
+    const dX = d[0].x;
+    let name;
+    if (isNaN(dX) || dX instanceof Date) {
+      name = defaultTitleFormat(dX);
+    } else {
+      name = this.bite.categories[dX];
+    }
+    const value = defaultValueFormat(d[0].value);
+    const tooltip = '' +
+      '<div class="c3-hxl-bites-tooltip">' +
+      ' <span class="name">' + name + '</span>' + ' <span class="value">' + value + '</span>' +
+      '</div>';
+
+    return tooltip;
+  }
+
   protected generateOptions(): {} {
     this.overwriteXAxisLabel();
 
+    const values = this.bite.values;
+    const categories = this.bite.categories;
+    let pattern = ChartBite.colorPattern;
+    if (!this.bite.pieChart) {
+      pattern = [this.bite.color];
+    }
     const config = {
       bindto: this.elementRef.nativeElement.children[0],
       data: {},
@@ -51,12 +84,14 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         x: {
           type: 'category',
           categories: this.bite.categories,
-          tick: {},
+          tick: {
+          },
           height: 50
         },
         y: {
           tick: {
-            rotate: 30
+            rotate: 30,
+            format: this.numberFormatter
           }
         }
       },
@@ -70,15 +105,27 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         format: {
           title: function (x) { return this.bite.categories[x]; }.bind(this),
           value: undefined
-        }
+        },
+        contents: this.tooltipFormatter.bind(this)
       },
       color: {
-        pattern: ['#1ebfb3', '#0077ce', '#f2645a', '#9C27B0']
+        pattern: pattern
       }
     };
 
-    const values = this.bite.values;
-    const categories = this.bite.categories;
+    const ascSort = function(a, b){
+      return a - b;
+    };
+    const descSort = function(a, b){
+      return b - a;
+    };
+    if (this.bite.sorting !== null) {
+      if (this.bite.sorting === 'ASC') {
+        this.bite.values.sort(ascSort);
+      } else {
+        this.bite.values.sort(descSort);
+      }
+    }
 
     if (!this.bite.pieChart) {
       config.data = {
@@ -112,21 +159,28 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       };
     }
 
+    const trimXValues = function (x) {
+      const maxLength = 15;
+      const value = categories[x];
+      if (value.length > maxLength) {
+        return value.substring(0, maxLength - 3) + '...';
+      } else {
+        return value;
+      }
+    };
+
     if (!this.bite.swapAxis) {
       config.axis.x.tick = {
         rotate: 20,
         width: 100,
-        format: function (x) {
-          const maxLength = 15;
-          const value = categories[x];
-          if (value.length > maxLength) {
-            return value.substring(0, maxLength - 3) + '...';
-          } else {
-            return value;
-          }
-        }
+        format: trimXValues
+      };
+    } else {
+      config.axis.x.tick = {
+        format: trimXValues
       };
     }
+
 
     return config;
   }

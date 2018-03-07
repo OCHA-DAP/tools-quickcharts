@@ -1,5 +1,5 @@
 import { HxlPreviewConfig } from './hxl-preview-config';
-import { Bite } from 'hdxtools-ng-lib';
+import { Bite } from 'hxl-preview-ng-lib';
 import { Logger } from 'angular2-logger/core';
 
 export class PersisUtil {
