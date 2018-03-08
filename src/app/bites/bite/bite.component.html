@@ -164,7 +164,7 @@
               <div class="section-title">
                 Display preference
               </div>
-              <div class="element-group" *ngIf="(bite.type != classTypes.ToplineBite) && (!asChartBite(bite).pieChart)">
+              <div class="element-group" *ngIf="(bite.type == classTypes.ChartBite)">
                 <label >
                   Sorting
                 </label>
@@ -179,7 +179,7 @@
                     </label>
                   </div>
                   <i class="change-sorting glyphicon glyphicon-arrow-up" style="margin-bottom: 3px;"
-                    [ngClass]="{'glyphicon-arrow-down': settingsModel.sorting == 'DESC'}"
+                    [ngClass]="{'glyphicon-arrow-down': settingsModel.sorting == SORT_DESC}"
                     [style.display]="(settingsModel.sorting === null ? 'none' : 'inline-block')"
                     (click)="swapSorting()"></i>
                 </div>

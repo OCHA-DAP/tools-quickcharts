@@ -66,7 +66,8 @@ export class BiteComponent implements OnInit {
   displayableAvailableBites: SimpleDropdownItem[];
 
   settingsModel: SettingsModel;
-  private colorPattern: string[];
+  private colorPattern: string[] = ChartBite.colorPattern;
+  private SORT_DESC: string = ChartBite.SORT_DESC;
 
   constructor(private logger: Logger, private biteService: BiteService, private sanitizer: DomSanitizer) {
     this.classTypes.ToplineBite = KeyFigureBite.type();
@@ -77,7 +78,6 @@ export class BiteComponent implements OnInit {
     this.poweredBySource = biteService.getPoweredBySource();
     this.poweredByUrl = biteService.getPoweredByUrl();
     this.poweredByDate = biteService.getPoweredByDate();
-    this.colorPattern = ChartBite.colorPattern;
   }
 
   ngOnInit() {
@@ -105,7 +105,7 @@ export class BiteComponent implements OnInit {
   }
   toggleSorting() {
     if (this.settingsModel.sorting === null) {
-      this.settingsModel.sorting = 'DESC';
+      this.settingsModel.sorting = this.SORT_DESC;
     } else {
       this.settingsModel.sorting = null;
     }
@@ -113,10 +113,10 @@ export class BiteComponent implements OnInit {
   }
 
   swapSorting() {
-    if (this.settingsModel.sorting === 'ASC') {
-      this.settingsModel.sorting = 'DESC';
+    if (this.settingsModel.sorting === ChartBite.SORT_ASC) {
+      this.settingsModel.sorting = ChartBite.SORT_DESC;
     } else {
-      this.settingsModel.sorting = 'ASC';
+      this.settingsModel.sorting = ChartBite.SORT_ASC;
     }
     this.renderContent();
   }
