@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
-import { ChartBite } from 'hxl-preview-ng-lib';
+import { ChartBite, BiteLogicFactory, ColorUsage, UnitsUtil } from 'hxl-preview-ng-lib';
 import { Input } from '@angular/core';
 
 declare const c3: any;
@@ -37,96 +37,59 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   }
 
   protected numberFormatter(value) {
-    const formatter = d3.format('.2s');
-    let string = formatter(value);
-    string = string.replace('G', 'B'); // Billions at more than 6 digits :)
-    if (string.endsWith('.0')) {
-      string = string.replace('.0', '');
-    }
-    return string;
+    const unit = UnitsUtil.computeBiteUnit(value);
+    const formattedValue = UnitsUtil.transform(value, null, unit);
+    return formattedValue + (unit ? ` ${unit}` : '');
+    // const formatter = d3.format('.2s');
+    // let string = formatter(value);
+    // string = string.replace('G', 'B'); // Billions at more than 6 digits :)
+    // if (string.endsWith('.0')) {
+    //   string = string.replace('.0', '');
+    // }
+    // return string;
   }
 
-  protected tooltipFormatter(d, defaultTitleFormat, defaultValueFormat, color) {
-    const dX = d[0].x;
-    let name;
-    if (isNaN(dX) || dX instanceof Date) {
-      name = defaultTitleFormat(dX);
-    } else {
-      name = this.bite.categories[dX];
-    }
-    const value = defaultValueFormat(d[0].value);
-    const tooltip = '' +
-      '<div class="c3-hxl-bites-tooltip">' +
-      ' <span class="name">' + name + '</span>' + ' <span class="value">' + value + '</span>' +
-      '</div>';
+  // protected tooltipFormatter(d, defaultTitleFormat, defaultValueFormat, color) {
+  //   const dX = d[0].x;
+  //   let name;
+  //   if (isNaN(dX) || dX instanceof Date) {
+  //     name = defaultTitleFormat(dX);
+  //   } else {
+  //     name = this.bite.categories[dX];
+  //   }
+  //   const value = defaultValueFormat(d[0].value);
+  //   const tooltip = '' +
+  //     '<div class="c3-hxl-bites-tooltip">' +
+  //     ' <span class="name">' + name + '</span>' + ' <span class="value">' + value + '</span>' +
+  //     '</div>';
 
-    return tooltip;
+  //   return tooltip;
+  // }
+
+  protected generateOptionsTooltip(config: C3ChartConfig) {
+    config.tooltip = {
+      format: {
+        title: function (x) { return this.bite.categories[x]; }.bind(this),
+        value: (value, ratio, id, index) => {
+          return this.numberFormatter(value);
+        }
+      },
+      // contents: this.tooltipFormatter.bind(this)
+    };
   }
 
-  protected generateOptions(): {} {
-    this.overwriteXAxisLabel();
-
-    const values = this.bite.values;
-    const categories = this.bite.categories;
+  protected generateOptionsColor(config: C3ChartConfig) {
     let pattern = ChartBite.colorPattern;
-    if (!this.bite.pieChart) {
+    if (BiteLogicFactory.createBiteLogic(this.bite).colorUsage() === ColorUsage.ONE) {
       pattern = [this.bite.color];
     }
-    const config = {
-      bindto: this.elementRef.nativeElement.children[0],
-      data: {},
-      zoom: {},
-      size: {
-        height: 225
-      },
-      axis: {
-        rotated: this.bite.swapAxis,
-        x: {
-          type: 'category',
-          categories: this.bite.categories,
-          tick: {
-          },
-          height: 50
-        },
-        y: {
-          tick: {
-            rotate: 30,
-            format: this.numberFormatter
-          }
-        }
-      },
-      grid: {
-        y: {
-          show: this.bite.showGrid
-        }
-      },
-      pie: {},
-      tooltip: {
-        format: {
-          title: function (x) { return this.bite.categories[x]; }.bind(this),
-          value: undefined
-        },
-        contents: this.tooltipFormatter.bind(this)
-      },
-      color: {
-        pattern: pattern
-      }
+    config.color = {
+      pattern: pattern
     };
+  }
 
-    const ascSort = function(a, b){
-      return a - b;
-    };
-    const descSort = function(a, b){
-      return b - a;
-    };
-    if (this.bite.sorting !== null) {
-      if (this.bite.sorting === 'ASC') {
-        this.bite.values.sort(ascSort);
-      } else {
-        this.bite.values.sort(descSort);
-      }
-    }
-
+  protected generateOptionsData(config: C3ChartConfig) {
+    const values = this.bite.values;
     if (!this.bite.pieChart) {
       config.data = {
         columns: [values],
@@ -143,32 +106,39 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         columns: pieValues,
         type: 'pie'
       };
-      config.axis.rotated = false; // we don't allow it for pie
-      config.tooltip.format.value = function (value, ratio, id) {
-        const valueFormat = d3.format(',');
-        const percentageFormat = d3.format('.1%');
-        return valueFormat(value) + ' (' + percentageFormat(ratio) + ')';
-      };
     }
+  }
 
-    if (values.length > this.maxNumberOfValues) {
-      config.zoom = {
-        enabled: false,
-        type: 'drag', // can be [drag, scroll]
-        extent: [1.5, 2]
-      };
+  protected generateOptionsAxis(config: C3ChartConfig) {
+    const categories = this.bite.categories;
+    config.axis = {
+      rotated: this.bite.swapAxis,
+      x: {
+        type: 'category',
+        categories: this.bite.categories,
+        tick: {
+        },
+        height: 50
+      },
+      y: {
+        tick: {
+          rotate: 30,
+          format: this.numberFormatter
+        }
+      }
+    };
+    if (this.bite.pieChart) {
+      config.axis.rotated = false;
     }
-
     const trimXValues = function (x) {
       const maxLength = 15;
       const value = categories[x];
-      if (value.length > maxLength) {
+      if (value && value.length > maxLength) {
         return value.substring(0, maxLength - 3) + '...';
       } else {
         return value;
       }
     };
-
     if (!this.bite.swapAxis) {
       config.axis.x.tick = {
         rotate: 20,
@@ -180,8 +150,63 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         format: trimXValues
       };
     }
+  }
 
+  protected generateOptions(): C3ChartConfig {
+    this.overwriteXAxisLabel();
 
+    const values = this.bite.values;
+
+    const config = {
+      bindto: this.elementRef.nativeElement.children[0],
+      data: {},
+      zoom: {},
+      size: {
+        height: 225
+      },
+      grid: {
+        y: {
+          show: this.bite.showGrid
+        }
+      },
+      pie: {},
+    };
+
+    this.generateOptionsTooltip(config);
+    this.generateOptionsColor(config);
+    this.generateOptionsData(config);
+    this.generateOptionsAxis(config);
+
+    const ascSort = function(a, b){
+      return a - b;
+    };
+    const descSort = function(a, b){
+      return b - a;
+    };
+    if (this.bite.sorting !== null) {
+      if (this.bite.sorting === 'ASC') {
+        this.bite.values.sort(ascSort);
+      } else {
+        this.bite.values.sort(descSort);
+      }
+    }
+
+    // if (this.bite.pieChart) {
+    //   config.axis.rotated = false; // we don't allow it for pie
+      // config.tooltip.format.value = function (value, ratio, id) {
+      //   const valueFormat = d3.format(',');
+      //   const percentageFormat = d3.format('.1%');
+      //   return valueFormat(value) + ' (' + percentageFormat(ratio) + ')';
+      // };
+    // }
+
+    if (values.length > this.maxNumberOfValues) {
+      config.zoom = {
+        enabled: false,
+        type: 'drag', // can be [drag, scroll]
+        extent: [1.5, 2]
+      };
+    }
     return config;
   }
 
@@ -283,3 +308,6 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
 
   }
 }
+
+// tslint:disable-next-line:interface-over-type-literal
+export type C3ChartConfig = { [s: string]: any; };

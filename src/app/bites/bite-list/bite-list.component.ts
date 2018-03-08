@@ -1,4 +1,4 @@
-import {Bite} from 'hxl-preview-ng-lib';
+import { Bite, ChartBite, KeyFigureBite, TimeseriesChartBite, ComparisonChartBite } from 'hxl-preview-ng-lib';
 import { Component, HostListener, NgZone, OnInit, ViewChild } from '@angular/core';
 import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
@@ -160,9 +160,9 @@ export class BiteListComponent implements OnInit {
   private loadDefaultBites() {
 
     // splitting the bites by their type
-    const listA = this.availableBites.filter(bite => bite.type === 'chart');
-    const listB = this.availableBites.filter(bite => bite.type === 'key figure');
-    const listC = this.availableBites.filter(bite => bite.type === 'timeseries');
+    const listA = this.availableBites.filter(bite => bite.type === ChartBite.type() || bite.type === ComparisonChartBite.type());
+    const listB = this.availableBites.filter(bite => bite.type === KeyFigureBite.type());
+    const listC = this.availableBites.filter(bite => bite.type === TimeseriesChartBite.type());
 
     let orderedBites: Array<Bite>;
     orderedBites = [];

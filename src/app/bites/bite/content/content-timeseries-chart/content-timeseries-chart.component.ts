@@ -1,3 +1,4 @@
+import { C3ChartConfig } from './../content-chart/content-chart.component';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ContentChartComponent } from '../content-chart/content-chart.component';
 
@@ -16,54 +17,50 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
     }
   }
 
-  protected generateOptions(): {} {
-    this.overwriteXAxisLabel();
-    return {
-      bindto: this.elementRef.nativeElement.children[0],
-      data: {
-        x: 'Date',
-        columns: this.bite.values,
-        type: 'line'
-      },
-      size: {
-        height: 225
-      },
-      axis: {
-        // rotated: true,
-        x: {
-          type: 'timeseries',
-          tick: {
-            count: 7,
-            rotate: 15,
-            format: '%d %b %Y'
-            // culling: {
-            //   max: 4
-            // }
-          }
-          // categories: this.bite.categories
-        },
-        y: {
-          tick: {
-            rotate: 30,
-            format: this.numberFormatter
-          }
+  protected generateOptionsTooltip(config: C3ChartConfig) {
+    super.generateOptionsTooltip(config);
+    delete config.tooltip.format.title;
+  }
+
+  protected generateOptionsData(config: C3ChartConfig) {
+    config.data = {
+      x: 'Date',
+      columns: this.bite.values,
+      type: 'line'
+    };
+  }
+
+  protected generateOptionsAxis(config: C3ChartConfig) {
+    config.axis = {
+      // rotated: true,
+      x: {
+        type: 'timeseries',
+        tick: {
+          count: 7,
+          rotate: 15,
+          format: '%d %b %Y'
+          // culling: {
+          //   max: 4
+          // }
         }
+        // categories: this.bite.categories
       },
-      grid: {
-        y: {
-          show: this.bite.showGrid
+      y: {
+        tick: {
+          rotate: 30,
+          format: this.numberFormatter
         }
-      },
-      tooltip: {
-        contents: this.tooltipFormatter.bind(this)
-      },
-      point: {
-        show: false
-      },
-      color: {
-        pattern: [this.bite.color]
       }
     };
+  }
+
+  protected generateOptions(): C3ChartConfig {
+    this.overwriteXAxisLabel();
+    const config = super.generateOptions();
+    config.point = {
+      show: false
+    };
+    return config;
   }
 
 }
