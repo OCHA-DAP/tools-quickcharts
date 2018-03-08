@@ -100,7 +100,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       for (let i = 1; i < values.length; i++) {
         pieValues.push([this.bite.categories[i - 1], values[i]]);
       }
-      console.log(pieValues);
+      // console.log(pieValues);
 
       config.data = {
         columns: pieValues,
@@ -155,7 +155,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   protected generateOptions(): C3ChartConfig {
     this.overwriteXAxisLabel();
 
-    const values = this.bite.values;
+    const values = this.bite.values.slice(); // copy values
 
     const config = {
       bindto: this.elementRef.nativeElement.children[0],
@@ -184,10 +184,10 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       return b - a;
     };
     if (this.bite.sorting !== null) {
-      if (this.bite.sorting === 'ASC') {
-        this.bite.values.sort(ascSort);
+      if (this.bite.sorting === ChartBite.SORT_ASC) {
+        values.sort(ascSort);
       } else {
-        this.bite.values.sort(descSort);
+        values.sort(descSort);
       }
     }
 

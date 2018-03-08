@@ -7,6 +7,7 @@ export const environment = {
   production: false,
   hxlProxy: '/hxlproxy/data.json',
   maxBites: 6,
+  snapService: '/snap',
   googleAnalyticsKey: 'UA-48221887-3',
   prodMixpanelKey: '99035923ee0a67880e6c05ab92b6cbc0', // actually hdx-server project not prod
   testMixpanelKey: '875bfe50f9cb981f4e2817832c83c165',
