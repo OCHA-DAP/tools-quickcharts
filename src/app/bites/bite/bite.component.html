@@ -12,6 +12,7 @@
     <div class="content" [ngSwitch]="bite.type">
       <hxl-content-topline *ngSwitchCase="classTypes.ToplineBite" [bite]="bite"></hxl-content-topline>
       <hxl-content-chart *ngSwitchCase="classTypes.ChartBite" [bite]="bite"></hxl-content-chart>
+      <hxl-content-comparison-chart *ngSwitchCase="classTypes.ComparisonChartBite" [bite]="bite"></hxl-content-comparison-chart>
       <hxl-content-timeseries-chart *ngSwitchCase="classTypes.TimeseriesChartBite" [bite]="bite"></hxl-content-timeseries-chart>
     </div>
   </div>
@@ -75,7 +76,7 @@
               <div class="section-title">
                 Axis & Grid
               </div>
-              <div class="element-group" *ngIf="bite.type == classTypes.ChartBite">
+              <div class="element-group" *ngIf="bite.type == classTypes.ChartBite || bite.type == classTypes.ComparisonChartBite">
                 <label >
                   Reverse Axis
                 </label>
@@ -164,7 +165,7 @@
               <div class="section-title">
                 Display preference
               </div>
-              <div class="element-group" *ngIf="(bite.type != classTypes.ToplineBite) && (!asChartBite(bite).pieChart)">
+              <div class="element-group" *ngIf="(bite.type == classTypes.ChartBite)">
                 <label >
                   Sorting
                 </label>
@@ -179,12 +180,12 @@
                     </label>
                   </div>
                   <i class="change-sorting glyphicon glyphicon-arrow-up" style="margin-bottom: 3px;"
-                    [ngClass]="{'glyphicon-arrow-down': settingsModel.sorting == 'DESC'}"
+                    [ngClass]="{'glyphicon-arrow-down': settingsModel.sorting == SORT_DESC}"
                     [style.display]="(settingsModel.sorting === null ? 'none' : 'inline-block')"
                     (click)="swapSorting()"></i>
                 </div>
               </div>
-              <div class="element-group" *ngIf="(bite.type != classTypes.ToplineBite) && (!asChartBite(bite).pieChart)">
+              <div class="element-group" *ngIf="showColorPatternChooser">
                 <label >
                   Chart color
                 </label>
