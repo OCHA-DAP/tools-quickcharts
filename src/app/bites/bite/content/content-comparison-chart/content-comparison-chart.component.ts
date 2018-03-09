@@ -21,7 +21,8 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
       format: {
         value: (value, ratio, id, index) => {
           let newValue = value;
-          if (this.bite.ingredient.aggregateColumn && id === values[1][0]) {
+          // if we have more than 1 row of data and this is a comparison value
+          if (this.bite.values.length > 2 && id === values[1][0]) {
             newValue = value + values[0][index + 1];
           }
           return this.numberFormatter(newValue);
@@ -46,7 +47,8 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
       columns: values,
       type: 'bar',
     };
-    if (this.bite.ingredient.aggregateColumn) {
+    // if we have more than 1 row of data
+    if (this.bite.values.length > 2) {
       config.data.groups = [[
         values[0][0],
         values[1][0]
