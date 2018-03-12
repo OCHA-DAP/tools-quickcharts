@@ -1,5 +1,5 @@
 import { ContentComparisonChartComponent } from './content/content-comparison-chart/content-comparison-chart.component';
-import { Component, OnInit, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import {Input, Output} from '@angular/core';
 import { Bite } from 'hxl-preview-ng-lib';
 import { KeyFigureBite } from 'hxl-preview-ng-lib';
@@ -13,6 +13,7 @@ import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simpl
 import { BiteLogicFactory, ColorUsage } from 'hxl-preview-ng-lib';
 import { KeyFigureBiteLogic } from 'hxl-preview-ng-lib';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AnalyticsService } from '../shared/analytics.service';
 
 @Component({
   selector: 'hxl-bite',
@@ -75,7 +76,8 @@ export class BiteComponent implements OnInit {
   private colorPattern: string[] = ChartBite.colorPattern;
   private SORT_DESC: string = ChartBite.SORT_DESC;
 
-  constructor(private logger: Logger, private biteService: BiteService, private sanitizer: DomSanitizer) {
+  constructor(private logger: Logger, private biteService: BiteService, private sanitizer: DomSanitizer,
+              private analyticsService: AnalyticsService) {
     this.classTypes.ToplineBite = KeyFigureBite.type();
     this.classTypes.ChartBite = ChartBite.type();
     this.classTypes.ComparisonChartBite = ComparisonChartBite.type();
@@ -95,10 +97,14 @@ export class BiteComponent implements OnInit {
 
   switchBite(newBite: Bite) {
     this.onSwitch.emit({oldBite: this.bite, newBite: newBite});
+    this.analyticsService.trackAction('action-switch-bite');
   }
 
   toggleSettings(self) {
     this.settingsDisplay = !this.settingsDisplay;
+    if (this.settingsDisplay) {
+      this.analyticsService.trackAction('action-settings-menu');
+    }
   }
 
   showCustomColorSection() {
@@ -150,10 +156,12 @@ export class BiteComponent implements OnInit {
   createEmbedLink() {
     const embedUrl = this.biteService.exportBitesToURL([this.bite], true);
     this.onEmbedUrlCreate.emit(embedUrl);
+    this.analyticsService.trackAction('action-embed');
   }
 
   saveAsImage() {
     this.biteService.saveAsImage([this.bite], true);
+    this.analyticsService.trackAction('action-save-image');
   }
 
   asChartBite(bite: Bite): ChartBite {
@@ -165,11 +173,27 @@ class SettingsModel {
   private maxDescriptionLength = 200;
   public descriptionRemaining: number;
   private descriptionStr: string;
+  private bite: Bite;
+  // noinspection TsLint
+  private firstSettingsChange = false;
 
-  constructor(private bite: Bite, private biteService: BiteService, private biteComponent: BiteComponent) {
+  private changeHandler: ProxyHandler<Bite> = {
+    set: function (target: Bite, p: PropertyKey, value: any, receiver: any): boolean {
+      if (!this.firstSettingsChange) {
+        this.firstSettingsChange = true;
+        this.biteComponent.analyticsService.trackAction('action-settings-changed');
+      }
+      return true;
+    }.bind(this)
+  };
+
+  constructor(bite: Bite, private biteService: BiteService, private biteComponent: BiteComponent) {
+    this.bite = new Proxy<Bite>(bite, this.changeHandler);
     this.computeDescriptionLength();
     this.descriptionStr = this.bite.description;
   }
+
+
   get title(): string {
     return this.bite.title;
   }

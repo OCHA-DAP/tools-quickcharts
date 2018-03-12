@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { HttpService } from '../../shared/http.service';
 import { Http } from '@angular/http';
+import { AnalyticsService } from '../shared/analytics.service';
 
 @Component({
   selector: 'hxl-bite-list',
@@ -66,7 +67,8 @@ export class BiteListComponent implements OnInit {
     console.log('Unknown message: ' + $event.data);
   }
 
-  constructor(public biteService: BiteService, private appConfig: AppConfigService, private logger: Logger, http: Http, zone: NgZone) {
+  constructor(public biteService: BiteService, private appConfig: AppConfigService, private logger: Logger, http: Http,
+              zone: NgZone, private analyticsService: AnalyticsService) {
     // window['angularComponentRef'] = {component: this, zone: zone};
 
     this.biteList = [];
@@ -266,8 +268,10 @@ export class BiteListComponent implements OnInit {
       this.embedUrl = this.biteService.exportBitesToURL(this.biteList);
       this.iframeUrl = this.generateIframeUrl(this.embedUrl);
       this.embedLinkModal.show();
+      this.analyticsService.trackAction('action-embed');
     } else if (action === 'image') {
       this.biteService.saveAsImage(this.biteList);
+      this.analyticsService.trackAction('action-save-image');
     } else if (action === 'save-views') {
       const biteListToSave = this.resetMode ? [] : this.biteList;
       this.biteService.saveBites(biteListToSave).subscribe(

@@ -34,4 +34,8 @@ export class AnalyticsService {
     this.genericAnalyticsService.trackEventCategory('hxl preview edit');
   }
 
+  public trackAction(actionName: string) {
+    // TODO:
+    console.log('Tracking: ' + actionName);
+  }
 }
