@@ -1,15 +1,16 @@
+import { ContentComparisonChartComponent } from './content/content-comparison-chart/content-comparison-chart.component';
 import { Component, OnInit, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import {Input, Output} from '@angular/core';
 import { Bite } from 'hxl-preview-ng-lib';
 import { KeyFigureBite } from 'hxl-preview-ng-lib';
-import { ChartBite } from 'hxl-preview-ng-lib';
+import { ChartBite, ComparisonChartBite } from 'hxl-preview-ng-lib';
 import { TimeseriesChartBite } from 'hxl-preview-ng-lib';
 import { Logger } from 'angular2-logger/core';
 import { BiteService } from 'app/bites/shared/bite.service';
 import { ContentChartComponent } from './content/content-chart/content-chart.component';
 import { ContentTimeseriesChartComponent } from './content/content-timeseries-chart/content-timeseries-chart.component';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
-import { BiteLogicFactory } from 'hxl-preview-ng-lib';
+import { BiteLogicFactory, ColorUsage } from 'hxl-preview-ng-lib';
 import { KeyFigureBiteLogic } from 'hxl-preview-ng-lib';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -51,6 +52,9 @@ export class BiteComponent implements OnInit {
   @ViewChild(ContentChartComponent)
   private chartComponent: ContentChartComponent;
 
+  @ViewChild(ContentComparisonChartComponent)
+  private comparisonChartComponent: ContentComparisonChartComponent;
+
   @ViewChild(ContentTimeseriesChartComponent)
   private timeseriesComponent: ContentTimeseriesChartComponent;
 
@@ -61,28 +65,32 @@ export class BiteComponent implements OnInit {
   private poweredBySource: String;
   private poweredByUrl: String;
   private poweredByDate: String;
+
+  showColorPatternChooser: Boolean = false;
   displayCustomColor: Boolean = false;
 
   displayableAvailableBites: SimpleDropdownItem[];
 
   settingsModel: SettingsModel;
-  private colorPattern: string[];
+  private colorPattern: string[] = ChartBite.colorPattern;
+  private SORT_DESC: string = ChartBite.SORT_DESC;
 
   constructor(private logger: Logger, private biteService: BiteService, private sanitizer: DomSanitizer) {
     this.classTypes.ToplineBite = KeyFigureBite.type();
     this.classTypes.ChartBite = ChartBite.type();
+    this.classTypes.ComparisonChartBite = ComparisonChartBite.type();
     this.classTypes.TimeseriesChartBite = TimeseriesChartBite.type();
     this.uuid = biteService.getNextId();
     this.poweredByDisplay = biteService.getPoweredByDisplay();
     this.poweredBySource = biteService.getPoweredBySource();
     this.poweredByUrl = biteService.getPoweredByUrl();
     this.poweredByDate = biteService.getPoweredByDate();
-    this.colorPattern = ChartBite.colorPattern;
   }
 
   ngOnInit() {
     this.displayableAvailableBites = this.biteService.generateBiteSelectionMenu(this.availableBites);
     this.settingsModel = new SettingsModel(this.bite, this.biteService, this);
+    this.showColorPatternChooser = BiteLogicFactory.createBiteLogic(this.bite).colorUsage() === ColorUsage.ONE;
   }
 
   switchBite(newBite: Bite) {
@@ -105,7 +113,7 @@ export class BiteComponent implements OnInit {
   }
   toggleSorting() {
     if (this.settingsModel.sorting === null) {
-      this.settingsModel.sorting = 'DESC';
+      this.settingsModel.sorting = this.SORT_DESC;
     } else {
       this.settingsModel.sorting = null;
     }
@@ -113,10 +121,10 @@ export class BiteComponent implements OnInit {
   }
 
   swapSorting() {
-    if (this.settingsModel.sorting === 'ASC') {
-      this.settingsModel.sorting = 'DESC';
+    if (this.settingsModel.sorting === ChartBite.SORT_ASC) {
+      this.settingsModel.sorting = ChartBite.SORT_DESC;
     } else {
-      this.settingsModel.sorting = 'ASC';
+      this.settingsModel.sorting = ChartBite.SORT_ASC;
     }
     this.renderContent();
   }
@@ -131,11 +139,8 @@ export class BiteComponent implements OnInit {
   }
 
   renderContent() {
-    if (this.chartComponent) {
-      this.chartComponent.render();
-    } else if (this.timeseriesComponent) {
-      this.timeseriesComponent.render();
-    }
+    const component = this.chartComponent || this.timeseriesComponent || this.comparisonChartComponent;
+    component.render();
   }
 
   settingsModelChanged(model) {
