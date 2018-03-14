@@ -10,8 +10,7 @@ import { BiteService } from 'app/bites/shared/bite.service';
 import { ContentChartComponent } from './content/content-chart/content-chart.component';
 import { ContentTimeseriesChartComponent } from './content/content-timeseries-chart/content-timeseries-chart.component';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
-import { BiteLogicFactory, ColorUsage } from 'hxl-preview-ng-lib';
-import { KeyFigureBiteLogic } from 'hxl-preview-ng-lib';
+import { BiteLogicFactory, ColorUsage, KeyFigureBiteLogic, BiteLogic } from 'hxl-preview-ng-lib';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -71,6 +70,7 @@ export class BiteComponent implements OnInit {
 
   displayableAvailableBites: SimpleDropdownItem[];
 
+  biteLogic: BiteLogic;
   settingsModel: SettingsModel;
   private colorPattern: string[] = ChartBite.colorPattern;
   private SORT_DESC: string = ChartBite.SORT_DESC;
@@ -89,8 +89,9 @@ export class BiteComponent implements OnInit {
 
   ngOnInit() {
     this.displayableAvailableBites = this.biteService.generateBiteSelectionMenu(this.availableBites);
-    this.settingsModel = new SettingsModel(this.bite, this.biteService, this);
-    this.showColorPatternChooser = BiteLogicFactory.createBiteLogic(this.bite).colorUsage() === ColorUsage.ONE;
+    this.biteLogic = BiteLogicFactory.createBiteLogic(this.bite);
+    this.settingsModel = new SettingsModel(this.biteLogic, this.biteService, this);
+    this.showColorPatternChooser = this.biteLogic.colorUsage() === ColorUsage.ONE;
   }
 
   switchBite(newBite: Bite) {
@@ -162,19 +163,22 @@ export class BiteComponent implements OnInit {
 }
 
 class SettingsModel {
+  bite: Bite;
+
   private maxDescriptionLength = 200;
   public descriptionRemaining: number;
   private descriptionStr: string;
 
-  constructor(private bite: Bite, private biteService: BiteService, private biteComponent: BiteComponent) {
+  constructor(private biteLogic: BiteLogic, private biteService: BiteService, private biteComponent: BiteComponent) {
     this.computeDescriptionLength();
-    this.descriptionStr = this.bite.description;
+    this.descriptionStr = this.biteLogic.description;
+    this.bite = biteLogic.getBite();
   }
   get title(): string {
-    return this.bite.title;
+    return this.biteLogic.title;
   }
   set title(title: string) {
-    this.bite.title = title;
+    this.bite.uiProperties.title = title;
   }
 
   get description(): string {
@@ -182,10 +186,10 @@ class SettingsModel {
   }
   set description(description: string) {
     if (description.length <= this.maxDescriptionLength) {
-      this.bite.description = description;
+      this.bite.uiProperties.description = description;
       this.computeDescriptionLength();
     } else {
-      this.descriptionStr = this.bite.description;
+      this.descriptionStr = this.biteLogic.description;
     }
   }
 
@@ -215,43 +219,43 @@ class SettingsModel {
     chartBite.showGrid = value;
   }
 
-  get filterZero(): boolean {
-    return this.bite.filteredValues.indexOf(0) >= 0;
-  }
-  set filterZero(shouldAdd: boolean) {
-    if (shouldAdd && this.bite.filteredValues.indexOf(0) < 0) {
-      this.bite.filteredValues.push(0);
-      this.biteService.initBite(this.bite).subscribe(bite => this.biteComponent.renderContent());
-    }
-    if (!shouldAdd) {
-      const index = this.bite.filteredValues.indexOf(0);
-      if (index >= 0) {
-        this.bite.filteredValues.splice(index, 1);
-        this.biteService.initBite(this.bite).subscribe(bite => this.biteComponent.renderContent());
-      }
-    }
-  }
+  // get filterZero(): boolean {
+  //   return this.bite.filteredValues.indexOf(0) >= 0;
+  // }
+  // set filterZero(shouldAdd: boolean) {
+  //   if (shouldAdd && this.bite.filteredValues.indexOf(0) < 0) {
+  //     this.bite.filteredValues.push(0);
+  //     this.biteService.initBite(this.bite).subscribe(bite => this.biteComponent.renderContent());
+  //   }
+  //   if (!shouldAdd) {
+  //     const index = this.bite.filteredValues.indexOf(0);
+  //     if (index >= 0) {
+  //       this.bite.filteredValues.splice(index, 1);
+  //       this.biteService.initBite(this.bite).subscribe(bite => this.biteComponent.renderContent());
+  //     }
+  //   }
+  // }
 
-  get filterCustomValue(): number {
-    for (let i = 0; i < this.bite.filteredValues.length; i++) {
-      const value = this.bite.filteredValues[i];
-      if (value !== 0) {
-        return value;
-      }
-    }
-    return null;
-  }
-  set filterCustomValue(value: number) {
-    const filterZero = this.filterZero;
-    this.bite.filteredValues = [];
-    if (filterZero) {
-      this.bite.filteredValues.push(0);
-    }
-    if (value) {
-      this.bite.filteredValues.push(value);
-    }
-    this.biteService.initBite(this.bite).subscribe(bite => this.biteComponent.renderContent());
-  }
+  // get filterCustomValue(): number {
+  //   for (let i = 0; i < this.bite.filteredValues.length; i++) {
+  //     const value = this.bite.filteredValues[i];
+  //     if (value !== 0) {
+  //       return value;
+  //     }
+  //   }
+  //   return null;
+  // }
+  // set filterCustomValue(value: number) {
+  //   const filterZero = this.filterZero;
+  //   this.bite.filteredValues = [];
+  //   if (filterZero) {
+  //     this.bite.filteredValues.push(0);
+  //   }
+  //   if (value) {
+  //     this.bite.filteredValues.push(value);
+  //   }
+  //   this.biteService.initBite(this.bite).subscribe(bite => this.biteComponent.renderContent());
+  // }
 
   get prefix(): string {
     const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
@@ -318,7 +322,7 @@ class SettingsModel {
   }
 
   computeDescriptionLength() {
-    const descriptionLength = this.bite.description ? this.bite.description.length : 0;
+    const descriptionLength = this.biteLogic.description ? this.biteLogic.description.length : 0;
     this.descriptionRemaining = this.maxDescriptionLength - descriptionLength;
   }
 }

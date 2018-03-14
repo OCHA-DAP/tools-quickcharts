@@ -56,4 +56,13 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
     }
   }
 
+  protected generateOptionsAxis(config: C3ChartConfig) {
+    super.generateOptionsAxis(config);
+
+    // if we have 1 row of data
+    if (this.bite.values.length <= 2) {
+      config.axis.rotated = false;
+    }
+  }
+
 }
