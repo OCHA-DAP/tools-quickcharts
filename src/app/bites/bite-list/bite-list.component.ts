@@ -1,5 +1,5 @@
 import { Bite, ChartBite, KeyFigureBite, TimeseriesChartBite, ComparisonChartBite } from 'hxl-preview-ng-lib';
-import { Component, HostListener, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, NgZone, OnInit, ViewChild } from '@angular/core';
 import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
 import {Logger} from 'angular2-logger/core';
@@ -11,6 +11,7 @@ import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { HttpService } from '../../shared/http.service';
 import { Http } from '@angular/http';
 import { AnalyticsService } from '../shared/analytics.service';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Component({
   selector: 'hxl-bite-list',
@@ -43,6 +44,9 @@ export class BiteListComponent implements OnInit {
   @ViewChild('embedLinkModal')
   private embedLinkModal: SimpleModalComponent;
 
+  @ViewChild('embedLinkInput')
+  private embedLinkInput: ElementRef;
+
   embedUrl: string;
   iframeUrl: string;
 
@@ -68,7 +72,7 @@ export class BiteListComponent implements OnInit {
   }
 
   constructor(public biteService: BiteService, private appConfig: AppConfigService, private logger: Logger, http: Http,
-              zone: NgZone, private analyticsService: AnalyticsService) {
+              zone: NgZone, private analyticsService: AnalyticsService, @Inject( DOCUMENT ) private dom: Document) {
     // window['angularComponentRef'] = {component: this, zone: zone};
 
     this.biteList = [];
@@ -203,6 +207,11 @@ export class BiteListComponent implements OnInit {
     this.generateAvailableBites().subscribe(() => this.load());
   }
 
+  copyToClipboard() {
+    this.embedLinkInput.nativeElement.select();
+    this.dom.execCommand('copy');
+  }
+
   addBite(bite: Bite) {
     this.biteService.addBite(bite, this.biteList, this.availableBites);
   }
@@ -268,10 +277,10 @@ export class BiteListComponent implements OnInit {
       this.embedUrl = this.biteService.exportBitesToURL(this.biteList);
       this.iframeUrl = this.generateIframeUrl(this.embedUrl);
       this.embedLinkModal.show();
-      this.analyticsService.trackAction('action-embed');
+      this.analyticsService.trackEmbed();
     } else if (action === 'image') {
       this.biteService.saveAsImage(this.biteList);
-      this.analyticsService.trackAction('action-save-image');
+      this.analyticsService.trackSaveImage();
     } else if (action === 'save-views') {
       const biteListToSave = this.resetMode ? [] : this.biteList;
       this.biteService.saveBites(biteListToSave).subscribe(

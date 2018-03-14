@@ -96,14 +96,14 @@ export class BiteComponent implements OnInit {
   }
 
   switchBite(newBite: Bite) {
+    this.analyticsService.trackSwitchBite(this.bite, newBite);
     this.onSwitch.emit({oldBite: this.bite, newBite: newBite});
-    this.analyticsService.trackAction('action-switch-bite');
   }
 
   toggleSettings(self) {
     this.settingsDisplay = !this.settingsDisplay;
     if (this.settingsDisplay) {
-      this.analyticsService.trackAction('action-settings-menu');
+      this.analyticsService.trackSettingsMenuOpen(this.bite);
     }
   }
 
@@ -156,12 +156,12 @@ export class BiteComponent implements OnInit {
   createEmbedLink() {
     const embedUrl = this.biteService.exportBitesToURL([this.bite], true);
     this.onEmbedUrlCreate.emit(embedUrl);
-    this.analyticsService.trackAction('action-embed');
+    this.analyticsService.trackEmbed();
   }
 
   saveAsImage() {
     this.biteService.saveAsImage([this.bite], true);
-    this.analyticsService.trackAction('action-save-image');
+    this.analyticsService.trackSaveImage();
   }
 
   asChartBite(bite: Bite): ChartBite {
@@ -175,14 +175,12 @@ class SettingsModel {
   private descriptionStr: string;
   private bite: Bite;
   // noinspection TsLint
-  private firstSettingsChange = false;
 
   private changeHandler: ProxyHandler<Bite> = {
     set: function (target: Bite, p: PropertyKey, value: any, receiver: any): boolean {
-      if (!this.firstSettingsChange) {
-        this.firstSettingsChange = true;
-        this.biteComponent.analyticsService.trackAction('action-settings-changed');
-      }
+      this.biteComponent.analyticsService.trackSettingsChanged(target);
+      // The default behavior to store the value
+      target[p] = value;
       return true;
     }.bind(this)
   };

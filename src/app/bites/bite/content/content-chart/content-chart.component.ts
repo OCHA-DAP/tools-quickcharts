@@ -290,10 +290,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       if (dif > 0.1) {
         c3_chart.internal.redrawForBrush();
         c3_chart.internal.brush.leftMarginRedraw = c3_chart.internal.brush.leftMargin;
-        if (!c3_chart.internal.hdxMixpanelSent) {
-          this.analyticsService.trackAction('action-chart-scroll');
-          c3_chart.internal.hdxMixpanelSent = true;
-        }
+        this.analyticsService.trackChartScroll(this.bite);
         // console.log('Redraw for delta: ' + delta / 10);
       } else {
         // console.log('Skipped redraw');
