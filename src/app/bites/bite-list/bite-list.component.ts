@@ -177,7 +177,7 @@ export class BiteListComponent implements OnInit {
     const handleValue = (value, observer) => {
       if (!value) {
         // we have exhausted all available bites, send event into analytics
-
+        this.analyticsService.trackNoMoreBitesToRender();
       }
       observer.next(value);
       observer.complete();

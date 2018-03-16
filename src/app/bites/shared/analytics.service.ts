@@ -16,6 +16,7 @@ export class AnalyticsService {
   public static TRACK_EVENT_SETTINGS_OPEN: String = 'settings-open';
   public static TRACK_EVENT_SETTINGS_CHANGE: String = 'settings-change';
   public static TRACK_EVENT_CHART_SCROLL: String = 'chart-scroll';
+  public static TRACK_EVENT_END_OF_BITES: String = 'chart-scroll';
   private eventTrack: Map<Bite, Map<String, Boolean>>;
 
   public mpToken: string;
@@ -119,5 +120,9 @@ export class AnalyticsService {
   private trackAction(actionName: string) {
     // TODO: remove
     console.warn('Tracking: ' + actionName);
+  }
+
+  trackNoMoreBitesToRender() {
+    this.trackAction('action-no-more-bites-to-render');
   }
 }
