@@ -18,6 +18,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   elementRef: ElementRef;
   maxNumberOfValues = 7.5;
 
+  private sortedCategories: string[];
+
   constructor(elementRef: ElementRef, private analyticsService: AnalyticsService) {
     this.elementRef = elementRef;
   }
@@ -81,7 +83,9 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
 
   protected generateOptionsColor(config: C3ChartConfig) {
     let pattern = ChartBite.colorPattern;
-    if (BiteLogicFactory.createBiteLogic(this.bite).colorUsage() === ColorUsage.ONE) {
+
+    // added check for this.bite.color since saved bites might not have any
+    if (BiteLogicFactory.createBiteLogic(this.bite).colorUsage() === ColorUsage.ONE && this.bite.color) {
       pattern = [this.bite.color];
     }
     config.color = {
@@ -90,7 +94,29 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   }
 
   protected generateOptionsData(config: C3ChartConfig) {
-    const values = this.bite.values;
+    // const values = this.bite.values.slice(); // copy values
+    let values = this.bite.values;
+    const ascSort = function(a, b){
+      return a.value - b.value;
+    };
+    const descSort = function(a, b){
+      return b.value - a.value;
+    };
+    if (this.bite.sorting !== null) {
+      const valuesLabel = this.bite.values[0];
+      const valAndCategArray = this.bite.values.slice(1).map( (val, i) => ({value: val, category: this.bite.categories[i]}));
+      if (this.bite.sorting === ChartBite.SORT_ASC) {
+        valAndCategArray.sort(ascSort);
+      } else {
+        valAndCategArray.sort(descSort);
+      }
+      values = valAndCategArray.map(item => item.value);
+      values.unshift(valuesLabel);
+      this.sortedCategories = valAndCategArray.map(item => item.category);
+    } else {
+      this.sortedCategories = null;
+    }
+
     if (!this.bite.pieChart) {
       config.data = {
         columns: [values],
@@ -111,7 +137,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   }
 
   protected generateOptionsAxis(config: C3ChartConfig) {
-    const categories = this.bite.categories;
+    // this.sortedCategories can be set when sorting is selected, otherwise use bite categories
+    const categories = this.sortedCategories || this.bite.categories;
     config.axis = {
       rotated: this.bite.swapAxis,
       x: {
@@ -156,7 +183,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   protected generateOptions(): C3ChartConfig {
     this.overwriteXAxisLabel();
 
-    const values = this.bite.values.slice(); // copy values
+    const values = this.bite.values; // copy values
 
     const config = {
       bindto: this.elementRef.nativeElement.children[0],
@@ -176,21 +203,9 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     this.generateOptionsTooltip(config);
     this.generateOptionsColor(config);
     this.generateOptionsData(config);
-    this.generateOptionsAxis(config);
 
-    const ascSort = function(a, b){
-      return a - b;
-    };
-    const descSort = function(a, b){
-      return b - a;
-    };
-    if (this.bite.sorting !== null) {
-      if (this.bite.sorting === ChartBite.SORT_ASC) {
-        values.sort(ascSort);
-      } else {
-        values.sort(descSort);
-      }
-    }
+    // generateOptionsData() might sort the x axis categories so generateOptionsAxis() needs to come after
+    this.generateOptionsAxis(config);
 
     // if (this.bite.pieChart) {
     //   config.axis.rotated = false; // we don't allow it for pie

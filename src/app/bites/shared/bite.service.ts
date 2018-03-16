@@ -206,6 +206,7 @@ export class BiteService {
     if (availableBites) {
       for (let i = 0; i < availableBites.length; i++) {
         const b = availableBites[i];
+        const biteLogic = BiteLogicFactory.createBiteLogic(b);
 
         let categoryList: SimpleDropdownItem[] = categoryListMap[b.displayCategory];
         /* Initializing category list */
@@ -220,7 +221,7 @@ export class BiteService {
           categoryListMap[b.displayCategory] = categoryList;
         }
         categoryList.push({
-          displayValue: b.title,
+          displayValue: biteLogic.title,
           type: 'menuitem',
           payload: b
         });

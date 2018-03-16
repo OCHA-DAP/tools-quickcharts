@@ -3,7 +3,7 @@
   [class.settings-open]="settingsDisplay"
 >
   <div class="title">
-    <div class="title-content" title="{{bite.title}}">{{bite.title}}</div>
+    <div class="title-content" title="{{biteLogic.title}}">{{biteLogic.title}}</div>
     <div class="title-menu">
       <hxl-simple-dropdown [items]="displayableAvailableBites" (selected)="switchBite($event)"></hxl-simple-dropdown>
     </div>
@@ -21,7 +21,7 @@
   </ng-template>
   <div class="description">
     <div class="description-content">
-      {{ bite.description }}
+      {{ biteLogic.description }}
     </div>
   </div>
   <div class="footer">
