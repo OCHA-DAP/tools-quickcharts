@@ -176,7 +176,6 @@ class SettingsModel {
   private maxDescriptionLength = 200;
   public descriptionRemaining: number;
   private descriptionStr: string;
-  private bite: Bite;
   // noinspection TsLint
 
   private changeHandler: ProxyHandler<Bite> = {
