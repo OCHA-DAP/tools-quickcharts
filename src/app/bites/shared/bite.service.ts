@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Bite } from 'hxl-preview-ng-lib';
+import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite } from 'hxl-preview-ng-lib';
 import { RecipeService } from './recipe.service';
 import { Logger } from 'angular2-logger/core';
 import { CookBookService } from 'hxl-preview-ng-lib';
@@ -11,6 +11,7 @@ import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simpl
 import { PersisUtil } from './persist/persist-util';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
+import { AsyncSubject } from 'rxjs/AsyncSubject';
 
 @Injectable()
 export class BiteService {
@@ -159,28 +160,47 @@ export class BiteService {
     return this.recipeService.resetBite(bite);
   }
 
-  addBite(bite: Bite, bites: Bite[], availableBites: Bite[], replaceIndex?: number) {
+  addBite(bite: Bite, bites: Bite[], availableBites: Bite[], replaceIndex?: number): Observable<boolean> {
 
     // /* Removing bite from list of available bites */
     // const index = BiteService.findBiteInArray(bite, availableBites);
     // availableBites.splice(index, 1);
+    const observable = new AsyncSubject<boolean>();
 
     const clonedBite = this.cloneObjectLiteral(bite) as Bite;
 
     this.initBite(clonedBite)
       .subscribe(
         b => {
+          if (!b.init || b.type === ChartBite.type() || bite.type === ComparisonChartBite.type() || b.type === TimeseriesChartBite.type()) {
+            const cb: ChartBite = <ChartBite> b;
+            // should we check if bite can render?
+            if (replaceIndex === undefined) {
+              // check if bite can render
+              if (!cb.init || cb.values === null || cb.values.length < 3) {
+                observable.next(false);
+                observable.complete();
+                return;
+              }
+            }
+          }
+
           if (replaceIndex == null) {
             bites.push(b);
           } else {
             bites[replaceIndex] = b;
           }
+          observable.next(true);
+          observable.complete();
         },
         err => {
           this.logger.error('Can\'t process bite due to:' + err);
           // availableBites.push(bite);
+          observable.next(false);
+          observable.complete();
         }
       );
+    return observable;
   }
 
   /**
