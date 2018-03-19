@@ -1,5 +1,5 @@
-import { Component, OnInit, ElementRef, AfterViewInit } from '@angular/core';
-import { ChartBite, BiteLogicFactory, ColorUsage, UnitsUtil } from 'hxl-preview-ng-lib';
+import { Component, OnInit, ElementRef, AfterViewInit, OnChanges } from '@angular/core';
+import { ChartBite, BiteLogicFactory, ColorUsage, UnitsUtil, ChartBiteLogic } from 'hxl-preview-ng-lib';
 import { Input } from '@angular/core';
 
 declare const c3: any;
@@ -10,9 +10,11 @@ declare const d3: any;
   templateUrl: './content-chart.component.html',
   styleUrls: ['./content-chart.component.less']
 })
-export class ContentChartComponent implements OnInit, AfterViewInit {
+export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
   @Input()
   bite: ChartBite;
+
+  biteLogic: ChartBiteLogic;
 
   elementRef: ElementRef;
   maxNumberOfValues = 7.5;
@@ -23,18 +25,24 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     this.elementRef = elementRef;
   }
 
+  ngOnChanges() {
+    if (!this.biteLogic) {
+      this.biteLogic = BiteLogicFactory.createBiteLogic(this.bite) as ChartBiteLogic;
+    }
+  }
+
   ngOnInit() {
   }
 
   ngAfterViewInit(): void {
-    if (this.bite.values) {
+    if (this.biteLogic.values) {
       this.render();
     }
   }
 
   protected overwriteXAxisLabel() {
-    if (this.bite.dataTitle && !this.bite.pieChart) {
-      this.bite.values[0] = this.bite.dataTitle;
+    if (this.biteLogic.dataTitle && !this.biteLogic.pieChart) {
+      this.biteLogic.values[0] = this.biteLogic.dataTitle;
     }
   }
 
@@ -84,8 +92,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     let pattern = ChartBite.colorPattern;
 
     // added check for this.bite.color since saved bites might not have any
-    if (BiteLogicFactory.createBiteLogic(this.bite).colorUsage() === ColorUsage.ONE && this.bite.color) {
-      pattern = [this.bite.color];
+    if (BiteLogicFactory.createBiteLogic(this.bite).colorUsage() === ColorUsage.ONE && this.biteLogic.color) {
+      pattern = [this.biteLogic.color];
     }
     config.color = {
       pattern: pattern
@@ -94,17 +102,18 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
 
   protected generateOptionsData(config: C3ChartConfig) {
     // const values = this.bite.values.slice(); // copy values
-    let values = this.bite.values;
+    let values = this.biteLogic.values;
     const ascSort = function(a, b){
       return a.value - b.value;
     };
     const descSort = function(a, b){
       return b.value - a.value;
     };
-    if (this.bite.sorting !== null) {
-      const valuesLabel = this.bite.values[0];
-      const valAndCategArray = this.bite.values.slice(1).map( (val, i) => ({value: val, category: this.bite.categories[i]}));
-      if (this.bite.sorting === ChartBite.SORT_ASC) {
+    if (this.biteLogic.sorting !== null) {
+      const valuesLabel = this.biteLogic.values[0];
+      const valAndCategArray =
+          this.biteLogic.values.slice(1).map( (val, i) => ({value: val, category: this.biteLogic.categories[i]}));
+      if (this.biteLogic.sorting === ChartBite.SORT_ASC) {
         valAndCategArray.sort(ascSort);
       } else {
         valAndCategArray.sort(descSort);
@@ -116,7 +125,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       this.sortedCategories = null;
     }
 
-    if (!this.bite.pieChart) {
+    if (!this.biteLogic.pieChart) {
       config.data = {
         columns: [values],
         type: 'bar'
@@ -124,7 +133,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     } else {
       const pieValues = [];
       for (let i = 1; i < values.length; i++) {
-        pieValues.push([this.bite.categories[i - 1], values[i]]);
+        pieValues.push([this.biteLogic.categories[i - 1], values[i]]);
       }
       // console.log(pieValues);
 
@@ -137,12 +146,12 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
 
   protected generateOptionsAxis(config: C3ChartConfig) {
     // this.sortedCategories can be set when sorting is selected, otherwise use bite categories
-    const categories = this.sortedCategories || this.bite.categories;
+    const categories = this.sortedCategories || this.biteLogic.categories;
     config.axis = {
-      rotated: this.bite.swapAxis,
+      rotated: this.biteLogic.swapAxis,
       x: {
         type: 'category',
-        categories: this.bite.categories,
+        categories: this.biteLogic.categories,
         tick: {
         },
         height: 50
@@ -154,7 +163,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         }
       }
     };
-    if (this.bite.pieChart) {
+    if (this.biteLogic.pieChart) {
       config.axis.rotated = false;
     }
     const trimXValues = function (x) {
@@ -166,7 +175,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
         return value;
       }
     };
-    if (!this.bite.swapAxis) {
+    if (!this.biteLogic.swapAxis) {
       config.axis.x.tick = {
         rotate: 20,
         width: 100,
@@ -182,7 +191,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   protected generateOptions(): C3ChartConfig {
     this.overwriteXAxisLabel();
 
-    const values = this.bite.values; // copy values
+    const values = this.biteLogic.values; // copy values
 
     const config = {
       bindto: this.elementRef.nativeElement.children[0],
@@ -193,7 +202,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       },
       grid: {
         y: {
-          show: this.bite.showGrid
+          show: this.biteLogic.showGrid
         }
       },
       pie: {},
@@ -315,7 +324,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       .on('wheel.zoom', zoomHandler.bind(this))
       .on('mousewheel.zoom', zoomHandler.bind(this))
       .on('DOMMouseScroll.zoom', zoomHandler.bind(this));
-    if (this.bite.values.length > this.maxNumberOfValues) {
+    if (this.biteLogic.values.length > this.maxNumberOfValues) {
       c3_chart.internal.brush.leftMargin = 0;
       c3_chart.internal.brush.extent([0, this.maxNumberOfValues]).update();
       c3_chart.internal.redrawForBrush();

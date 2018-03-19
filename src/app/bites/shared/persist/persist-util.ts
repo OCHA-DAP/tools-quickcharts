@@ -4,7 +4,7 @@ import { Logger } from 'angular2-logger/core';
 
 export class PersisUtil {
 
-  readonly CONFIG_VERSION = 2;
+  readonly CONFIG_VERSION = 3;
 
   constructor(private logger: Logger){}
 
