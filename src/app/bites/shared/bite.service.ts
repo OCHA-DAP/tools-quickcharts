@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite } from 'hxl-preview-ng-lib';
+import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite, BiteLogicFactory, ChartBiteLogic } from 'hxl-preview-ng-lib';
 import { RecipeService } from './recipe.service';
 import { Logger } from 'angular2-logger/core';
 import { CookBookService } from 'hxl-preview-ng-lib';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
-import { BiteLogicFactory } from 'hxl-preview-ng-lib';
 import { DomEventsService } from '../../shared/dom-events.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { PersisUtil } from './persist/persist-util';
@@ -172,12 +171,13 @@ export class BiteService {
     this.initBite(clonedBite)
       .subscribe(
         b => {
-          if (!b.init || b.type === ChartBite.type() || bite.type === ComparisonChartBite.type() || b.type === TimeseriesChartBite.type()) {
-            const cb: ChartBite = <ChartBite> b;
+          if (b.type === ChartBite.type() || b.type === ComparisonChartBite.type() ||
+                  b.type === TimeseriesChartBite.type()) {
+            const chartBiteLogic = BiteLogicFactory.createBiteLogic(b) as ChartBiteLogic;
             // should we check if bite can render?
             if (replaceIndex === undefined) {
               // check if bite can render
-              if (!cb.init || cb.values === null || cb.values.length < 3) {
+              if (chartBiteLogic.values === null || chartBiteLogic.values.length < 2) {
                 observable.next(false);
                 observable.complete();
                 return;

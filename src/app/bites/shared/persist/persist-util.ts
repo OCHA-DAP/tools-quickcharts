@@ -6,7 +6,7 @@ export class PersisUtil {
 
   readonly CONFIG_VERSION = 3;
 
-  constructor(private logger: Logger){}
+  constructor(private logger: Logger) {}
 
   /**
    * Transforms a bitelist to a config string that can be saved.
@@ -23,7 +23,7 @@ export class PersisUtil {
 
   public configToBitelist(config: string): Bite[] {
     const configObj: HxlPreviewConfig = JSON.parse(config);
-    if (configObj.configVersion === this.CONFIG_VERSION){
+    if (configObj.configVersion === this.CONFIG_VERSION) {
       return configObj.bites;
     } else {
       this.logger.warn('Found config doesn\'t have correct version');

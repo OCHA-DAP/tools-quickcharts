@@ -80,7 +80,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
   protected generateOptionsTooltip(config: C3ChartConfig) {
     config.tooltip = {
       format: {
-        title: function (x) { return this.bite.categories[x]; }.bind(this),
+        title: x => this.biteLogic.categories[x],
         value: (value, ratio, id, index) => {
           return this.numberFormatter(value);
         }
@@ -93,7 +93,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
     let pattern = ChartBite.colorPattern;
 
     // added check for this.bite.color since saved bites might not have any
-    if (BiteLogicFactory.createBiteLogic(this.bite).colorUsage() === ColorUsage.ONE && this.biteLogic.color) {
+    if (this.biteLogic.colorUsage() === ColorUsage.ONE && this.biteLogic.color) {
       pattern = [this.biteLogic.color];
     }
     config.color = {
@@ -284,13 +284,13 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
         pixelY : pY };
     }
 
-    const zoomHandler = function() {
+    const zoomHandler = () => {
       const event = d3.event;
       event.preventDefault();
       event.stopPropagation();
       const eventDelta = normalizeWheel(event);
 
-      const delta = -1 * (this.bite.swapAxis ? eventDelta.pixelY : eventDelta.pixelX);
+      const delta = -1 * (this.biteLogic.swapAxis ? eventDelta.pixelY : eventDelta.pixelX);
 
       if (!c3_chart.internal.brush.leftMargin) {
         c3_chart.internal.brush.leftMargin = 0;
@@ -302,8 +302,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
       if (leftMargin < 0) {
         leftMargin = 0;
       }
-      if (leftMargin + this.maxNumberOfValues > this.bite.values.length) {
-        leftMargin = this.bite.values.length - this.maxNumberOfValues;
+      if (leftMargin + this.maxNumberOfValues > this.biteLogic.values.length) {
+        leftMargin = this.biteLogic.values.length - this.maxNumberOfValues;
       }
       c3_chart.internal.brush.leftMargin = leftMargin;
       c3_chart.internal.brush.extent([leftMargin, leftMargin + this.maxNumberOfValues]);
@@ -322,9 +322,9 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
     };
 
     d3.select(this.elementRef.nativeElement.children[0]).select('svg')
-      .on('wheel.zoom', zoomHandler.bind(this))
-      .on('mousewheel.zoom', zoomHandler.bind(this))
-      .on('DOMMouseScroll.zoom', zoomHandler.bind(this));
+      .on('wheel.zoom', zoomHandler)
+      .on('mousewheel.zoom', zoomHandler)
+      .on('DOMMouseScroll.zoom', zoomHandler);
     if (this.biteLogic.values.length > this.maxNumberOfValues) {
       c3_chart.internal.brush.leftMargin = 0;
       c3_chart.internal.brush.extent([0, this.maxNumberOfValues]).update();
