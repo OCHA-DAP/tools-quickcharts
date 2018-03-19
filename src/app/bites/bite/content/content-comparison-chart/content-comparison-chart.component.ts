@@ -1,4 +1,4 @@
-import { ComparisonChartBite, ChartBite } from 'hxl-preview-ng-lib';
+import { ChartBite, ComparisonChartBiteLogic } from 'hxl-preview-ng-lib';
 import { ContentChartComponent, C3ChartConfig } from './../content-chart/content-chart.component';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 
@@ -13,16 +13,17 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
   }
 
   protected generateOptionsTooltip(config: C3ChartConfig) {
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
     const values = [
-      this.bite.values,
-      (this.bite as ComparisonChartBite).comparisonValues
+      cmpBiteLogic.values,
+      cmpBiteLogic.comparisonValues
     ];
     config.tooltip = {
       format: {
         value: (value, ratio, id, index) => {
           let newValue = value;
           // if we have more than 1 row of data and this is a comparison value
-          if (this.bite.values.length > 2 && id === values[1][0]) {
+          if (cmpBiteLogic.values.length > 2 && id === values[1][0]) {
             newValue = value + values[0][index + 1];
           }
           return this.numberFormatter(newValue);
@@ -38,17 +39,17 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
   }
 
   protected generateOptionsData(config: C3ChartConfig) {
-    const bite = this.bite as ComparisonChartBite;
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
     const values = [
-      bite.values,
-      bite.comparisonValues
+      cmpBiteLogic.values,
+      cmpBiteLogic.comparisonValues
     ];
     config.data = {
       columns: values,
       type: 'bar',
     };
     // if we have more than 1 row of data
-    if (this.bite.values.length > 2) {
+    if (cmpBiteLogic.values.length > 2) {
       config.data.groups = [[
         values[0][0],
         values[1][0]
@@ -59,8 +60,9 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
   protected generateOptionsAxis(config: C3ChartConfig) {
     super.generateOptionsAxis(config);
 
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
     // if we have 1 row of data
-    if (this.bite.values.length <= 2) {
+    if (cmpBiteLogic.values.length <= 2) {
       config.axis.rotated = false;
     }
   }
