@@ -1,5 +1,5 @@
 import { Bite, ChartBite, KeyFigureBite, TimeseriesChartBite, ComparisonChartBite } from 'hxl-preview-ng-lib';
-import { Component, HostListener, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Inject, NgZone, OnInit, ViewChild } from '@angular/core';
 import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
 import {Logger} from 'angular2-logger/core';
@@ -10,6 +10,8 @@ import { Observable } from 'rxjs/Observable';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { HttpService } from '../../shared/http.service';
 import { Http } from '@angular/http';
+import { AnalyticsService } from '../shared/analytics.service';
+import { DOCUMENT } from '@angular/platform-browser';
 
 @Component({
   selector: 'hxl-bite-list',
@@ -42,6 +44,9 @@ export class BiteListComponent implements OnInit {
   @ViewChild('embedLinkModal')
   private embedLinkModal: SimpleModalComponent;
 
+  @ViewChild('embedLinkInput')
+  private embedLinkInput: ElementRef;
+
   embedUrl: string;
   iframeUrl: string;
 
@@ -66,7 +71,8 @@ export class BiteListComponent implements OnInit {
     console.log('Unknown message: ' + $event.data);
   }
 
-  constructor(public biteService: BiteService, private appConfig: AppConfigService, private logger: Logger, http: Http, zone: NgZone) {
+  constructor(public biteService: BiteService, private appConfig: AppConfigService, private logger: Logger, http: Http,
+              zone: NgZone, private analyticsService: AnalyticsService, @Inject( DOCUMENT ) private dom: Document) {
     // window['angularComponentRef'] = {component: this, zone: zone};
 
     this.biteList = [];
@@ -168,30 +174,46 @@ export class BiteListComponent implements OnInit {
     const listB = this.availableBites.filter(bite => bite.type === KeyFigureBite.type());
     const listC = this.availableBites.filter(bite => bite.type === TimeseriesChartBite.type());
 
-    let orderedBites: Array<Bite>;
-    orderedBites = [];
+    const handleValue = (value, observer) => {
+      if (!value) {
+        // we have exhausted all available bites, send event into analytics
+        this.analyticsService.trackNoMoreBitesToRender();
+      }
+      observer.next(value);
+      observer.complete();
+    };
 
-    if (listA && listA.length > 0) {
-      orderedBites.push(listA[0]);
-      listA.splice(0, 1);
-    }
-    if (listB && listB.length > 0) {
-      orderedBites.push(listB[0]);
-      listB.splice(0, 1);
-    }
-    if (listC && listC.length > 0) {
-      orderedBites.push(listC[0]);
-      listC.splice(0, 1);
-    }
-    orderedBites = orderedBites.concat(listA);
-    orderedBites = orderedBites.concat(listB);
-    orderedBites = orderedBites.concat(listC);
+    const observable = [
+      new Observable<Bite>((observer) => {
+        const value = listA.pop() || listB.pop() || listC.pop();
+        handleValue(value, observer);
+      }),
+      new Observable<Bite>((observer) => {
+        const value = listB.pop() || listC.pop() || listA.pop();
+        handleValue(value, observer);
+      }),
+      new Observable<Bite>((observer) => {
+        const value = listC.pop() || listA.pop() || listB.pop();
+        handleValue(value, observer);
+      })
+    ];
 
-    // filling the slots
-    for (let i = 0; i < 3 && i < orderedBites.length; i++) {
-      this.addBite(orderedBites[i]);
-    }
-
+    const processBite = (self, idx) => {
+      const instance = (bite) => {
+        if (!bite) {
+          return;
+        }
+        self.addBite(bite).subscribe((val) => {
+          if (!val) {
+            observable[idx].subscribe(instance);
+          }
+        });
+      };
+      return instance;
+    };
+    observable[0].subscribe(processBite(this, 0));
+    observable[1].subscribe(processBite(this, 1));
+    observable[2].subscribe(processBite(this, 2));
   }
 
   init() {
@@ -201,8 +223,13 @@ export class BiteListComponent implements OnInit {
     this.generateAvailableBites().subscribe(() => this.load());
   }
 
-  addBite(bite: Bite) {
-    this.biteService.addBite(bite, this.biteList, this.availableBites);
+  copyToClipboard() {
+    this.embedLinkInput.nativeElement.select();
+    this.dom.execCommand('copy');
+  }
+
+  addBite(bite: Bite): Observable<boolean> {
+    return this.biteService.addBite(bite, this.biteList, this.availableBites);
   }
 
   deleteBite(bite: Bite) {
@@ -222,7 +249,7 @@ export class BiteListComponent implements OnInit {
       this.biteService.generateAvailableBites()
         .subscribe(
           bite => {
-            this.logger.log('Available bite ' + JSON.stringify(bite));
+            // this.logger.log('Available bite ' + JSON.stringify(bite));
             this.availableBites.push(bite);
           },
           errObj => {
@@ -266,8 +293,10 @@ export class BiteListComponent implements OnInit {
       this.embedUrl = this.biteService.exportBitesToURL(this.biteList);
       this.iframeUrl = this.generateIframeUrl(this.embedUrl);
       this.embedLinkModal.show();
+      this.analyticsService.trackEmbed();
     } else if (action === 'image') {
       this.biteService.saveAsImage(this.biteList);
+      this.analyticsService.trackSaveImage();
     } else if (action === 'save-views') {
       const biteListToSave = this.resetMode ? [] : this.biteList;
       this.biteService.saveBites(biteListToSave).subscribe(

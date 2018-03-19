@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, AfterViewInit, OnChanges } from '@angular/core';
 import { ChartBite, BiteLogicFactory, ColorUsage, UnitsUtil, ChartBiteLogic } from 'hxl-preview-ng-lib';
 import { Input } from '@angular/core';
+import { AnalyticsService } from '../../../shared/analytics.service';
 
 declare const c3: any;
 declare const d3: any;
@@ -21,7 +22,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
 
   private sortedCategories: string[];
 
-  constructor(elementRef: ElementRef) {
+  constructor(elementRef: ElementRef, private analyticsService: AnalyticsService) {
     this.elementRef = elementRef;
   }
 
@@ -313,11 +314,11 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
       if (dif > 0.1) {
         c3_chart.internal.redrawForBrush();
         c3_chart.internal.brush.leftMarginRedraw = c3_chart.internal.brush.leftMargin;
+        this.analyticsService.trackChartScroll(this.bite);
         // console.log('Redraw for delta: ' + delta / 10);
       } else {
         // console.log('Skipped redraw');
       }
-
     };
 
     d3.select(this.elementRef.nativeElement.children[0]).select('svg')
