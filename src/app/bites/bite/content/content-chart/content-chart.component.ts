@@ -102,7 +102,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     const descSort = function(a, b){
       return b.value - a.value;
     };
-    if (this.bite.sorting !== null) {
+    if (this.bite.sorting) {
       const valuesLabel = this.bite.values[0];
       const valAndCategArray = this.bite.values.slice(1).map( (val, i) => ({value: val, category: this.bite.categories[i]}));
       if (this.bite.sorting === ChartBite.SORT_ASC) {

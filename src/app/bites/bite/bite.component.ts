@@ -113,7 +113,7 @@ export class BiteComponent implements OnInit {
     }, 2);
   }
   toggleSorting() {
-    if (this.settingsModel.sorting === null) {
+    if (!this.settingsModel.sorting) {
       this.settingsModel.sorting = this.SORT_DESC;
     } else {
       this.settingsModel.sorting = null;
