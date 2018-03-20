@@ -69,9 +69,10 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
   // }
 
   protected generateOptionsTooltip(config: C3ChartConfig) {
+    const categories = this.sortedCategories || this.bite.categories;
     config.tooltip = {
       format: {
-        title: function (x) { return this.bite.categories[x]; }.bind(this),
+        title: function (x) { return categories[x]; }.bind(this),
         value: (value, ratio, id, index) => {
           return this.numberFormatter(value);
         }
@@ -101,7 +102,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
     const descSort = function(a, b){
       return b.value - a.value;
     };
-    if (this.bite.sorting !== null) {
+    if (this.bite.sorting) {
       const valuesLabel = this.bite.values[0];
       const valAndCategArray = this.bite.values.slice(1).map( (val, i) => ({value: val, category: this.bite.categories[i]}));
       if (this.bite.sorting === ChartBite.SORT_ASC) {
@@ -199,12 +200,15 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
       pie: {},
     };
 
-    this.generateOptionsTooltip(config);
     this.generateOptionsColor(config);
     this.generateOptionsData(config);
 
-    // generateOptionsData() might sort the x axis categories so generateOptionsAxis() needs to come after
+    /**
+     * generateOptionsData() might sort the x axis categories
+     * so generateOptionsAxis() and generateOptionsTooltip need to come after
+     */
     this.generateOptionsAxis(config);
+    this.generateOptionsTooltip(config);
 
     // if (this.bite.pieChart) {
     //   config.axis.rotated = false; // we don't allow it for pie
