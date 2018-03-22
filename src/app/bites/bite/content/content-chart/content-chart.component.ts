@@ -315,14 +315,16 @@ export class ContentChartComponent implements OnInit, AfterViewInit {
 
     };
 
-    d3.select(this.elementRef.nativeElement.children[0]).select('svg')
-      .on('wheel.zoom', zoomHandler.bind(this))
-      .on('mousewheel.zoom', zoomHandler.bind(this))
-      .on('DOMMouseScroll.zoom', zoomHandler.bind(this));
+
     if (this.bite.values.length > this.maxNumberOfValues) {
       c3_chart.internal.brush.leftMargin = 0;
       c3_chart.internal.brush.extent([0, this.maxNumberOfValues]).update();
       c3_chart.internal.redrawForBrush();
+
+      d3.select(this.elementRef.nativeElement.children[0]).select('svg')
+        .on('wheel.zoom', zoomHandler.bind(this))
+        .on('mousewheel.zoom', zoomHandler.bind(this))
+        .on('DOMMouseScroll.zoom', zoomHandler.bind(this));
     }
 
   }
