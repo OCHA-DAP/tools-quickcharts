@@ -73,6 +73,7 @@ export class BiteComponent implements OnInit {
 
   biteLogic: BiteLogic;
   settingsModel: SettingsModel;
+  temporaryCustomColor: string;
   private colorPattern: string[] = ChartBite.colorPattern;
   private SORT_DESC: string = ChartBite.SORT_DESC;
 
@@ -111,9 +112,10 @@ export class BiteComponent implements OnInit {
   showCustomColorSection() {
     const chartBiteLogic = this.biteLogic as ChartBiteLogic;
     if (this.colorPattern.indexOf(chartBiteLogic.color) >= 0) {
-      chartBiteLogic.uiProperties.color = '#ffffff';
+      this.temporaryCustomColor = this.settingsModel.customColor;
     }
     this.displayCustomColor = true;
+
     setTimeout(() => {
       this.customColorInput.nativeElement.focus();
     }, 2);
@@ -138,6 +140,7 @@ export class BiteComponent implements OnInit {
 
   hideCustomColorSection() {
     this.displayCustomColor = false;
+    this.settingsModel.customColor = this.temporaryCustomColor;
     this.renderContent();
   }
 
@@ -329,7 +332,12 @@ class SettingsModel {
 
   set customColor(color: string) {
     const chartBiteLogic = this.biteLogic as ChartBiteLogic;
-    chartBiteLogic.uiProperties.color = color;
+    const WHITE = '#ffffff';
+    if ((color !== WHITE && /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color))) {
+      chartBiteLogic.uiProperties.color = color;
+    } else {
+      chartBiteLogic.uiProperties.color = ChartBite.colorPattern[0];
+    }
   }
 
   get sorting(): string {
