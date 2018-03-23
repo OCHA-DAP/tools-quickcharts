@@ -23,7 +23,7 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
         value: (value, ratio, id, index) => {
           let newValue = value;
           // if we have more than 1 row of data and this is a comparison value
-          if (cmpBiteLogic.values.length > 2 && id === values[1][0]) {
+          if (cmpBiteLogic.values.length > 2 && id === values[1][0] && cmpBiteLogic.stackChart) {
             newValue = value + values[0][index + 1];
           }
           return this.numberFormatter(newValue);
@@ -40,16 +40,20 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
 
   protected generateOptionsData(config: C3ChartConfig) {
     const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    let comparisonValues = cmpBiteLogic.comparisonValues;
+    if (cmpBiteLogic.values.length > 2 && cmpBiteLogic.stackChart) {
+      comparisonValues = cmpBiteLogic.comparisonValues.map( (val, i) => i > 0 ? val - cmpBiteLogic.values[i] : val);
+    }
     const values = [
       cmpBiteLogic.values,
-      cmpBiteLogic.comparisonValues
+      comparisonValues
     ];
     config.data = {
       columns: values,
       type: 'bar',
     };
     // if we have more than 1 row of data
-    if (cmpBiteLogic.values.length > 2) {
+    if (cmpBiteLogic.values.length > 2 && cmpBiteLogic.stackChart) {
       config.data.groups = [[
         values[0][0],
         values[1][0]

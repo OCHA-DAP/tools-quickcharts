@@ -185,6 +185,22 @@
                     (click)="swapSorting()"></i>
                 </div>
               </div>
+              <div class="element-group" *ngIf="(bite.type == classTypes.ComparisonChartBite)">
+                <label >
+                  Stack Chart
+                </label>
+                <div class="pull-right">
+                  <div class="checkbox-slider pull-right">
+                    <input [checked]="settingsModel.stackChart"
+                           (change)="settingsModel.stackChart = $event.target.checked; renderContent()"
+                           type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="stack-chart-{{uuid}}">
+                    <label class="checkbox-slider-label" for="stack-chart-{{uuid}}">
+                      <span class="checkbox-slider-inner"></span>
+                      <span class="checkbox-slider-switch"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
               <div class="element-group" *ngIf="showColorPatternChooser">
                 <label >
                   Chart color
