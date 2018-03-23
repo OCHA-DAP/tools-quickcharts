@@ -1,7 +1,7 @@
 import { ContentComparisonChartComponent } from './content/content-comparison-chart/content-comparison-chart.component';
 import { Component, OnInit, EventEmitter, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import {Input, Output} from '@angular/core';
-import { Bite, ChartBiteLogic } from 'hxl-preview-ng-lib';
+import { Bite, ChartBiteLogic, ComparisonChartBiteLogic } from 'hxl-preview-ng-lib';
 import { KeyFigureBite } from 'hxl-preview-ng-lib';
 import { ChartBite, ComparisonChartBite } from 'hxl-preview-ng-lib';
 import { TimeseriesChartBite } from 'hxl-preview-ng-lib';
@@ -348,6 +348,16 @@ class SettingsModel {
   set sorting(sorting: string) {
     const chartBiteLogic = this.biteLogic as ChartBiteLogic;
     chartBiteLogic.uiProperties.sorting = sorting;
+  }
+
+  get stackChart(): boolean {
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    return cmpBiteLogic.stackChart;
+  }
+
+  set stackChart(stackChart: boolean) {
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    cmpBiteLogic.uiProperties.stackChart = stackChart;
   }
 
   computeDescriptionLength() {
