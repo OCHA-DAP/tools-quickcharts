@@ -6,8 +6,12 @@
       <i *ngIf="spinnerActive"><img class="img-color" src="./assets/images/loading-spinner.gif"> Loading ...</i>
     </div>
     <div class="col-xs-2 right-menu" *ngIf="!toolsMode">
-      <hxl-simple-dropdown [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="smartChartsMenu"
-                       [linkText]="'More actions'" (selected)="doSaveAction($event)">
+      <hxl-simple-dropdown [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="shareChartsMenu"
+                       linkText="Share" (selected)="doSaveAction($event)">
+      </hxl-simple-dropdown>
+      |
+      <hxl-simple-dropdown [glyphiconClass]="'glyphicon-cog'" [items]="adminChartsMenu" [makeGray]="true"
+                      (selected)="doSaveAction($event)">
       </hxl-simple-dropdown>
 
       <hxl-simple-modal [title]="'Save Configuration'" #savedModal>

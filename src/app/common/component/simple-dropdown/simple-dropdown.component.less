@@ -23,3 +23,13 @@ a, a:focus, a:hover {
 a.dropdown-item:hover {
   background-color: @extraLighterGrayColor;
 }
+
+span[dropdown]{
+  word-spacing: 4px;
+  a.make-gray {
+    color: @grayColor;
+  }
+  &.open a.make-gray {
+    color: @blueColor;
+  }
+}
