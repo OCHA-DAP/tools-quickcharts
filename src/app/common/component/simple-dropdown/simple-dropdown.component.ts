@@ -1,6 +1,10 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
 
+export interface SimpleDropdownPayload {
+  name: string;
+  checked?: boolean;
+}
 export interface SimpleDropdownItem {
   displayValue: string;
   type: string; // header, menuitem, divider
@@ -36,7 +40,13 @@ export class SimpleDropdownComponent implements OnInit {
   ngOnInit() {
   }
 
-  itemSelected(payload: any) {
+  itemSelected(payload: SimpleDropdownPayload) {
+    this.selected.emit(payload);
+    return false;
+  }
+
+  itemToggled(payload: SimpleDropdownPayload, checked: boolean) {
+    payload.checked = checked;
     this.selected.emit(payload);
     return false;
   }

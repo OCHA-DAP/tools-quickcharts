@@ -23,6 +23,11 @@
         </a>
       </li>
       <li *ngIf="item.type=='divider'" class="divider" role="separator"></li>
+      <li *ngIf="item.type=='togglemenuitem'" role="menuitem">
+        <hxl-checkbox-slider (checked)="itemToggled(item.payload, $event)"
+          [name]="item.payload.name" [title]="item.displayValue" [initiallyChecked]="item.payload.checked" [forMenu]="true">
+        </hxl-checkbox-slider>
+      </li>
     </ng-template>
   </ul>
 </span>
