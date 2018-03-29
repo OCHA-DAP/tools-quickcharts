@@ -29,7 +29,8 @@ export class BiteListComponent implements OnInit {
   spinnerActive = false;
   resetMode = false;
 
-  smartChartsMenu: SimpleDropdownItem[];
+  adminChartsMenu: SimpleDropdownItem[];
+  shareChartsMenu: SimpleDropdownItem[];
 
   sortableMain: SortablejsOptions = {
     handle: '.drag-handle',
@@ -89,7 +90,7 @@ export class BiteListComponent implements OnInit {
       console.log('SPINNER ACTIVE CHANGE;');
     });
 
-    this.smartChartsMenu = [
+    this.shareChartsMenu = [
       {
         displayValue: 'EXPORT ALL CHARTS',
         type: 'header',
@@ -108,16 +109,7 @@ export class BiteListComponent implements OnInit {
         payload: {
           name: 'image'
         }
-      },
-      {
-        displayValue: 'Recipe controls:',
-        type: 'togglemenuitem',
-        payload: {
-          name: 'show-recipe-section',
-          checked: false
-        }
       }
-
     ];
 
   }
@@ -126,7 +118,7 @@ export class BiteListComponent implements OnInit {
     this.init();
 
     if (this.appConfig.get('has_modify_permission') === 'true') {
-      this.smartChartsMenu.splice(0, 0,
+      this.adminChartsMenu = [
         {
           displayValue: 'ADMIN SETTINGS',
           type: 'header',
@@ -140,11 +132,14 @@ export class BiteListComponent implements OnInit {
           }
         },
         {
-          displayValue: null,
-          type: 'divider',
-          payload: null
+          displayValue: 'Recipe controls:',
+          type: 'togglemenuitem',
+          payload: {
+            name: 'show-recipe-section',
+            checked: false
+          }
         }
-      );
+      ];
     }
 
     this.singleWidgetMode = this.appConfig.get('singleWidgetMode') === 'true';

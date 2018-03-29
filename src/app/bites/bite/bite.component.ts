@@ -1,5 +1,5 @@
 import { ContentComparisonChartComponent } from './content/content-comparison-chart/content-comparison-chart.component';
-import { Component, OnInit, EventEmitter, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import {Input, Output} from '@angular/core';
 import { Bite, ChartBiteLogic, ComparisonChartBiteLogic } from 'hxl-preview-ng-lib';
 import { KeyFigureBite } from 'hxl-preview-ng-lib';

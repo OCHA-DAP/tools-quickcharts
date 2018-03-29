@@ -33,6 +33,9 @@ export class SimpleDropdownComponent implements OnInit {
   @Input()
   glyphiconClass: string;
 
+  @Input()
+  makeGray = false;
+
   constructor(private logger: Logger) {
     this.selected = new EventEmitter<any>();
   }
