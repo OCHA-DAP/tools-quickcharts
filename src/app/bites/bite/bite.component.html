@@ -76,34 +76,13 @@
               <div class="section-title">
                 Axis & Grid
               </div>
-              <div class="element-group" *ngIf="bite.type == classTypes.ChartBite || bite.type == classTypes.ComparisonChartBite">
-                <label >
-                  Reverse Axis
-                </label>
-                <div class="checkbox-slider pull-right">
-                  <input [checked]="settingsModel.swapAxis"
-                         (change)="settingsModel.swapAxis = $event.target.checked; renderContent()"
-                         type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="reverse-axis-{{uuid}}">
-                  <label class="checkbox-slider-label" for="reverse-axis-{{uuid}}">
-                    <span class="checkbox-slider-inner"></span>
-                    <span class="checkbox-slider-switch"></span>
-                  </label>
-                </div>
-              </div>
-              <div class="element-group">
-                <label >
-                  Show Grid
-                </label>
-                <div class="checkbox-slider pull-right">
-                  <input [checked]="settingsModel.showGrid"
-                         (change)="settingsModel.showGrid = $event.target.checked; renderContent()"
-                         type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="show-grid-{{uuid}}">
-                  <label class="checkbox-slider-label" for="show-grid-{{uuid}}">
-                    <span class="checkbox-slider-inner"></span>
-                    <span class="checkbox-slider-switch"></span>
-                  </label>
-                </div>
-              </div>
+              <hxl-checkbox-slider *ngIf="bite.type == classTypes.ChartBite || bite.type == classTypes.ComparisonChartBite"
+                (checked)="settingsModel.swapAxis=$event; renderContent();" name="swap-axis" [uuid]="uuid" title="Reverse Axis"
+                [initiallyChecked]="settingsModel.swapAxis">
+              </hxl-checkbox-slider>
+              <hxl-checkbox-slider (checked)="settingsModel.showGrid=$event; renderContent();" name="show-grid" [uuid]="uuid" title="Show Grid"
+                [initiallyChecked]="settingsModel.showGrid">
+              </hxl-checkbox-slider>
               <div class="element-group">
                 <label>
                   Chart values title
@@ -145,20 +124,9 @@
                   <option value="us">1,000.00</option>
                 </select>
               </div>
-              <div class="element-group">
-                <label >
-                  Abbreviate values
-                </label>
-                <div class="checkbox-slider pull-right">
-                  <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox"
-                         id="abbreviate-values-{{uuid}}" checked
-                         [(ngModel)]="settingsModel.abbreviateValues" name="abbreviateValues">
-                  <label class="checkbox-slider-label" for="abbreviate-values-{{uuid}}">
-                    <span class="checkbox-slider-inner"></span>
-                    <span class="checkbox-slider-switch"></span>
-                  </label>
-                </div>
-              </div>
+              <hxl-checkbox-slider (checked)="settingsModel.abbreviateValues=$event; renderContent();" name="abbreviate-values" 
+                [uuid]="uuid" title="Abbreviate values" [initiallyChecked]="settingsModel.abbreviateValues">
+              </hxl-checkbox-slider>
               <hr/>
             </div>
             <div class="section">
@@ -185,22 +153,10 @@
                     (click)="swapSorting()"></i>
                 </div>
               </div>
-              <div class="element-group" *ngIf="(bite.type == classTypes.ComparisonChartBite)">
-                <label >
-                  Stack Chart
-                </label>
-                <div class="pull-right">
-                  <div class="checkbox-slider pull-right">
-                    <input [checked]="settingsModel.stackChart"
-                           (change)="settingsModel.stackChart = $event.target.checked; renderContent()"
-                           type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="stack-chart-{{uuid}}">
-                    <label class="checkbox-slider-label" for="stack-chart-{{uuid}}">
-                      <span class="checkbox-slider-inner"></span>
-                      <span class="checkbox-slider-switch"></span>
-                    </label>
-                  </div>
-                </div>
-              </div>
+              <hxl-checkbox-slider *ngIf="(bite.type == classTypes.ComparisonChartBite)"
+                (checked)="settingsModel.stackChart=$event; renderContent();" name="stack-chart" 
+                [uuid]="uuid" title="Stack Chart" [initiallyChecked]="settingsModel.stackChart">
+              </hxl-checkbox-slider>
               <div class="element-group" *ngIf="showColorPatternChooser">
                 <label >
                   Chart color

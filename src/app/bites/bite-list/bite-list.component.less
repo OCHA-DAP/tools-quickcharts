@@ -30,13 +30,37 @@
     width: 100%;
   }
 
-  & + .row {
-    margin-top: 35px;
-  }
+  // & + .row {
+  //   margin-top: 35px;
+  // }
 
   .right-menu {
     text-align: right;
   }
+}
+
+/* Cookbook controls */
+.cookbook-controls {
+  &.row {
+    position: absolute;
+    opacity: 0;
+    border-bottom: @listBorderHeight solid @lightGrayColor;
+  }
+  .cookbook-controls-container {
+    background-color: @almostWhiteGrayColor;
+    transition: max-height .3s linear;
+    max-height: 0px;
+  }
+  &.shown {
+    &.row {
+      position: static;
+      opacity: 1;
+    }
+    .cookbook-controls-container {
+      max-height: 40px;
+    }
+  }
+
 }
 
 a:hover {

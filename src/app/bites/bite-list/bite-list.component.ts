@@ -1,3 +1,4 @@
+import { SimpleDropdownPayload } from './../../common/component/simple-dropdown/simple-dropdown.component';
 import { Bite, ChartBite, KeyFigureBite, TimeseriesChartBite, ComparisonChartBite } from 'hxl-preview-ng-lib';
 import { Component, ElementRef, HostListener, Inject, NgZone, OnInit, ViewChild } from '@angular/core';
 import {SortablejsOptions} from 'angular-sortablejs';
@@ -37,9 +38,11 @@ export class BiteListComponent implements OnInit {
     forceFallback: true
   };
 
+  protected showCookbookControls = false;
+
   @ViewChild('savedModal')
   private savedModal: SimpleModalComponent;
-  private savedModalMessage: string;
+  protected savedModalMessage: string;
 
   @ViewChild('embedLinkModal')
   private embedLinkModal: SimpleModalComponent;
@@ -95,12 +98,24 @@ export class BiteListComponent implements OnInit {
       {
         displayValue: 'Embed',
         type: 'menuitem',
-        payload: 'embed'
+        payload: {
+          name: 'embed'
+        }
       },
       {
         displayValue: 'Save as image',
         type: 'menuitem',
-        payload: 'image'
+        payload: {
+          name: 'image'
+        }
+      },
+      {
+        displayValue: 'Recipe controls:',
+        type: 'togglemenuitem',
+        payload: {
+          name: 'show-recipe-section',
+          checked: false
+        }
       }
 
     ];
@@ -120,7 +135,9 @@ export class BiteListComponent implements OnInit {
         {
           displayValue: 'Save the current views as default',
           type: 'menuitem',
-          payload: 'save-views'
+          payload: {
+            name: 'save-views'
+          }
         },
         {
           displayValue: null,
@@ -287,18 +304,18 @@ export class BiteListComponent implements OnInit {
   }
 
 
-  doSaveAction(action: string) {
+  doSaveAction(payload: SimpleDropdownPayload) {
     // this.logger.log(action + ' - ' +
     //   this.biteService.exportBitesToURL(this.biteList));
-    if (action === 'embed') {
+    if (payload.name === 'embed') {
       this.embedUrl = this.biteService.exportBitesToURL(this.biteList);
       this.iframeUrl = this.generateIframeUrl(this.embedUrl);
       this.embedLinkModal.show();
       this.analyticsService.trackEmbed();
-    } else if (action === 'image') {
+    } else if (payload.name === 'image') {
       this.biteService.saveAsImage(this.biteList);
       this.analyticsService.trackSaveImage();
-    } else if (action === 'save-views') {
+    } else if (payload.name === 'save-views') {
       const biteListToSave = this.resetMode ? [] : this.biteList;
       this.biteService.saveBites(biteListToSave).subscribe(
         (successful: boolean) => {
@@ -311,6 +328,8 @@ export class BiteListComponent implements OnInit {
           this.savedModalMessage = 'FAILED: Saving configuration failed. Please try again!';
         }
       );
+    } else if (payload.name === 'show-recipe-section') {
+      this.showCookbookControls = payload.checked;
     }
   }
 
