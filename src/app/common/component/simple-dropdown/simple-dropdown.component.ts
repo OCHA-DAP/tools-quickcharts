@@ -29,6 +29,12 @@ export class SimpleDropdownComponent implements OnInit {
   @Input()
   glyphiconClass: string;
 
+  @Input()
+  classDecorator: Function;
+  @Input()
+  classDecoratorParam: any;
+
+
   constructor(private logger: Logger) {
     this.selected = new EventEmitter<any>();
   }
@@ -44,6 +50,13 @@ export class SimpleDropdownComponent implements OnInit {
   truncate(value: string): string {
     const maxLength = 40;
     return value.slice(0, maxLength) + (value.length > maxLength ? '...' : '');
+  }
+
+  renderClass(sd: SimpleDropdownItem) {
+    if (this.classDecorator) {
+      return this.classDecorator(sd.payload, this.classDecoratorParam);
+    }
+    return '';
   }
 
 }

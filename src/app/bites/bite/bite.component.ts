@@ -102,6 +102,14 @@ export class BiteComponent implements OnInit {
     this.onSwitch.emit({oldBite: this.bite, newBite: newBite});
   }
 
+  selectedBiteClassRenderer(bite: Bite, selectedBite: Bite) {
+    if (selectedBite.hashCode === bite.hashCode) {
+      return 'selected';
+    }
+
+    return '';
+  }
+
   toggleSettings(self) {
     this.settingsDisplay = !this.settingsDisplay;
     if (this.settingsDisplay) {
