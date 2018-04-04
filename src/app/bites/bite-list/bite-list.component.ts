@@ -349,6 +349,7 @@ export class BiteListComponent implements OnInit {
     this.cookbooksAndTags.cookbooks[index].selected = true;
     this.cookbooksAndTags.chosenCookbook = this.cookbooksAndTags.cookbooks[index];
 
+    this.biteList = [];
     const biteObs = this.biteService.genereateAvailableBites(this.cookbooksAndTags.columnNames,
                         this.cookbooksAndTags.hxlTags, this.cookbooksAndTags.chosenCookbook.recipes);
 

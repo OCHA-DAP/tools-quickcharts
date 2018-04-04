@@ -1,6 +1,6 @@
-import { BiteConfig } from './../../../../hdxtools-ng-library/out-tsc/lib-es2015/src/types/bite-config.d';
 import { Injectable } from '@angular/core';
-import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite, BiteLogicFactory, ChartBiteLogic } from 'hxl-preview-ng-lib';
+import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite,
+        BiteLogicFactory, ChartBiteLogic, BiteConfig } from 'hxl-preview-ng-lib';
 import { RecipeService } from './recipe.service';
 import { Logger } from 'angular2-logger/core';
 import { CookBookService, CookbooksAndTags } from 'hxl-preview-ng-lib';
