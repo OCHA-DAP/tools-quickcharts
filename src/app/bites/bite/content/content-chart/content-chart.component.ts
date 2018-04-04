@@ -78,10 +78,10 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
   // }
 
   protected generateOptionsTooltip(config: C3ChartConfig) {
-    const categories = this.sortedCategories || this.bite.categories;
+    const categories = this.sortedCategories || this.biteLogic.categories;
     config.tooltip = {
       format: {
-        title: x => this.biteLogic.categories[x],
+        title: x => categories[x],
         value: (value, ratio, id, index) => {
           return this.numberFormatter(value);
         }
