@@ -78,6 +78,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
   // }
 
   protected generateOptionsTooltip(config: C3ChartConfig) {
+    const categories = this.sortedCategories || this.bite.categories;
     config.tooltip = {
       format: {
         title: x => this.biteLogic.categories[x],
@@ -209,12 +210,15 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
       pie: {},
     };
 
-    this.generateOptionsTooltip(config);
     this.generateOptionsColor(config);
     this.generateOptionsData(config);
 
-    // generateOptionsData() might sort the x axis categories so generateOptionsAxis() needs to come after
+    /**
+     * generateOptionsData() might sort the x axis categories
+     * so generateOptionsAxis() and generateOptionsTooltip need to come after
+     */
     this.generateOptionsAxis(config);
+    this.generateOptionsTooltip(config);
 
     // if (this.bite.pieChart) {
     //   config.axis.rotated = false; // we don't allow it for pie

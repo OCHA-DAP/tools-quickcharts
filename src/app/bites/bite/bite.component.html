@@ -149,7 +149,7 @@
                   </div>
                   <i class="change-sorting glyphicon glyphicon-arrow-up" style="margin-bottom: 3px;"
                     [ngClass]="{'glyphicon-arrow-down': settingsModel.sorting == SORT_DESC}"
-                    [style.display]="(settingsModel.sorting === null ? 'none' : 'inline-block')"
+                    [style.display]="(!settingsModel.sorting ? 'none' : 'inline-block')"
                     (click)="swapSorting()"></i>
                 </div>
               </div>
