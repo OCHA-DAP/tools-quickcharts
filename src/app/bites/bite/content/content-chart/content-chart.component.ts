@@ -1,5 +1,11 @@
 import { Component, OnInit, ElementRef, AfterViewInit, OnChanges } from '@angular/core';
-import { ChartBite, BiteLogicFactory, ColorUsage, UnitsUtil, ChartBiteLogic } from 'hxl-preview-ng-lib';
+import {
+  ChartBite,
+  BiteLogicFactory,
+  ColorUsage,
+  UnitsUtil,
+  ChartBiteLogic
+} from 'hxl-preview-ng-lib';
 import { Input } from '@angular/core';
 import { AnalyticsService } from '../../../shared/analytics.service';
 
