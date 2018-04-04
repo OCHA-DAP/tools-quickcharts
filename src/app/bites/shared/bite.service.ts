@@ -1,8 +1,9 @@
+import { BiteConfig } from './../../../../hdxtools-ng-library/out-tsc/lib-es2015/src/types/bite-config.d';
 import { Injectable } from '@angular/core';
 import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite, BiteLogicFactory, ChartBiteLogic } from 'hxl-preview-ng-lib';
 import { RecipeService } from './recipe.service';
 import { Logger } from 'angular2-logger/core';
-import { CookBookService } from 'hxl-preview-ng-lib';
+import { CookBookService, CookbooksAndTags } from 'hxl-preview-ng-lib';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
 import { DomEventsService } from '../../shared/dom-events.service';
@@ -142,9 +143,15 @@ export class BiteService {
     return JSON.parse(JSON.stringify(obj));
   }
 
-  generateAvailableBites(): Observable<Bite> {
-    console.log('Recipe url is:' + this.appConfigService.get('recipeUrl'));
-    return this.cookBookService.load(this.url, this.appConfigService.get('recipeUrl'));
+  public generateAvailableCookbooksAndBites(recipeUrl?: string):
+            { biteObs: Observable<Bite>, cookbookAndTagsObs: Observable<CookbooksAndTags> } {
+    const finalRecipeUrl = recipeUrl ? recipeUrl : this.appConfigService.get('recipeUrl');
+    console.log('Recipe url is:' + finalRecipeUrl);
+    return this.cookBookService.load(this.url, finalRecipeUrl);
+  }
+
+  public genereateAvailableBites(columnNames: string[], hxlTags: string[], recipes: BiteConfig[]): Observable<Bite> {
+    return this.cookBookService.determineAvailableBites(columnNames, hxlTags, recipes);
   }
 
   initBite(bite: Bite): Observable<Bite> {

@@ -47,10 +47,18 @@
     opacity: 0;
     border-bottom: @listBorderHeight solid @lightGrayColor;
   }
+  .row {
+    padding-top: 20px;
+    &:last-of-type {
+      padding-bottom: 20px;
+    }
+  }
+  
   .cookbook-controls-container {
     background-color: @almostWhiteGrayColor;
     transition: max-height .3s linear;
     max-height: 0px;
+    overflow: hidden;
   }
   &.shown {
     &.row {
@@ -58,7 +66,7 @@
       opacity: 1;
     }
     .cookbook-controls-container {
-      max-height: 40px;
+      max-height: 150px;
     }
   }
 
