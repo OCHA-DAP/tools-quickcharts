@@ -83,16 +83,6 @@
               <hxl-checkbox-slider (checked)="settingsModel.showGrid=$event; renderContent();" name="show-grid" [uuid]="uuid" title="Show Grid"
                 [initiallyChecked]="settingsModel.showGrid">
               </hxl-checkbox-slider>
-              <div class="element-group">
-                <label>
-                  Chart values title
-                </label>
-                <div>
-                  <input type="text" placeholder="X Axis Label"
-                         [(ngModel)]="settingsModel.xAxisLabel"
-                         name="xAxisLabel">
-                </div>
-              </div>
               <hr/>
             </div>
             <div class="section" *ngIf="bite.type == classTypes.ToplineBite">
@@ -124,7 +114,7 @@
                   <option value="us">1,000.00</option>
                 </select>
               </div>
-              <hxl-checkbox-slider (checked)="settingsModel.abbreviateValues=$event; renderContent();" name="abbreviate-values" 
+              <hxl-checkbox-slider (checked)="settingsModel.abbreviateValues=$event; renderContent();" name="abbreviate-values"
                 [uuid]="uuid" title="Abbreviate values" [initiallyChecked]="settingsModel.abbreviateValues">
               </hxl-checkbox-slider>
               <hr/>
@@ -154,38 +144,43 @@
                 </div>
               </div>
               <hxl-checkbox-slider *ngIf="(bite.type == classTypes.ComparisonChartBite)"
-                (checked)="settingsModel.stackChart=$event; renderContent();" name="stack-chart" 
+                (checked)="settingsModel.stackChart=$event; renderContent();" name="stack-chart"
                 [uuid]="uuid" title="Stack Chart" [initiallyChecked]="settingsModel.stackChart">
               </hxl-checkbox-slider>
-              <div class="element-group" *ngIf="showColorPatternChooser">
-                <label >
-                  Chart color
+              <div class="element-group">
+                <label>
+                  Chart values title <span *ngIf="(bite.type == classTypes.ComparisonChartBite)">1</span>
                 </label>
-                <div class="pull-right">
-                  <ul class="color-picker">
-                    <li *ngFor="let color of colorPattern" [ngStyle]="{'background-color': color}" class="color-item"
-                        [ngClass]="{'color-item-selected': color === settingsModel.customColor}"
-                        (click)="settingsModel.customColor = color; renderContent();">
-                    </li>
-                    <li class="color-item"
-                      [ngStyle]="{'background-color': (colorPattern.indexOf(settingsModel.customColor) >= 0) ? '#ffffff' : settingsModel.customColor}"
-                      [ngClass]="{'color-item-selected': (colorPattern.indexOf(settingsModel.customColor) == -1)}"
-                      (click)="showCustomColorSection()">
-                      <i class="glyphicon glyphicon-plus" style="display: table; font-size: 11px; margin-top: -1px; line-height: 1;"
-                        [ngStyle]="{'color': (colorPattern.indexOf(settingsModel.customColor) >= 0) ? '#888' : '#fff'}"></i>
-                    </li>
-                  </ul>
-                </div>
-                <div class="element-group" [style.display]="displayCustomColor ? 'block' : 'none'">
-                  <label for="custom-color-{{uuid}}">
-                    Custom color (<small>css hex format only</small>)
-                  </label>
-                  <!--<input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">-->
-                  <input #customColorInput id="custom-color-{{uuid}}" [(ngModel)]="this.temporaryCustomColor"
-                         name="customColor" type="text"
-                         (blur)="hideCustomColorSection()">
+                <div>
+                  <input type="text" placeholder="X Axis Label"
+                         [(ngModel)]="settingsModel.xAxisLabel"
+                         name="xAxisLabel">
                 </div>
               </div>
+              <div class="element-group" *ngIf="showColorPatternChooser">
+                <label >
+                  Chart color <span *ngIf="(bite.type == classTypes.ComparisonChartBite)">1</span>
+                </label>
+                <hxl-color-picker [colorPattern]="colorPattern" [selectedColor]="settingsModel.customColor" (onChange)="selectCustomColor($event)"></hxl-color-picker>
+              </div>
+              <div class="element-group" *ngIf="(bite.type == classTypes.ComparisonChartBite)">
+                <label>
+                  Chart values title 2
+                </label>
+                <div>
+                  <input type="text" placeholder="X Axis Label 2"
+                         [(ngModel)]="settingsModel.xAxisLabel2"
+                         name="xAxisLabel2">
+                </div>
+              </div>
+              <div class="element-group" *ngIf="(bite.type == classTypes.ComparisonChartBite)">
+                <label >
+                  Chart color 2
+                </label>
+                <hxl-color-picker [colorPattern]="colorPattern" [selectedColor]="settingsModel.comparisonCustomColor" (onChange)="selectComparisonCustomColor($event)"></hxl-color-picker>
+              </div>
+
+
               <!-- TODO: not implemented yet -->
               <div class="element-group" *ngIf="false && bite.type == classTypes.ToplineBite">
                 <label >
