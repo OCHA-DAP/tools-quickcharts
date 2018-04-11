@@ -21,6 +21,7 @@ import { HdxPersistService } from './shared/persist/hdx-persist.service';
 import { CommonModule as MyCommonModule } from '../common/common.module';
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 import { SimpleModule } from 'hxl-preview-ng-lib';
+import { ColorPickerComponent } from './shared/color-picker/color-picker.component';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { SimpleModule } from 'hxl-preview-ng-lib';
   ],
   declarations: [BitesComponent, BiteListComponent, BiteComponent, ContentToplineComponent, ContentChartComponent, InlineEditComponent,
     ContentTimeseriesChartComponent,
-    ContentComparisonChartComponent],
+    ContentComparisonChartComponent,
+    ColorPickerComponent],
   providers: [
     BiteService,
     RecipeService,

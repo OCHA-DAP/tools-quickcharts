@@ -277,28 +277,9 @@
       margin-bottom: @settingsMenuElementMargin;
     }
 
-    .element-group {
+    /deep/ .element-group {
       margin: @settingsMenuElementMargin 0;
       position: relative;
-    }
-
-    ul.color-picker {
-      list-style: none;
-      margin: 3px 0 0;
-      padding: 0;
-      line-height: 0;
-
-      .color-item {
-        display: inline-block;
-        cursor: pointer;
-        height: 15px;
-        width: 15px;
-        border: 2px solid @whiteColor;
-
-        &.color-item-selected {
-          border-color: @grayColor;
-        }
-      }
     }
 
     .change-sorting {
@@ -309,12 +290,12 @@
       width: 49%;
     }
 
-    label {
+    /deep/ label {
       .sourceSansProFont(400, 12px);
       color: @darkGrayColor;
       margin-bottom: 0;
     }
-    input, textarea, select {
+    /deep/ input, textarea, select {
       @inputInnerTextPadding: 5px;
 
       background-color: @whiteColor;

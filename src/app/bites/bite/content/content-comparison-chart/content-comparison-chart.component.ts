@@ -1,6 +1,7 @@
 import { ChartBite, ComparisonChartBiteLogic } from 'hxl-preview-ng-lib';
 import { ContentChartComponent, C3ChartConfig } from './../content-chart/content-chart.component';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib/src/types/comparison-chart-bite';
 
 @Component({
   selector: 'hxl-content-comparison-chart',
@@ -32,10 +33,33 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
     };
   }
 
+  protected generateOptions(): C3ChartConfig {
+    const config = super.generateOptions();
+    this.overwriteXAxisLabel();
+    return config;
+  }
+
+
   protected generateOptionsColor(config: C3ChartConfig) {
+    let pattern = ChartBite.colorPattern;
+
+    // added check for this.bite.color since saved bites might not have any
+    const biteLogic: ComparisonChartBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    if (biteLogic.color || biteLogic.comparisonDataTitle) {
+      pattern = [biteLogic.color, biteLogic.comparisonColor];
+    }
     config.color = {
-      pattern: ChartBite.colorPattern
+      pattern: pattern
     };
+  }
+
+  protected overwriteXAxisLabel() {
+    super.overwriteXAxisLabel();
+    if (this.biteLogic.dataTitle && !this.biteLogic.pieChart) {
+      const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+      const cmpUIProp = this.bite.uiProperties as ComparisonChartUIProperties;
+      cmpBiteLogic.comparisonValues[0] = cmpBiteLogic.comparisonDataTitle;
+    }
   }
 
   protected generateOptionsData(config: C3ChartConfig) {
@@ -70,5 +94,4 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
       config.axis.rotated = false;
     }
   }
-
 }
