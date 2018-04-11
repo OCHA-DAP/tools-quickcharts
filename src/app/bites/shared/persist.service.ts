@@ -1,3 +1,4 @@
+import { HxlPreviewConfig } from './persist/hxl-preview-config';
 import { Injectable } from '@angular/core';
 import { Bite } from 'hxl-preview-ng-lib';
 import { Observable } from 'rxjs/Observable';
@@ -10,14 +11,17 @@ export abstract class PersistService {
   /**
    *
    * @param bites customized bites to save
+   * @param recipeUrl url from which the used recipes can be loaded
+   * @param cookbookName unique identifier for the cookbook inside the recipes json file (more precisely, inside a
+   *        cookbook library)
    *
    */
-  abstract save(bites: Bite[]): Observable<boolean>;
+  abstract save(bites: Bite[], recipeUrl?: string, cookbookName?: string): Observable<boolean>;
 
   /**
    *
-   * @return array of customized bites
+   * @return observable of an object containing the saved bites and recipe information
    */
-  abstract load(): Observable<Bite[]>;
+  abstract load(): Observable<HxlPreviewConfig>;
 
 }

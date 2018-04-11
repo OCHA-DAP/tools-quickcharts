@@ -158,13 +158,13 @@ export class BiteComponent implements OnInit {
   }
 
   createEmbedLink() {
-    const embedUrl = this.biteService.exportBitesToURL([this.bite], true);
+    const embedUrl = this.biteService.exportBitesToURL([this.bite], null, null, true);
     this.onEmbedUrlCreate.emit(embedUrl);
     this.analyticsService.trackEmbed();
   }
 
   saveAsImage() {
-    this.biteService.saveAsImage([this.bite], true);
+    this.biteService.saveAsImage([this.bite], null, null, true);
     this.analyticsService.trackSaveImage();
   }
 

@@ -8,7 +8,6 @@ import {AppConfigService} from '../../shared/app-config.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { SimpleModalComponent } from 'hxl-preview-ng-lib';
 import { Observable } from 'rxjs/Observable';
-import { AsyncSubject } from 'rxjs/AsyncSubject';
 import { HttpService } from '../../shared/http.service';
 import { Http } from '@angular/http';
 import { AnalyticsService } from '../shared/analytics.service';
@@ -41,6 +40,7 @@ export class BiteListComponent implements OnInit {
 
   protected showCookbookControls = false;
   protected showCustomCookbookControls = false;
+  protected customCookbookUrl = '';
   protected cookbooksAndTags: CookbooksAndTags;
 
   @ViewChild('savedModal')
@@ -74,7 +74,7 @@ export class BiteListComponent implements OnInit {
         return;
       }
     }
-    console.log('Unknown message: ' + $event.data);
+    // console.log('Unknown message: ' + $event.data);
   }
 
   constructor(public biteService: BiteService, private appConfig: AppConfigService, private logger: Logger, http: Http,
@@ -157,35 +157,6 @@ export class BiteListComponent implements OnInit {
   }
 
   /**
-   * Decides which 3 bites will be shown: either saved ones or finding defaults.
-   * Then populates bites with numerical data processed by the HXL Proxy
-   */
-  private load() {
-    if (!this.resetMode) {
-      this.biteService.getBites().subscribe(
-        (bite: Bite) => {
-          this.logger.log('Processing bite ' + JSON.stringify(bite));
-
-          this.biteList.push(bite);
-          this.logger.log('biteList ' + JSON.stringify(this.biteList));
-        },
-        errObj => {
-          this.logger.log('load>getBites>in ERROR...');
-        },
-        () => {
-          this.logger.log('load>getBites>on COMPLETE...');
-
-          if (this.availableBites && this.biteList && this.availableBites.length !== 0 && this.biteList.length === 0) {
-            this.loadDefaultBites();
-          }
-        }
-      );
-    } else {
-      this.loadDefaultBites();
-    }
-  }
-
-  /**
    *  loads 3 bites as default when no other bites are saved
    */
   private loadDefaultBites() {
@@ -241,11 +212,33 @@ export class BiteListComponent implements OnInit {
   init() {
     this.availableBites = null;
     this.biteList = [];
-    this.logger.info('BiteListComponent on init');
-    const availableInfo = this.biteService.generateAvailableCookbooksAndBites();
-    this.generateAvailableBites(availableInfo.biteObs).subscribe(() => this.load());
-    availableInfo.cookbookAndTagsObs.subscribe( cookbookAndTags => {
-      this.cookbooksAndTags = cookbookAndTags;
+    this.biteService.loadSavedPreview(this.resetMode).subscribe(hxlPreviewConfig => {
+      if (hxlPreviewConfig.recipeUrl) {
+        this.showCustomCookbookControls = true;
+        this.customCookbookUrl = hxlPreviewConfig.recipeUrl;
+      }
+      const availableInfo = this.biteService.generateAvailableCookbooksAndBites(hxlPreviewConfig.recipeUrl,
+                          hxlPreviewConfig.cookbookName);
+      if (hxlPreviewConfig.bites && hxlPreviewConfig.bites.length > 0) {
+        hxlPreviewConfig.bites.forEach( b => {
+          this.biteService.initBite(b).subscribe( bite => {
+            this.biteList.push(bite);
+          });
+        });
+        // We have saved bites that were populated above, so we don't need to do anything once the
+        // available bites are calculated -> callback is null
+        this.generateAvailableBites(availableInfo.biteObs, null);
+      } else {
+        this.generateAvailableBites(availableInfo.biteObs, this.loadDefaultBites);
+      }
+
+      // If we are loading saved bites with a saved recipe, we don't prepare the HDX cookbook controls.
+      // This will be populated in the changeCustomCookbookControls() method
+      if (!this.showCustomCookbookControls) {
+        availableInfo.cookbookAndTagsObs.subscribe(cookbookAndTags => {
+          this.cookbooksAndTags = cookbookAndTags;
+        });
+      }
     });
   }
 
@@ -267,8 +260,7 @@ export class BiteListComponent implements OnInit {
     this.biteService.switchBites(bitePair.oldBite, bitePair.newBite, this.biteList, this.availableBites);
   }
 
-  generateAvailableBites(biteObs: Observable<Bite>): Observable<boolean> {
-    const observable = new AsyncSubject<boolean>();
+  generateAvailableBites(biteObs: Observable<Bite>, onCompleteCallback: () => void) {
     this.availableBites = [];
     // const loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
     biteObs
@@ -279,8 +271,6 @@ export class BiteListComponent implements OnInit {
       },
       errObj => {
         this.logger.log('in ERROR...');
-        observable.next(false);
-        observable.complete();
       },
       () => {
         this.logger.log('on COMPLETE...');
@@ -288,11 +278,11 @@ export class BiteListComponent implements OnInit {
           // Your files contains HXL tags which are not supported by Quick Charts
           this.hxlUnsupported = true;
         }
-        observable.next(true);
-        observable.complete();
+        if (onCompleteCallback) {
+          onCompleteCallback.bind(this)();
+        }
       }
       );
-    return observable;
   }
 
   singleEmbedUrlCreated(event: string) {
@@ -302,28 +292,36 @@ export class BiteListComponent implements OnInit {
   }
 
   getEmbedLink() {
-    return this.biteService.exportBitesToURL(this.biteList);
+    const customCookbookURL = this.showCustomCookbookControls ? this.customCookbookUrl : null;
+    return this.biteService.exportBitesToURL(this.biteList, customCookbookURL,
+              this.cookbooksAndTags.chosenCookbook.name, false);
   }
 
   saveAsImage() {
-    return this.biteService.exportBitesToURL(this.biteList);
+    const customCookbookURL = this.showCustomCookbookControls ? this.customCookbookUrl : null;
+    return this.biteService.exportBitesToURL(this.biteList, customCookbookURL,
+              this.cookbooksAndTags.chosenCookbook.name, false);
   }
 
 
   doSaveAction(payload: SimpleDropdownPayload) {
     // this.logger.log(action + ' - ' +
     //   this.biteService.exportBitesToURL(this.biteList));
+    const customCookbookURL = this.showCustomCookbookControls ? this.customCookbookUrl : null;
     if (payload.name === 'embed') {
-      this.embedUrl = this.biteService.exportBitesToURL(this.biteList);
+      this.embedUrl = this.biteService.exportBitesToURL(this.biteList, customCookbookURL,
+                    this.cookbooksAndTags.chosenCookbook.name, false);
       this.iframeUrl = this.generateIframeUrl(this.embedUrl);
       this.embedLinkModal.show();
       this.analyticsService.trackEmbed();
     } else if (payload.name === 'image') {
-      this.biteService.saveAsImage(this.biteList);
+      this.biteService.saveAsImage(this.biteList, customCookbookURL,
+        this.cookbooksAndTags.chosenCookbook.name, false);
       this.analyticsService.trackSaveImage();
     } else if (payload.name === 'save-views') {
       const biteListToSave = this.resetMode ? [] : this.biteList;
-      this.biteService.saveBites(biteListToSave).subscribe(
+      this.biteService.saveBites(biteListToSave, customCookbookURL, this.cookbooksAndTags.chosenCookbook.name,
+        this.resetMode).subscribe(
         (successful: boolean) => {
           this.logger.log('Result of bites saved: ' + successful);
           this.savedModalMessage = 'Your configuration was saved on the server !';
@@ -344,6 +342,28 @@ export class BiteListComponent implements OnInit {
     return result;
   }
 
+  protected changeCustomCookbookControls(show: boolean) {
+    this.showCustomCookbookControls = show;
+    if (!this.showCustomCookbookControls && !this.cookbooksAndTags) {
+      this.biteList = [];
+      const availableInfo = this.biteService.generateAvailableCookbooksAndBites();
+      this.generateAvailableBites(availableInfo.biteObs, this.loadDefaultBites);
+      availableInfo.cookbookAndTagsObs.subscribe(cookbookAndTags => {
+        this.cookbooksAndTags = cookbookAndTags;
+      });
+    } else if (!this.showCustomCookbookControls) {
+      let currentlySelected = 0;
+      this.cookbooksAndTags.cookbooks.forEach( (cb, i) => {
+        if (cb.selected) {
+          currentlySelected = i;
+        }
+      });
+      this.cookbookSelected(currentlySelected);
+    } else if (this.showCustomCookbookControls && this.customCookbookUrl ) {
+      this.customCookbookSelected(this.customCookbookUrl);
+    }
+  }
+
   protected cookbookSelected(index: number) {
     this.cookbooksAndTags.chosenCookbook.selected = false;
     this.cookbooksAndTags.cookbooks[index].selected = true;
@@ -353,14 +373,15 @@ export class BiteListComponent implements OnInit {
     const biteObs = this.biteService.genereateAvailableBites(this.cookbooksAndTags.columnNames,
                         this.cookbooksAndTags.hxlTags, this.cookbooksAndTags.chosenCookbook.recipes);
 
-    this.generateAvailableBites(biteObs).subscribe(() => this.loadDefaultBites());
+    this.generateAvailableBites(biteObs, this.loadDefaultBites);
   }
 
   protected customCookbookSelected(url: string) {
     console.log(url);
+    this.customCookbookUrl = url;
     this.biteList = [];
     const availableInfo = this.biteService.generateAvailableCookbooksAndBites(url);
-    this.generateAvailableBites(availableInfo.biteObs).subscribe(() => this.loadDefaultBites());
+    this.generateAvailableBites(availableInfo.biteObs, this.loadDefaultBites);
   }
 
 }

@@ -1,3 +1,4 @@
+import { HxlPreviewConfig } from './persist/hxl-preview-config';
 import { Injectable } from '@angular/core';
 import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite,
         BiteLogicFactory, ChartBiteLogic, BiteConfig } from 'hxl-preview-ng-lib';
@@ -50,7 +51,14 @@ export class BiteService {
     return this.nextId;
   }
 
-  private loadBites(): Observable<Bite[]> {
+  public loadSavedPreview(resetMode: boolean): Observable<HxlPreviewConfig> {
+    if (resetMode) {
+      return Observable.of({
+        configVersion: 0,
+        bites: []
+      });
+    }
+
     const embeddedConfig = this.appConfigService.get('embeddedConfig');
     if (embeddedConfig && embeddedConfig.length) {
       return Observable.of(this.persistUtil.configToBitelist(embeddedConfig));
@@ -59,19 +67,14 @@ export class BiteService {
     }
   }
 
-  getBites(): Observable<Bite> {
-    return this.loadBites()
-      .flatMap(
-        (bites: Bite[]) => {
-          this.logger.log('Loaded bites are: ' + JSON.stringify(bites));
-          return this.recipeService.processAll(bites, this.url);
-        }
-      );
-  }
-
-  saveBites(biteList: Bite[]): Observable<boolean> {
-    const modifiedBiteList = this.unpopulateListOfBites(biteList);
-    return this.persistService.save(modifiedBiteList);
+  saveBites(biteList: Bite[], cookbookUrl: string, chosenCookbookName: string,
+        resetMode: boolean): Observable<boolean> {
+    if (!resetMode) {
+      const modifiedBiteList = this.unpopulateListOfBites(biteList);
+      return this.persistService.save(modifiedBiteList, cookbookUrl, chosenCookbookName);
+    } else {
+      return this.persistService.save([]);
+    }
   }
 
   private filterPathWithoutParams(path: string): string {
@@ -82,9 +85,9 @@ export class BiteService {
     return '';
   }
 
-  saveAsImage(biteList: Bite[], isSingleWidgetMode?: boolean ) {
+  saveAsImage(biteList: Bite[], customCookbookUrl: string, chosenCookbookName: string, isSingleWidgetMode: boolean ) {
     const snapService = environment.snapService;
-    const url = this.exportBitesToURL(biteList, isSingleWidgetMode);
+    const url = this.exportBitesToURL(biteList, customCookbookUrl, chosenCookbookName, isSingleWidgetMode);
     const urlEncoded = encodeURIComponent(url);
     const viewPortWidth = isSingleWidgetMode ? 500 : 1280;
     const pngDownloadUrl = `${snapService}/png?viewport={"width": ${viewPortWidth}, "height": 1}&url=${urlEncoded}`;
@@ -94,7 +97,8 @@ export class BiteService {
     }, 2);
   }
 
-  exportBitesToURL(biteList: Bite[], isSingleWidgetMode?: boolean): string {
+  exportBitesToURL(biteList: Bite[], customCookbookUrl: string, chosenCookbookName: string,
+    isSingleWidgetMode: boolean): string {
     biteList = biteList ? biteList : [];
 
     const protocol = this.appConfigService.get('loc_protocol');
@@ -103,7 +107,8 @@ export class BiteService {
     const path = this.appConfigService.get('loc_pathname');
 
     const modifiedBiteList = this.unpopulateListOfBites(biteList);
-    let embeddedConfig = encodeURIComponent(this.persistUtil.bitelistToConfig(modifiedBiteList));
+    let embeddedConfig = encodeURIComponent(this.persistUtil.bitelistToConfig(modifiedBiteList,
+              customCookbookUrl, chosenCookbookName));
 
     /* Dealing with parenthesis which are not encoded by encodeURIComponent */
     embeddedConfig = embeddedConfig.replace(/\(/g, '%28').replace(/\)/g, '%29');
@@ -120,9 +125,12 @@ export class BiteService {
     const embeddedDate = encodeURIComponent(this.appConfigService.get('embeddedDate'));
     const embeddedTitle = this.quickChartsTitle;
 
+    const httpRecipeUrl = this.appConfigService.get('recipeUrl');
+    const recipeUrlParam = httpRecipeUrl ? `;recipeUrl=${encodeURIComponent(httpRecipeUrl)}` : '';
+
     return `${protocol}//${hostname}${port}${pathWithoutParams};` +
            `url=${url};embeddedSource=${embeddedSource};embeddedUrl=${embeddedUrl};embeddedDate=${embeddedDate};` +
-           `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}`;
+           `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}${recipeUrlParam}`;
   }
 
   /**
@@ -143,11 +151,12 @@ export class BiteService {
     return JSON.parse(JSON.stringify(obj));
   }
 
-  public generateAvailableCookbooksAndBites(recipeUrl?: string):
+  public generateAvailableCookbooksAndBites(recipeUrl?: string, chosenCookbookName?: string):
             { biteObs: Observable<Bite>, cookbookAndTagsObs: Observable<CookbooksAndTags> } {
+
     const finalRecipeUrl = recipeUrl ? recipeUrl : this.appConfigService.get('recipeUrl');
     console.log('Recipe url is:' + finalRecipeUrl);
-    return this.cookBookService.load(this.url, finalRecipeUrl);
+    return this.cookBookService.load(this.url, finalRecipeUrl, chosenCookbookName);
   }
 
   public genereateAvailableBites(columnNames: string[], hxlTags: string[], recipes: BiteConfig[]): Observable<Bite> {

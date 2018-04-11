@@ -124,7 +124,7 @@
                   <option value="us">1,000.00</option>
                 </select>
               </div>
-              <hxl-checkbox-slider (checked)="settingsModel.abbreviateValues=$event; renderContent();" name="abbreviate-values" 
+              <hxl-checkbox-slider (checked)="settingsModel.abbreviateValues=$event;" name="abbreviate-values"
                 [uuid]="uuid" title="Abbreviate values" [initiallyChecked]="settingsModel.abbreviateValues">
               </hxl-checkbox-slider>
               <hr/>
@@ -154,7 +154,7 @@
                 </div>
               </div>
               <hxl-checkbox-slider *ngIf="(bite.type == classTypes.ComparisonChartBite)"
-                (checked)="settingsModel.stackChart=$event; renderContent();" name="stack-chart" 
+                (checked)="settingsModel.stackChart=$event; renderContent();" name="stack-chart"
                 [uuid]="uuid" title="Stack Chart" [initiallyChecked]="settingsModel.stackChart">
               </hxl-checkbox-slider>
               <div class="element-group" *ngIf="showColorPatternChooser">

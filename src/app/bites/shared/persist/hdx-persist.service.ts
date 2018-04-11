@@ -1,3 +1,4 @@
+import { HxlPreviewConfig } from './hxl-preview-config';
 import { Injectable } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
 import { Http, Response } from '@angular/http';
@@ -29,7 +30,7 @@ export class HdxPersistService extends PersistService {
     this.persistUtil = new PersisUtil(logger);
   }
 
-  save(bites: Bite[]): Observable<boolean> {
+  save(bites: Bite[], recipeUrl?: string, cookbookName?: string): Observable<boolean> {
     const mapFunction = (response: Response) => {
       const jsonResponse = response.json();
       if ( jsonResponse && jsonResponse.hasOwnProperty('success') && jsonResponse.success ) {
@@ -43,13 +44,13 @@ export class HdxPersistService extends PersistService {
     const url = neededConfigs.hdxDomain + HdxPersistService.SAVE_PATH;
     this.logger.info('The save url is: ' + url);
 
-    const hxlPreviewConfig = this.persistUtil.bitelistToConfig(bites);
+    const hxlPreviewConfig = this.persistUtil.bitelistToConfig(bites, recipeUrl, cookbookName);
     this.analytics.trackSave();
     return this.http.post(url, {id: neededConfigs.resourceViewId, hxl_preview_config: hxlPreviewConfig})
       .map(mapFunction).catch(err => this.handleError(err));
   }
 
-  load(): Observable<Bite[]> {
+  load(): Observable<HxlPreviewConfig> {
     const mapFunction = (response: Response) => {
       const jsonResponse = response.json();
       if ( jsonResponse && jsonResponse.hasOwnProperty('success') && jsonResponse.success ) {
@@ -58,17 +59,20 @@ export class HdxPersistService extends PersistService {
           return this.persistUtil.configToBitelist(hxlPreviewConfig);
         }
       }
-      return [];
+      throw new Error('There was a problem with the http json response !');
     };
 
     const neededConfigs = this.getDomainAndViewId(false);
 
     if (!neededConfigs.hdxDomain || !neededConfigs.resourceViewId) {
-      return Observable.from([]);
+      return Observable.of({
+        configVersion: 0,
+        bites: []
+      });
     }
     const url = neededConfigs.hdxDomain + HdxPersistService.LOAD_PATH + neededConfigs.resourceViewId;
 
-    return this.http.get(url).map(mapFunction.bind(this)).catch(err => this.handleError(err));
+    return this.http.get(url).map(mapFunction).catch(err => this.handleError(err));
   }
 
   private getDomainAndViewId(isSave) {
