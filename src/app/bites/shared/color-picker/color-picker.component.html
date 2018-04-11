@@ -1,0 +1,24 @@
+<div class="pull-right">
+  <ul class="color-picker">
+    <li *ngFor="let color of colorPattern" [ngStyle]="{'background-color': color}" class="color-item"
+        [ngClass]="{'color-item-selected': color === selectedColor}"
+        (click)="onChange.emit(color)">
+    </li>
+    <li class="color-item"
+        [ngStyle]="{'background-color': (colorPattern.indexOf(selectedColor) >= 0) ? '#ffffff' : selectedColor}"
+        [ngClass]="{'color-item-selected': (colorPattern.indexOf(selectedColor) == -1)}"
+        (click)="showCustomColorSection()">
+      <i class="glyphicon glyphicon-plus" style="display: table; font-size: 11px; margin-top: -1px; line-height: 1;"
+         [ngStyle]="{'color': (colorPattern.indexOf(selectedColor) >= 0) ? '#888' : '#fff'}"></i>
+    </li>
+  </ul>
+</div>
+<div class="element-group" [style.display]="displayCustomColor ? 'block' : 'none'">
+  <label for="custom-color-{{uuid}}">
+    Custom color (<small>css hex format only</small>)
+  </label>
+  <!--<input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">-->
+  <input #customColorInput id="custom-color-{{uuid}}" [(ngModel)]="this.temporaryCustomColor"
+         name="customColor" type="text"
+         (blur)="hideCustomColorSection()">
+</div>

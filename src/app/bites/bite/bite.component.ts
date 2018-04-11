@@ -13,6 +13,7 @@ import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simpl
 import { BiteLogicFactory, ColorUsage, KeyFigureBiteLogic, BiteLogic } from 'hxl-preview-ng-lib';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AnalyticsService } from '../shared/analytics.service';
+import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib/src/types/comparison-chart-bite';
 
 @Component({
   selector: 'hxl-bite',
@@ -45,10 +46,6 @@ export class BiteComponent implements OnInit {
   @Output()
   onEmbedUrlCreate = new EventEmitter<string>();
 
-  @ViewChild('customColorInput')
-  private customColorInput: ElementRef;
-
-
   @ViewChild(ContentChartComponent)
   private chartComponent: ContentChartComponent;
 
@@ -74,7 +71,7 @@ export class BiteComponent implements OnInit {
   biteLogic: BiteLogic;
   settingsModel: SettingsModel;
   temporaryCustomColor: string;
-  private colorPattern: string[] = ChartBite.colorPattern;
+  protected colorPattern: string[] = ChartBite.colorPattern;
   private SORT_DESC: string = ChartBite.SORT_DESC;
 
   constructor(private logger: Logger, private biteService: BiteService, private sanitizer: DomSanitizer,
@@ -94,7 +91,7 @@ export class BiteComponent implements OnInit {
     this.displayableAvailableBites = this.biteService.generateBiteSelectionMenu(this.availableBites);
     this.biteLogic = BiteLogicFactory.createBiteLogic(this.bite);
     this.settingsModel = new SettingsModel(this.biteLogic, this.biteService, this);
-    this.showColorPatternChooser = this.biteLogic.colorUsage() === ColorUsage.ONE;
+    this.showColorPatternChooser = this.biteLogic.colorUsage() !== ColorUsage.NONE;
   }
 
   switchBite(newBite: Bite) {
@@ -109,17 +106,6 @@ export class BiteComponent implements OnInit {
     }
   }
 
-  showCustomColorSection() {
-    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
-    if (this.colorPattern.indexOf(chartBiteLogic.color) >= 0) {
-      this.temporaryCustomColor = this.settingsModel.customColor;
-    }
-    this.displayCustomColor = true;
-
-    setTimeout(() => {
-      this.customColorInput.nativeElement.focus();
-    }, 2);
-  }
   toggleSorting() {
     if (!this.settingsModel.sorting) {
       this.settingsModel.sorting = this.SORT_DESC;
@@ -135,12 +121,6 @@ export class BiteComponent implements OnInit {
     } else {
       this.settingsModel.sorting = ChartBite.SORT_ASC;
     }
-    this.renderContent();
-  }
-
-  hideCustomColorSection() {
-    this.displayCustomColor = false;
-    this.settingsModel.customColor = this.temporaryCustomColor;
     this.renderContent();
   }
 
@@ -171,6 +151,17 @@ export class BiteComponent implements OnInit {
   asChartBite(bite: Bite): ChartBite {
     return <ChartBite>bite;
   }
+
+  selectCustomColor(color: string) {
+    this.settingsModel.customColor = color;
+    this.renderContent();
+  }
+
+  selectComparisonCustomColor(color: string) {
+    this.settingsModel.comparisonCustomColor = color;
+    this.renderContent();
+  }
+
 }
 
 class SettingsModel {
@@ -222,6 +213,17 @@ class SettingsModel {
 
   set xAxisLabel(label: string) {
     this.bite.uiProperties.dataTitle = label;
+    this.biteComponent.renderContent();
+  }
+
+  get xAxisLabel2(): string {
+    const biteLogic: ComparisonChartBiteLogic = (<ComparisonChartBiteLogic>this.biteLogic);
+    return biteLogic.comparisonDataTitle;
+  }
+
+  set xAxisLabel2(label: string) {
+    const uiProperties: ComparisonChartUIProperties = (<ComparisonChartUIProperties>this.bite.uiProperties);
+    uiProperties.comparisonDataTitle = label;
     this.biteComponent.renderContent();
   }
 
@@ -325,6 +327,11 @@ class SettingsModel {
     }
   }
 
+  private colorTest(color): boolean {
+    const WHITE = '#ffffff';
+    return (color !== WHITE && /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color));
+  }
+
   get customColor(): string {
     const chartBiteLogic = this.biteLogic as ChartBiteLogic;
     return chartBiteLogic.color;
@@ -332,11 +339,24 @@ class SettingsModel {
 
   set customColor(color: string) {
     const chartBiteLogic = this.biteLogic as ChartBiteLogic;
-    const WHITE = '#ffffff';
-    if ((color !== WHITE && /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color))) {
+    if (this.colorTest(color)) {
       chartBiteLogic.uiProperties.color = color;
     } else {
       chartBiteLogic.uiProperties.color = ChartBite.colorPattern[0];
+    }
+  }
+
+  get comparisonCustomColor(): string {
+    const chartBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    return chartBiteLogic.comparisonColor;
+  }
+
+  set comparisonCustomColor(color: string) {
+    const chartBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    if (this.colorTest(color)) {
+      chartBiteLogic.uiProperties.comparisonColor = color;
+    } else {
+      chartBiteLogic.uiProperties.comparisonColor = ChartBite.colorPattern[0];
     }
   }
 
