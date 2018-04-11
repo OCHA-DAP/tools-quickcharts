@@ -25,26 +25,28 @@
       <div class="row">
           <div class="col-xs-5">
             <span>Choose Recipe: </span>
-            <a href *ngIf="showCustomCookbookControls; else hdxCookbooksControlsLink" 
-                  (click)="showCustomCookbookControls=false; false;">HDX Quick Charts Recipes</a>
+            <a href *ngIf="showCustomCookbookControls; else hdxCookbooksControlsLink"
+                  (click)="changeCustomCookbookControls(false); false;">HDX Quick Charts Recipes</a>
             <ng-template #hdxCookbooksControlsLink>
               <span>HDX Quick Charts Recipes</span>
             </ng-template>
             |
             <span *ngIf="showCustomCookbookControls; else customCookbooksControlsLink">Custom Recipes</span>
             <ng-template #customCookbooksControlsLink>
-              <a href (click)="showCustomCookbookControls=true; false;">Custom Recipes</a>
+              <a href (click)="changeCustomCookbookControls(true); false;">Custom Recipes</a>
             </ng-template>
-            
+
           </div>
       </div>
       <div class="row">
         <div class="col-xs-5 form-group">
-          <input class="form-control" type="text" *ngIf="showCustomCookbookControls; else hdxCookbookControls" 
-              (change)="customCookbookSelected($event.target.value)" placeholder="https://raw.githubusercontent.com/OCHA-DAP/hxl-recipes/master/recipes/recipes.json" />
+          <input class="form-control" type="text" *ngIf="showCustomCookbookControls; else hdxCookbookControls"
+              [value]="customCookbookUrl"
+              (change)="customCookbookSelected($event.target.value)"
+              placeholder="https://raw.githubusercontent.com/OCHA-DAP/hxl-recipes/master/recipes/recipes.json" />
           <ng-template #hdxCookbookControls>
             <select *ngIf="cookbooksAndTags" class="form-control" (change)="cookbookSelected($event.target.value)">
-              <option *ngFor="let cookbook of cookbooksAndTags.cookbooks; let idx = index;" 
+              <option *ngFor="let cookbook of cookbooksAndTags.cookbooks; let idx = index;"
                     [value]="idx" [selected]="cookbook.selected">{{cookbook.title}}</option>
             </select>
           </ng-template>

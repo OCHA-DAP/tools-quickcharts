@@ -33,7 +33,6 @@ export class CheckboxSliderComponent implements OnInit {
   }
 
   toggle(checked: boolean) {
-    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa");
     this.checked.emit(checked);
     return true;
   }

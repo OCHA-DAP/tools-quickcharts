@@ -71,15 +71,21 @@ export class PersisUtil {
    * Adds metadata (like version) and JSONifies.
    * @param bitelist
    */
-  public bitelistToConfig(bitelist: Bite[]): string {
+  public bitelistToConfig(bitelist: Bite[], recipeUrl?: string, cookbookName?: string): string {
     const config: HxlPreviewConfig = {
       configVersion: this.CONFIG_VERSION,
       bites: bitelist
     };
+    if (recipeUrl) {
+      config['recipeUrl'] = recipeUrl;
+    }
+    if (cookbookName) {
+      config['cookbookName'] = cookbookName;
+    }
     return JSON.stringify(config);
   }
 
-  public configToBitelist(config: string): Bite[] {
+  public configToBitelist(config: string): HxlPreviewConfig {
     const configObj: HxlPreviewConfig = JSON.parse(config);
     if (configObj.configVersion < this.CONFIG_VERSION) {
       PersisUtil.patchers.forEach(patcher => {
@@ -90,10 +96,13 @@ export class PersisUtil {
     }
 
     if (configObj.configVersion === this.CONFIG_VERSION) {
-      return configObj.bites;
+      return configObj;
     } else {
       this.logger.warn('Found config doesn\'t have correct version');
     }
-    return [];
+    return {
+      configVersion: 0,
+      bites: []
+    };
   }
 }

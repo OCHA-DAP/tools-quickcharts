@@ -71,7 +71,7 @@ export class BiteComponent implements OnInit {
   biteLogic: BiteLogic;
   settingsModel: SettingsModel;
   temporaryCustomColor: string;
-  private colorPattern: string[] = ChartBite.colorPattern;
+  protected colorPattern: string[] = ChartBite.colorPattern;
   private SORT_DESC: string = ChartBite.SORT_DESC;
 
   constructor(private logger: Logger, private biteService: BiteService, private sanitizer: DomSanitizer,
@@ -138,13 +138,13 @@ export class BiteComponent implements OnInit {
   }
 
   createEmbedLink() {
-    const embedUrl = this.biteService.exportBitesToURL([this.bite], true);
+    const embedUrl = this.biteService.exportBitesToURL([this.bite], null, null, true);
     this.onEmbedUrlCreate.emit(embedUrl);
     this.analyticsService.trackEmbed();
   }
 
   saveAsImage() {
-    this.biteService.saveAsImage([this.bite], true);
+    this.biteService.saveAsImage([this.bite], null, null, true);
     this.analyticsService.trackSaveImage();
   }
 
