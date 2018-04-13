@@ -191,12 +191,12 @@ export class BiteListComponent implements OnInit {
       })
     ];
 
-    const processBite = (self, idx) => {
+    const processBite = (idx) => {
       const instance = (bite) => {
         if (!bite) {
           return;
         }
-        self.addBite(bite).subscribe((val) => {
+        this.addBite(bite).subscribe((val) => {
           if (!val) {
             observable[idx].subscribe(instance);
           }
@@ -204,9 +204,9 @@ export class BiteListComponent implements OnInit {
       };
       return instance;
     };
-    observable[0].subscribe(processBite(this, 0));
-    observable[1].subscribe(processBite(this, 1));
-    observable[2].subscribe(processBite(this, 2));
+    observable[0].subscribe(processBite(0));
+    observable[1].subscribe(processBite(1));
+    observable[2].subscribe(processBite(2));
   }
 
   init() {
