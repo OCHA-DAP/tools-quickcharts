@@ -61,7 +61,7 @@ export class HdxPersistService extends PersistService {
           return {
             configVersion: 0,
             bites: []
-          }
+          };
         }
       }
       throw new Error('There was a problem with the http json response !');
