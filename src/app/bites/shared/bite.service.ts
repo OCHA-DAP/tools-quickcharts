@@ -139,6 +139,7 @@ export class BiteService {
    * @return {Bite[]} A new list with cloned object. The fields that were populated from the source data will be emptied.
    */
   private unpopulateListOfBites(biteList: Bite[]): Bite[] {
+    biteList.forEach(b => b.tempShowSaveCancelButtons = false);
 
     /* Do not modify the original bites by cloning them */
     const modifiedBiteList: Bite[] = this.cloneObjectLiteral(biteList) as Bite[];
@@ -146,7 +147,7 @@ export class BiteService {
     return modifiedBiteList;
   }
 
-  private cloneObjectLiteral(obj: {}): {} {
+  public cloneObjectLiteral<T>(obj: T): T {
     /* Hack to clone an object */
     return JSON.parse(JSON.stringify(obj));
   }
@@ -175,7 +176,7 @@ export class BiteService {
     return this.recipeService.resetBite(bite);
   }
 
-  addBite(bite: Bite, bites: Bite[], availableBites: Bite[], replaceIndex?: number): Observable<boolean> {
+  addBite(bite: Bite, bites: Bite[], replaceIndex?: number): Observable<boolean> {
 
     // /* Removing bite from list of available bites */
     // const index = BiteService.findBiteInArray(bite, availableBites);
@@ -204,6 +205,9 @@ export class BiteService {
           if (replaceIndex == null) {
             bites.push(b);
           } else {
+            // Since there is a replace index it means that we're switching an existing bite
+            // so we need to allow the user to save the change
+            b.tempShowSaveCancelButtons = true;
             bites[replaceIndex] = b;
           }
           observable.next(true);
@@ -226,13 +230,13 @@ export class BiteService {
    * @param bites
    * @param availableBites
    */
-  switchBites(oldBite: Bite, newBite: Bite, bites: Bite[], availableBites: Bite[]) {
+  switchBites(oldBite: Bite, newBite: Bite, bites: Bite[]) {
     if (bites) {
       const index: number = BiteService.findBiteInArray(oldBite, bites);
       if (index >= 0) {
         // BiteLogicFactory.createBiteLogic(oldBite).unpopulateBite();
         // availableBites.push(oldBite);
-        this.addBite(newBite, bites, availableBites, index);
+        this.addBite(newBite, bites, index);
       }
     }
   }
