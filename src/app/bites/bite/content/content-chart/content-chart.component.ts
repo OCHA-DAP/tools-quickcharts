@@ -117,15 +117,24 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
     const descSort = function(a, b){
       return b.value - a.value;
     };
-    if (this.biteLogic.sorting !== null) {
+    if (this.biteLogic.sorting !== null || this.biteLogic.limit !== null) {
       const valuesLabel = this.biteLogic.values[0];
-      const valAndCategArray =
+      let valAndCategArray =
           this.biteLogic.values.slice(1).map( (val, i) => ({value: val, category: this.biteLogic.categories[i]}));
-      if (this.biteLogic.sorting === ChartBite.SORT_ASC) {
-        valAndCategArray.sort(ascSort);
-      } else {
-        valAndCategArray.sort(descSort);
+
+      if (this.biteLogic.sorting !== null) {
+        if (this.biteLogic.sorting === ChartBite.SORT_ASC) {
+          valAndCategArray.sort(ascSort);
+        } else {
+          valAndCategArray.sort(descSort);
+        }
       }
+
+      const valuesLimit = this.biteLogic.limit;
+      if (valuesLimit && valuesLimit > 0) {
+        valAndCategArray = valAndCategArray.slice(0, valuesLimit);
+      }
+
       values = valAndCategArray.map(item => item.value);
       values.unshift(valuesLabel);
       this.sortedCategories = valAndCategArray.map(item => item.category);
