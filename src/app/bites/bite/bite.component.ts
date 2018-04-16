@@ -1,7 +1,7 @@
 import { ContentComparisonChartComponent } from './content/content-comparison-chart/content-comparison-chart.component';
 import { Component, OnInit, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import {Input, Output} from '@angular/core';
-import { Bite, ChartBiteLogic, ComparisonChartBiteLogic } from 'hxl-preview-ng-lib';
+import { Bite, ChartBiteLogic, ChartUIProperties, ComparisonChartBiteLogic } from 'hxl-preview-ng-lib';
 import { KeyFigureBite } from 'hxl-preview-ng-lib';
 import { ChartBite, ComparisonChartBite } from 'hxl-preview-ng-lib';
 import { TimeseriesChartBite } from 'hxl-preview-ng-lib';
@@ -239,6 +239,17 @@ class SettingsModel {
 
   set xAxisLabel(label: string) {
     this.bite.uiProperties.dataTitle = label;
+    this.biteComponent.renderContent();
+  }
+
+  get limit(): number {
+    const biteLogic = this.biteLogic as ChartBiteLogic;
+    return biteLogic.limit;
+  }
+
+  set limit(label: number) {
+    const uiProperties = this.bite.uiProperties as ChartUIProperties;
+    uiProperties.limit = label;
     this.biteComponent.renderContent();
   }
 

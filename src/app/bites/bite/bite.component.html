@@ -153,6 +153,16 @@
               </hxl-checkbox-slider>
               <div class="element-group">
                 <label>
+                  Limit number of values
+                </label>
+                <div>
+                  <input type="number" placeholder="enter limit"
+                         [(ngModel)]="settingsModel.limit"
+                         name="limit">
+                </div>
+              </div>
+              <div class="element-group">
+                <label>
                   Chart values title <span *ngIf="(bite.type == classTypes.ComparisonChartBite)">1</span>
                 </label>
                 <div>
