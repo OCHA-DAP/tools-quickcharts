@@ -135,7 +135,7 @@ export class BiteListComponent implements OnInit {
         }
       }
     ];
-    if (this.appConfig.get('has_modify_permission') === 'true') {
+    if (this.hasModifyPermission()) {
       this.adminChartsMenu.splice(1, 0,
         {
           displayValue: 'Save the current views as default',
@@ -149,6 +149,10 @@ export class BiteListComponent implements OnInit {
 
     this.singleWidgetMode = this.appConfig.get('singleWidgetMode') === 'true';
     this.toolsMode = this.appConfig.get('toolsMode') === 'true';
+  }
+
+  protected hasModifyPermission (): boolean {
+    return this.appConfig.get('has_modify_permission') === 'true';
   }
 
   private removeLoadedBiteToList(bite: Bite): void {

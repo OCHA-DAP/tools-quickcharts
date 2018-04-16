@@ -34,6 +34,8 @@ export class BiteComponent implements OnInit {
   @Input()
   listIsFull: boolean;
   @Input()
+  hasModifyPermission = false;
+  @Input()
   availableBites: Bite[];
 
   @Output()

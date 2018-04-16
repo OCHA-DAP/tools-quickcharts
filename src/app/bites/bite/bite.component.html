@@ -54,7 +54,7 @@
             </span>
           </a>
         </span>
-        <span *ngIf="!biteLogic.tempShowSaveCancelButtons; else saveCancelButtons;">
+        <span *ngIf="!(biteLogic.tempShowSaveCancelButtons && hasModifyPermission); else saveCancelButtons;">
           <i (click)="toggleSettings()" class="glyphicon glyphicon-cog footer-glyphicon" [class.open]="settingsDisplay"></i>
         </span>
         <ng-template #saveCancelButtons>
