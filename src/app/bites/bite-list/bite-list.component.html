@@ -73,8 +73,9 @@
   >
     <hxl-bite [listIsFull]="listIsFull" [bite]="bite"
               [availableBites]="availableBites" [index]="idx + 1"
-              [singleBite]="biteList.length === 1" [toolsMode]="toolsMode"
+              [singleBite]="biteList.length === 1" [toolsMode]="toolsMode" [hasModifyPermission]="hasModifyPermission()"
               (onDelete)="deleteBite($event)" (onSwitch)="switchBite($event)"
+              (onCancel)="cancelBite($event - 1)" (onSave)="saveBite($event - 1)"
               (onEmbedUrlCreate)="singleEmbedUrlCreated($event)">
     </hxl-bite>
   </div>

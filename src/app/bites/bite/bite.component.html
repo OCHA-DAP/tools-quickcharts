@@ -34,7 +34,8 @@
       </a>
     </div>
     <form #settingsForm="ngForm" (ngModelChange)="settingsModelChanged($event)">
-      <div class="pull-right">
+      <div class="settings-menu-shadow" [class.open]="settingsDisplay" (click)="toggleSettings();"></div>
+      <div class="pull-right cancel-save-wrapper" [class.over-shadow]="settingsDisplay">
         <span class="powered-by" [class.display]="poweredByDisplay" *ngIf="poweredByDisplay">
           <a href="https://tools.humdata.org/quickcharts/" target="_blank">
             <div *ngIf="poweredBySource != 'undefined' || poweredByUrl != 'undefined' || poweredByDate != 'undefined'" class="settings-menu powered-by-menu dropdown-menu" >
@@ -53,10 +54,13 @@
             </span>
           </a>
         </span>
-        <span>
-          <i (click)="toggleSettings(this)" class="glyphicon glyphicon-cog" [class.open]="settingsDisplay"></i>
+        <span *ngIf="!(biteLogic.tempShowSaveCancelButtons && hasModifyPermission); else saveCancelButtons;">
+          <i (click)="toggleSettings()" class="glyphicon glyphicon-cog footer-glyphicon" [class.open]="settingsDisplay"></i>
         </span>
-        <div class="settings-menu-shadow" [class.open]="settingsDisplay" (click)="toggleSettings(this);"></div>
+        <ng-template #saveCancelButtons>
+          <a class="btn qc-btn qc-btn-secondary" (click)="cancel();">Cancel</a><!--
+          --><a class="btn btn-primary qc-btn" (click)="save();">Save</a>
+        </ng-template>
         <div class="settings-menu dropdown-menu"
            [class.open]="settingsDisplay"
            [class.arrow-right]="(index % 3 == 0) || (singleBite && poweredByDisplay)"

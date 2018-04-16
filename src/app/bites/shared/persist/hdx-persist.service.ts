@@ -57,6 +57,11 @@ export class HdxPersistService extends PersistService {
         const hxlPreviewConfig = jsonResponse.result.hxl_preview_config;
         if (hxlPreviewConfig) {
           return this.persistUtil.configToBitelist(hxlPreviewConfig);
+        } else {
+          return {
+            configVersion: 0,
+            bites: []
+          };
         }
       }
       throw new Error('There was a problem with the http json response !');
