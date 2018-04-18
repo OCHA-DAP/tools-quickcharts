@@ -1,7 +1,7 @@
 import { ContentComparisonChartComponent } from './content/content-comparison-chart/content-comparison-chart.component';
 import { Component, OnInit, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import {Input, Output} from '@angular/core';
-import { Bite, ChartBiteLogic, ComparisonChartBiteLogic } from 'hxl-preview-ng-lib';
+import { Bite, ChartBiteLogic, ChartUIProperties, ComparisonChartBiteLogic } from 'hxl-preview-ng-lib';
 import { KeyFigureBite } from 'hxl-preview-ng-lib';
 import { ChartBite, ComparisonChartBite } from 'hxl-preview-ng-lib';
 import { TimeseriesChartBite } from 'hxl-preview-ng-lib';
@@ -34,6 +34,8 @@ export class BiteComponent implements OnInit {
   @Input()
   listIsFull: boolean;
   @Input()
+  hasModifyPermission = false;
+  @Input()
   availableBites: Bite[];
   @Input()
   allowShare: boolean;
@@ -46,6 +48,11 @@ export class BiteComponent implements OnInit {
   onDelete = new EventEmitter<Bite>();
   @Output()
   onSwitch = new EventEmitter<{oldBite: Bite, newBite: Bite}>();
+
+  @Output()
+  onSave = new EventEmitter<number>();
+  @Output()
+  onCancel = new EventEmitter<number>();
 
   @Output()
   onEmbedUrlCreate = new EventEmitter<string>();
@@ -103,9 +110,28 @@ export class BiteComponent implements OnInit {
     this.onSwitch.emit({oldBite: this.bite, newBite: newBite});
   }
 
-  toggleSettings(self) {
-    this.settingsDisplay = !this.settingsDisplay;
+  cancel() {
+    this.onCancel.emit(this.index);
+    this.toggleSettings(false);
+    this.biteLogic.tempShowSaveCancelButtons = false;
+  }
+
+  save() {
+    this.onSave.emit(this.index);
+    this.toggleSettings(false);
+    this.biteLogic.tempShowSaveCancelButtons = false;
+  }
+
+  toggleSettings(show?: boolean) {
+    if (show === true) {
+      this.settingsDisplay = true;
+    } else if (show === false) {
+      this.settingsDisplay = false;
+    } else {
+      this.settingsDisplay = !this.settingsDisplay;
+    }
     if (this.settingsDisplay) {
+      this.biteLogic.tempShowSaveCancelButtons = true;
       this.analyticsService.trackSettingsMenuOpen(this.bite);
     }
   }
@@ -217,6 +243,17 @@ class SettingsModel {
 
   set xAxisLabel(label: string) {
     this.bite.uiProperties.dataTitle = label;
+    this.biteComponent.renderContent();
+  }
+
+  get limit(): number {
+    const biteLogic = this.biteLogic as ChartBiteLogic;
+    return biteLogic.limit;
+  }
+
+  set limit(label: number) {
+    const uiProperties = this.bite.uiProperties as ChartUIProperties;
+    uiProperties.limit = label;
     this.biteComponent.renderContent();
   }
 

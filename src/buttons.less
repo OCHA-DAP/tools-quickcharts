@@ -109,7 +109,7 @@
 }
 
 .btn.hdx-btn.resource-btn {
-  background-color: #888888;
+  background-color: @grayColor;
   color: white;
   border: 0;
   line-height: 35px;
@@ -128,5 +128,25 @@
 .btn.hdx-btn.resource-icon-btn img{
   width: 14px;
   margin-bottom: 5px;
+}
+
+.btn.qc-btn {
+  margin: 0px;
+  border-radius: 0;
+  border-width: 0;
+  padding-top: 8px;
+  & ~ .qc-btn {
+    margin-left: 0px;
+  }
+
+  &.qc-btn-secondary {
+    color: @grayColor;
+    background-color: transparent;
+    &:hover {
+      background-color: @grayColor;
+      color: @whiteColor;
+    }
+  }
+
 }
 /* END Button style*/

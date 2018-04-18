@@ -38,6 +38,8 @@ export class BiteListComponent implements OnInit {
     forceFallback: true
   };
 
+  protected originalBitesBackup: Bite[];
+
   protected showCookbookControls = false;
   protected showCustomCookbookControls = false;
   protected customCookbookUrl = '';
@@ -140,7 +142,7 @@ export class BiteListComponent implements OnInit {
         }
       }
     ];
-    if (this.appConfig.get('has_modify_permission') === 'true') {
+    if (this.hasModifyPermission()) {
       this.adminChartsMenu.splice(1, 0,
         {
           displayValue: 'Save the current views as default',
@@ -158,6 +160,10 @@ export class BiteListComponent implements OnInit {
     this.allowSettings = chartSettings !== 'false';
     const chartShare = this.appConfig.get('chartShare');
     this.allowShare = chartShare !== 'false';
+  }
+
+  protected hasModifyPermission (): boolean {
+    return this.appConfig.get('has_modify_permission') === 'true';
   }
 
   private removeLoadedBiteToList(bite: Bite): void {
@@ -210,6 +216,9 @@ export class BiteListComponent implements OnInit {
         this.addBite(bite).subscribe((val) => {
           if (!val) {
             observable[idx].subscribe(instance);
+          } else {
+            // We choose a correct bite so we need to save the original config as backup
+            this.originalBitesBackup = this.biteService.cloneObjectLiteral(this.biteList);
           }
         });
       };
@@ -223,7 +232,9 @@ export class BiteListComponent implements OnInit {
   init() {
     this.availableBites = null;
     this.biteList = [];
+    this.originalBitesBackup = [];
     this.biteService.loadSavedPreview(this.resetMode).subscribe(hxlPreviewConfig => {
+
       if (hxlPreviewConfig.recipeUrl) {
         this.showCustomCookbookControls = true;
         this.customCookbookUrl = hxlPreviewConfig.recipeUrl;
@@ -234,6 +245,9 @@ export class BiteListComponent implements OnInit {
         hxlPreviewConfig.bites.forEach( b => {
           this.biteService.initBite(b).subscribe( bite => {
             this.biteList.push(bite);
+            // Keep a copy of the loaded configuration to be able to revert to it
+            const backupBite = this.biteService.cloneObjectLiteral(bite);
+            this.originalBitesBackup.push(backupBite);
           });
         });
         // We have saved bites that were populated above, so we don't need to do anything once the
@@ -259,7 +273,7 @@ export class BiteListComponent implements OnInit {
   }
 
   addBite(bite: Bite): Observable<boolean> {
-    return this.biteService.addBite(bite, this.biteList, this.availableBites);
+    return this.biteService.addBite(bite, this.biteList);
   }
 
   deleteBite(bite: Bite) {
@@ -268,7 +282,56 @@ export class BiteListComponent implements OnInit {
   }
 
   switchBite(bitePair: { oldBite: Bite, newBite: Bite }) {
-    this.biteService.switchBites(bitePair.oldBite, bitePair.newBite, this.biteList, this.availableBites);
+    this.biteService.switchBites(bitePair.oldBite, bitePair.newBite, this.biteList);
+  }
+
+  cancelBite(biteIndex: number) {
+    const newBite = this.biteService.cloneObjectLiteral(
+                    this.originalBitesBackup[biteIndex]);
+    this.biteList.splice(biteIndex, 1, newBite);
+  }
+
+  /**
+   * This method makes sure only the bite on which "save" was clicked gets its changes saved.
+   * The other bites in the list are taken from the "backup"
+   *
+   * @param biteIndex the index of the bite we want to save
+   */
+  saveBite(biteIndex: number) {
+    const clonedBiteList = this.biteService.cloneObjectLiteral(this.biteList);
+    for (let i = 0; i < clonedBiteList.length; i++) {
+      if (i !== biteIndex) {
+        const originalBite = this.biteService.cloneObjectLiteral(this.originalBitesBackup[i]);
+        clonedBiteList[i] = originalBite;
+      }
+    }
+    this.saveBitesToServer(clonedBiteList);
+  }
+
+  private getChosenCookbookName(): string {
+    return this.cookbooksAndTags && this.cookbooksAndTags.chosenCookbook ?
+                this.cookbooksAndTags.chosenCookbook.name : null;
+  }
+
+  private getCustomCookbookURL(): string {
+    return this.showCustomCookbookControls ? this.customCookbookUrl : null;
+  }
+
+  private saveBitesToServer(biteList: Bite[]) {
+    this.biteService.saveBites(biteList, this.getCustomCookbookURL(), this.getChosenCookbookName(),
+          this.resetMode).subscribe(
+
+        (successful: boolean) => {
+          this.logger.log('Result of bites saved: ' + successful);
+          this.savedModalMessage = 'Your configuration was saved on the server !';
+          this.savedModal.show();
+          this.originalBitesBackup = this.biteService.cloneObjectLiteral(biteList);
+        },
+        error => {
+          this.logger.error('Save failed: ' + error);
+          this.savedModalMessage = 'FAILED: Saving configuration failed. Please try again!';
+        }
+      );
   }
 
   generateAvailableBites(biteObs: Observable<Bite>, onCompleteCallback: () => void) {
@@ -316,33 +379,21 @@ export class BiteListComponent implements OnInit {
 
 
   doSaveAction(payload: SimpleDropdownPayload) {
-    // this.logger.log(action + ' - ' +
-    //   this.biteService.exportBitesToURL(this.biteList));
-    const customCookbookURL = this.showCustomCookbookControls ? this.customCookbookUrl : null;
+
     if (payload.name === 'embed') {
-      this.embedUrl = this.biteService.exportBitesToURL(this.biteList, customCookbookURL,
-                    this.cookbooksAndTags.chosenCookbook.name, false);
+      this.embedUrl = this.biteService.exportBitesToURL(this.biteList, this.getCustomCookbookURL(),
+                    this.getChosenCookbookName(), false);
       this.iframeUrl = this.generateIframeUrl(this.embedUrl);
       this.embedLinkModal.show();
       this.analyticsService.trackEmbed();
     } else if (payload.name === 'image') {
-      this.biteService.saveAsImage(this.biteList, customCookbookURL,
-        this.cookbooksAndTags.chosenCookbook.name, false);
+      this.biteService.saveAsImage(this.biteList, this.getCustomCookbookURL(),
+                    this.getChosenCookbookName(), false);
       this.analyticsService.trackSaveImage();
     } else if (payload.name === 'save-views') {
       const biteListToSave = this.resetMode ? [] : this.biteList;
-      this.biteService.saveBites(biteListToSave, customCookbookURL, this.cookbooksAndTags.chosenCookbook.name,
-        this.resetMode).subscribe(
-        (successful: boolean) => {
-          this.logger.log('Result of bites saved: ' + successful);
-          this.savedModalMessage = 'Your configuration was saved on the server !';
-          this.savedModal.show();
-        },
-        error => {
-          this.logger.error('Save failed: ' + error);
-          this.savedModalMessage = 'FAILED: Saving configuration failed. Please try again!';
-        }
-      );
+      this.saveBitesToServer(biteListToSave);
+
     } else if (payload.name === 'show-recipe-section') {
       this.showCookbookControls = payload.checked;
     }
