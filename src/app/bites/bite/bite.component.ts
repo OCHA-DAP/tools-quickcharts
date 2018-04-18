@@ -35,6 +35,10 @@ export class BiteComponent implements OnInit {
   listIsFull: boolean;
   @Input()
   availableBites: Bite[];
+  @Input()
+  allowShare: boolean;
+  @Input()
+  allowSettings: boolean;
 
   @Output()
   onAdd = new EventEmitter<Bite>();

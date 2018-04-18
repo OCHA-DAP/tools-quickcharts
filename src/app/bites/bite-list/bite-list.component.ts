@@ -59,6 +59,13 @@ export class BiteListComponent implements OnInit {
   /* Used for when only one widget is embedded in a page */
   singleWidgetMode: boolean;
   toolsMode: boolean;
+  allowShare = true;
+  allowSettings = true;
+
+  /* share Widget configs */
+  private shareUrlMode = false;
+  shareAllowSettings = true;
+  shareAllowShare = true;
 
   @HostListener('window:message', ['$event'])
   onEmbedUrl($event) {
@@ -147,6 +154,10 @@ export class BiteListComponent implements OnInit {
 
     this.singleWidgetMode = this.appConfig.get('singleWidgetMode') === 'true';
     this.toolsMode = this.appConfig.get('toolsMode') === 'true';
+    const chartSettings = this.appConfig.get('chartSettings');
+    this.allowSettings = chartSettings !== 'false';
+    const chartShare = this.appConfig.get('chartShare');
+    this.allowShare = chartShare !== 'false';
   }
 
   private removeLoadedBiteToList(bite: Bite): void {
@@ -382,6 +393,19 @@ export class BiteListComponent implements OnInit {
     this.biteList = [];
     const availableInfo = this.biteService.generateAvailableCookbooksAndBites(url);
     this.generateAvailableBites(availableInfo.biteObs, this.loadDefaultBites);
+  }
+
+  public changeShareMode() {
+    this.shareUrlMode = !this.shareUrlMode;
+  }
+
+  // extended embed url + sharing controls
+  public get fullEmbedUrl(): string {
+    return this.embedUrl + ';chartSettings=' + this.shareAllowSettings + ';chartShare=' + this.shareAllowShare;
+  }
+  // extended embed url + sharing controls
+  public get fullIframeUrl(): string {
+    return this.generateIframeUrl(this.fullEmbedUrl);
   }
 
 }

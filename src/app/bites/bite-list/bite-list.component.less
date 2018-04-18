@@ -37,6 +37,12 @@
   .right-menu {
     word-spacing: 5px;
     text-align: right;
+    hxl-simple-dropdown ~ hxl-simple-dropdown {
+      &:before {
+        content: '|';
+        margin: 5px 0;
+      }
+    }
   }
 }
 
@@ -53,7 +59,7 @@
       padding-bottom: 20px;
     }
   }
-  
+
   .cookbook-controls-container {
     background-color: @almostWhiteGrayColor;
     transition: max-height .3s linear;
@@ -75,4 +81,32 @@
 a:hover {
   text-decoration: none;
 }
+hxl-checkbox-slider-only {
+  margin-right: 10px;
+}
+.sharing-config-item {
+  margin: 5px 0;
 
+  i.glyphicon {
+    color: @grayColor;
+  }
+}
+
+hxl-simple-modal {
+  h4 {
+    position: absolute;
+    top: -45px;
+
+    a {
+      cursor: pointer;
+      text-decoration: underline;
+      &.active {
+        cursor: default;
+        color: @darkGrayColor;
+        pointer-events: none;
+        text-decoration: none;
+      }
+    }
+  }
+
+}

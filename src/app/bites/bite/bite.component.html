@@ -25,7 +25,7 @@
     </div>
   </div>
   <div class="footer">
-    <div class="left-section pull-left">
+    <div class="left-section pull-left" *ngIf="allowShare">
       <a *ngIf="!toolsMode" href="javascript:void(0)" (click)="createEmbedLink()">
         <i class="glyphicon glyphicon-link"></i>
       </a>
@@ -53,7 +53,7 @@
             </span>
           </a>
         </span>
-        <span>
+        <span *ngIf="allowSettings">
           <i (click)="toggleSettings(this)" class="glyphicon glyphicon-cog" [class.open]="settingsDisplay"></i>
         </span>
         <div class="settings-menu-shadow" [class.open]="settingsDisplay" (click)="toggleSettings(this);"></div>
