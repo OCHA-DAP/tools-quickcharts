@@ -37,6 +37,10 @@ export class BiteComponent implements OnInit {
   hasModifyPermission = false;
   @Input()
   availableBites: Bite[];
+  @Input()
+  allowShare: boolean;
+  @Input()
+  allowSettings: boolean;
 
   @Output()
   onAdd = new EventEmitter<Bite>();

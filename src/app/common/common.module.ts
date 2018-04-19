@@ -4,6 +4,7 @@ import { SimpleDropdownComponent } from './component/simple-dropdown/simple-drop
 import { CommonModule as CoreCommonModule } from '@angular/common';
 import { NumberFormatPipe } from './pipe/number-format.pipe';
 import { CheckboxSliderComponent } from './component/checkbox-slider/checkbox-slider.component';
+import { CheckboxSliderOnlyComponent } from './component/checkbox-slider/checkbox-slider-only.component';
 // import { SimpleModalComponent } from './component/simple-modal/simple-modal.component';
 
 @NgModule({
@@ -12,7 +13,7 @@ import { CheckboxSliderComponent } from './component/checkbox-slider/checkbox-sl
     BsDropdownModule.forRoot(),
     ModalModule.forRoot()
   ],
-  declarations: [SimpleDropdownComponent, NumberFormatPipe, CheckboxSliderComponent],
-  exports: [SimpleDropdownComponent, NumberFormatPipe, CheckboxSliderComponent]
+  declarations: [SimpleDropdownComponent, NumberFormatPipe, CheckboxSliderComponent, CheckboxSliderOnlyComponent],
+  exports: [SimpleDropdownComponent, NumberFormatPipe, CheckboxSliderComponent, CheckboxSliderOnlyComponent]
 })
 export class CommonModule { }
