@@ -6,12 +6,11 @@
       <i *ngIf="spinnerActive"><img class="img-color" src="./assets/images/loading-spinner.gif"> Loading ...</i>
     </div>
     <div class="col-xs-2 right-menu" *ngIf="!toolsMode">
-      <hxl-simple-dropdown [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="shareChartsMenu"
-                       linkText="Share" (selected)="doSaveAction($event)">
+      <hxl-simple-dropdown *ngIf="allowShare" [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="shareChartsMenu"
+                           linkText="Share" (selected)="doSaveAction($event)">
       </hxl-simple-dropdown>
-      |
-      <hxl-simple-dropdown [glyphiconClass]="'glyphicon-cog'" [items]="adminChartsMenu" [makeGray]="true"
-                      (selected)="doSaveAction($event)">
+      <hxl-simple-dropdown *ngIf="allowSettings" [glyphiconClass]="'glyphicon-cog'" [items]="adminChartsMenu"
+                           [makeGray]="true" (selected)="doSaveAction($event)">
       </hxl-simple-dropdown>
 
       <hxl-simple-modal [title]="'Save Configuration'" #savedModal>
@@ -54,10 +53,28 @@
       </div>
     </div>
   </div>
-  <hxl-simple-modal [title]="'Embed Quick Charts'" #embedLinkModal>
+  <hxl-simple-modal [title]="" #embedLinkModal>
+    <h4>
+      <a (click)="changeShareMode()" [ngClass]="{'active':!shareUrlMode}">Embed Quick Charts</a><span style="margin: 0 5px;">|</span><a (click)="changeShareMode()" [ngClass]="{'active':shareUrlMode}">Share URL</a>
+    </h4>
+
+    <b>Sharing controls:</b>
+    <div class="sharing-config-item">
+      <hxl-checkbox-slider-only class="pull-left" (checked)="shareAllowSettings=$event;" name="allow-settings"
+                                title="" [initiallyChecked]="shareAllowSettings"></hxl-checkbox-slider-only>
+      <span>Allow others to access the chart settings (<i class="glyphicon glyphicon-cog"></i>)</span>
+    </div>
+    <div class="sharing-config-item">
+      <hxl-checkbox-slider-only class="pull-left" (checked)="shareAllowShare=$event;" name="allow-share" title=""
+                                [initiallyChecked]="shareAllowShare"></hxl-checkbox-slider-only>
+      <span>Allow others to share Quick Charts (Embed, download as jpg)</span>
+    </div>
+    <br>
     Please copy the code below to embed the quick charts.
-    <a href="{{embedUrl}}" target="_blank">See example here</a>:
-    <input type="text" onfocus="this.setSelectionRange(0, 0); this.setSelectionRange(0, this.value.length)" onClick="this.setSelectionRange(0, 0); this.setSelectionRange(0, this.value.length)" readonly [(ngModel)]="iframeUrl" style="width: 100%;" />
+    <a href="{{fullEmbedUrl}}" target="_blank">See example here</a>:
+    <input type="text" onfocus="this.setSelectionRange(0, 0); this.setSelectionRange(0, this.value.length)"
+           onClick="this.setSelectionRange(0, 0); this.setSelectionRange(0, this.value.length)" readonly
+           [(ngModel)]="shareUrlMode ? fullEmbedUrl : fullIframeUrl" style="width: 100%;" />
   </hxl-simple-modal>
 </div>
 
@@ -74,6 +91,7 @@
     <hxl-bite [listIsFull]="listIsFull" [bite]="bite"
               [availableBites]="availableBites" [index]="idx + 1"
               [singleBite]="biteList.length === 1" [toolsMode]="toolsMode" [hasModifyPermission]="hasModifyPermission()"
+              [allowShare]="allowShare" [allowSettings]="allowSettings"
               (onDelete)="deleteBite($event)" (onSwitch)="switchBite($event)"
               (onCancel)="cancelBite($event - 1)" (onSave)="saveBite($event - 1)"
               (onEmbedUrlCreate)="singleEmbedUrlCreated($event)">
