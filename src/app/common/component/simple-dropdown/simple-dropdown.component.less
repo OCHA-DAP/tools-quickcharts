@@ -4,6 +4,7 @@
 ul{
   &.dropdown-menu {
     max-height:355px;
+    min-width: 200px;
     overflow: auto;
   }
 }
@@ -18,4 +19,18 @@ li{
 a, a:focus, a:hover {
   text-decoration: none;
   color: @blueColor;
+}
+
+a.dropdown-item:hover {
+  background-color: @extraLighterGrayColor;
+}
+
+span[dropdown]{
+  word-spacing: 4px;
+  a.make-gray {
+    color: @grayColor;
+  }
+  &.open a.make-gray {
+    color: @blueColor;
+  }
 }

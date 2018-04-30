@@ -28,12 +28,19 @@ export class AppConfigService {
     this.config['loc_pathname'] = loc.pathname;
   }
 
-  public get(key: string): string {
+  /**
+   *
+   * @param key name of the config parameter
+   * @param includeEnvironment (optional) default true (look in environment for the request config)
+   */
+  public get(key: string, includeEnvironment?: boolean): string {
+    includeEnvironment = includeEnvironment ? includeEnvironment : true;
     if (this.config.hasOwnProperty(key)) {
       return this.config[key];
-    } else {
+    } else if (includeEnvironment) {
       return environment[key];
     }
+    return null;
   }
 
   public thisIsProd() {

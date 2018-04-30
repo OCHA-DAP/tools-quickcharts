@@ -1,0 +1,14 @@
+<div class="element-group" [class.for-menu]="forMenu">
+  <label class="title">
+    {{title}}
+  </label>
+  <div class="checkbox-slider pull-right" (click)="$event.stopPropagation();">
+    <input [checked]="initiallyChecked"
+           (change)="toggle($event.target.checked);"
+           type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="{{name}}-{{uuid}}">
+    <label class="checkbox-slider-label" for="{{name}}-{{uuid}}">
+      <span class="checkbox-slider-inner"></span>
+      <span class="checkbox-slider-switch"></span>
+    </label>
+  </div>
+</div>

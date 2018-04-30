@@ -1,16 +1,18 @@
+import { HxlPreviewConfig } from './persist/hxl-preview-config';
 import { Injectable } from '@angular/core';
-import { Bite } from 'hxl-preview-ng-lib';
+import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite,
+        BiteLogicFactory, ChartBiteLogic, BiteConfig } from 'hxl-preview-ng-lib';
 import { RecipeService } from './recipe.service';
 import { Logger } from 'angular2-logger/core';
-import { CookBookService } from 'hxl-preview-ng-lib';
+import { CookBookService, CookbooksAndTags } from 'hxl-preview-ng-lib';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
-import { BiteLogicFactory } from 'hxl-preview-ng-lib';
 import { DomEventsService } from '../../shared/dom-events.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { PersisUtil } from './persist/persist-util';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
+import { AsyncSubject } from 'rxjs/AsyncSubject';
 
 @Injectable()
 export class BiteService {
@@ -49,7 +51,14 @@ export class BiteService {
     return this.nextId;
   }
 
-  private loadBites(): Observable<Bite[]> {
+  public loadSavedPreview(resetMode: boolean): Observable<HxlPreviewConfig> {
+    if (resetMode) {
+      return Observable.of({
+        configVersion: 0,
+        bites: []
+      });
+    }
+
     const embeddedConfig = this.appConfigService.get('embeddedConfig');
     if (embeddedConfig && embeddedConfig.length) {
       return Observable.of(this.persistUtil.configToBitelist(embeddedConfig));
@@ -58,19 +67,14 @@ export class BiteService {
     }
   }
 
-  getBites(): Observable<Bite> {
-    return this.loadBites()
-      .flatMap(
-        (bites: Bite[]) => {
-          this.logger.log('Loaded bites are: ' + JSON.stringify(bites));
-          return this.recipeService.processAll(bites, this.url);
-        }
-      );
-  }
-
-  saveBites(biteList: Bite[]): Observable<boolean> {
-    const modifiedBiteList = this.unpopulateListOfBites(biteList);
-    return this.persistService.save(modifiedBiteList);
+  saveBites(biteList: Bite[], cookbookUrl: string, chosenCookbookName: string,
+        resetMode: boolean): Observable<boolean> {
+    if (!resetMode) {
+      const modifiedBiteList = this.unpopulateListOfBites(biteList);
+      return this.persistService.save(modifiedBiteList, cookbookUrl, chosenCookbookName);
+    } else {
+      return this.persistService.save([]);
+    }
   }
 
   private filterPathWithoutParams(path: string): string {
@@ -81,9 +85,9 @@ export class BiteService {
     return '';
   }
 
-  saveAsImage(biteList: Bite[], isSingleWidgetMode?: boolean ) {
+  saveAsImage(biteList: Bite[], customCookbookUrl: string, chosenCookbookName: string, isSingleWidgetMode: boolean ) {
     const snapService = environment.snapService;
-    const url = this.exportBitesToURL(biteList, isSingleWidgetMode);
+    const url = this.exportBitesToURL(biteList, customCookbookUrl, chosenCookbookName, isSingleWidgetMode);
     const urlEncoded = encodeURIComponent(url);
     const viewPortWidth = isSingleWidgetMode ? 500 : 1280;
     const pngDownloadUrl = `${snapService}/png?viewport={"width": ${viewPortWidth}, "height": 1}&url=${urlEncoded}`;
@@ -93,7 +97,8 @@ export class BiteService {
     }, 2);
   }
 
-  exportBitesToURL(biteList: Bite[], isSingleWidgetMode?: boolean): string {
+  exportBitesToURL(biteList: Bite[], customCookbookUrl: string, chosenCookbookName: string,
+    isSingleWidgetMode: boolean): string {
     biteList = biteList ? biteList : [];
 
     const protocol = this.appConfigService.get('loc_protocol');
@@ -102,7 +107,8 @@ export class BiteService {
     const path = this.appConfigService.get('loc_pathname');
 
     const modifiedBiteList = this.unpopulateListOfBites(biteList);
-    let embeddedConfig = encodeURIComponent(this.persistUtil.bitelistToConfig(modifiedBiteList));
+    let embeddedConfig = encodeURIComponent(this.persistUtil.bitelistToConfig(modifiedBiteList,
+              customCookbookUrl, chosenCookbookName));
 
     /* Dealing with parenthesis which are not encoded by encodeURIComponent */
     embeddedConfig = embeddedConfig.replace(/\(/g, '%28').replace(/\)/g, '%29');
@@ -119,9 +125,12 @@ export class BiteService {
     const embeddedDate = encodeURIComponent(this.appConfigService.get('embeddedDate'));
     const embeddedTitle = this.quickChartsTitle;
 
+    const httpRecipeUrl = this.appConfigService.get('recipeUrl');
+    const recipeUrlParam = httpRecipeUrl ? `;recipeUrl=${encodeURIComponent(httpRecipeUrl)}` : '';
+
     return `${protocol}//${hostname}${port}${pathWithoutParams};` +
            `url=${url};embeddedSource=${embeddedSource};embeddedUrl=${embeddedUrl};embeddedDate=${embeddedDate};` +
-           `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}`;
+           `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}${recipeUrlParam}`;
   }
 
   /**
@@ -130,6 +139,7 @@ export class BiteService {
    * @return {Bite[]} A new list with cloned object. The fields that were populated from the source data will be emptied.
    */
   private unpopulateListOfBites(biteList: Bite[]): Bite[] {
+    biteList.forEach(b => b.tempShowSaveCancelButtons = false);
 
     /* Do not modify the original bites by cloning them */
     const modifiedBiteList: Bite[] = this.cloneObjectLiteral(biteList) as Bite[];
@@ -137,14 +147,21 @@ export class BiteService {
     return modifiedBiteList;
   }
 
-  private cloneObjectLiteral(obj: {}): {} {
+  public cloneObjectLiteral<T>(obj: T): T {
     /* Hack to clone an object */
     return JSON.parse(JSON.stringify(obj));
   }
 
-  generateAvailableBites(): Observable<Bite> {
-    console.log('Recipe url is:' + this.appConfigService.get('recipeUrl'));
-    return this.cookBookService.load(this.url, this.appConfigService.get('recipeUrl'));
+  public generateAvailableCookbooksAndBites(recipeUrl?: string, chosenCookbookName?: string):
+            { biteObs: Observable<Bite>, cookbookAndTagsObs: Observable<CookbooksAndTags> } {
+
+    const finalRecipeUrl = recipeUrl ? recipeUrl : this.appConfigService.get('recipeUrl');
+    console.log('Recipe url is:' + finalRecipeUrl);
+    return this.cookBookService.load(this.url, finalRecipeUrl, chosenCookbookName);
+  }
+
+  public genereateAvailableBites(columnNames: string[], hxlTags: string[], recipes: BiteConfig[]): Observable<Bite> {
+    return this.cookBookService.determineAvailableBites(columnNames, hxlTags, recipes);
   }
 
   initBite(bite: Bite): Observable<Bite> {
@@ -159,28 +176,53 @@ export class BiteService {
     return this.recipeService.resetBite(bite);
   }
 
-  addBite(bite: Bite, bites: Bite[], availableBites: Bite[], replaceIndex?: number) {
+  addBite(bite: Bite, bites: Bite[], replaceIndex?: number): Observable<boolean> {
 
     // /* Removing bite from list of available bites */
     // const index = BiteService.findBiteInArray(bite, availableBites);
     // availableBites.splice(index, 1);
+    const observable = new AsyncSubject<boolean>();
 
     const clonedBite = this.cloneObjectLiteral(bite) as Bite;
 
     this.initBite(clonedBite)
       .subscribe(
         b => {
+          if (b.type === ChartBite.type() || b.type === ComparisonChartBite.type() ||
+                  b.type === TimeseriesChartBite.type()) {
+            const chartBiteLogic = BiteLogicFactory.createBiteLogic(b) as ChartBiteLogic;
+            // should we check if bite can render?
+            if (replaceIndex === undefined) {
+              // check if bite can render
+              if (chartBiteLogic.values === null ||
+                 ((chartBiteLogic.values[0] instanceof Array) && (chartBiteLogic.values[0].length < 2)) ||
+                 (!(chartBiteLogic.values[0] instanceof Array) && (chartBiteLogic.values.length < 3))) {
+                observable.next(false);
+                observable.complete();
+                return;
+              }
+            }
+          }
+
           if (replaceIndex == null) {
             bites.push(b);
           } else {
+            // Since there is a replace index it means that we're switching an existing bite
+            // so we need to allow the user to save the change
+            b.tempShowSaveCancelButtons = true;
             bites[replaceIndex] = b;
           }
+          observable.next(true);
+          observable.complete();
         },
         err => {
           this.logger.error('Can\'t process bite due to:' + err);
           // availableBites.push(bite);
+          observable.next(false);
+          observable.complete();
         }
       );
+    return observable;
   }
 
   /**
@@ -190,13 +232,13 @@ export class BiteService {
    * @param bites
    * @param availableBites
    */
-  switchBites(oldBite: Bite, newBite: Bite, bites: Bite[], availableBites: Bite[]) {
+  switchBites(oldBite: Bite, newBite: Bite, bites: Bite[]) {
     if (bites) {
       const index: number = BiteService.findBiteInArray(oldBite, bites);
       if (index >= 0) {
         // BiteLogicFactory.createBiteLogic(oldBite).unpopulateBite();
         // availableBites.push(oldBite);
-        this.addBite(newBite, bites, availableBites, index);
+        this.addBite(newBite, bites, index);
       }
     }
   }

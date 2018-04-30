@@ -1,6 +1,8 @@
 @import "../../../styles.less";
 @import "../../../variables";
 
+@shadowZIndex: 9999;
+
 .hxl-bite {
   margin: 30px 0;
   border: 1px solid @extraLighterGrayColor;
@@ -230,6 +232,21 @@
         color: @blueColor;
       }
     }
+    .cancel-save-wrapper {
+      padding: 0;
+      position: relative;
+      z-index: @shadowZIndex - 1;
+      margin: -@headerFooterPadding/2;
+      &.over-shadow {
+        z-index: @shadowZIndex + 2;
+      }
+      .qc-btn {
+        height: @footerHeight;
+      }
+      .footer-glyphicon {
+        padding: 10px;
+      }
+    }
   }
 
   .settings-menu-shadow {
@@ -240,7 +257,7 @@
     width: 100%;
     height: 100%;
     opacity: 0;
-    z-index: 9999;
+    z-index: @shadowZIndex;
     &.open {
       display: block;
     }
@@ -251,10 +268,12 @@
     @settingsMenuHeight: @titleContainerHeight + @contentHeight + @descriptionHeight + @footerHeight;
     @settingsMenuElementMargin: 10px;
 
-    z-index: 10000;
+    z-index: @shadowZIndex + 1;
     position: absolute;
     right: -1*@settingWidth - 10px;
-    top: 0;
+    top: initial;
+    left: initial;
+    bottom: 0;
     height: @settingsMenuHeight;
     width: @settingWidth;
     min-width: @settingWidth;
@@ -277,28 +296,9 @@
       margin-bottom: @settingsMenuElementMargin;
     }
 
-    .element-group {
+    /deep/ .element-group {
       margin: @settingsMenuElementMargin 0;
       position: relative;
-    }
-
-    ul.color-picker {
-      list-style: none;
-      margin: 3px 0 0;
-      padding: 0;
-      line-height: 0;
-
-      .color-item {
-        display: inline-block;
-        cursor: pointer;
-        height: 15px;
-        width: 15px;
-        border: 2px solid @whiteColor;
-
-        &.color-item-selected {
-          border-color: @grayColor;
-        }
-      }
     }
 
     .change-sorting {
@@ -309,12 +309,12 @@
       width: 49%;
     }
 
-    label {
+    /deep/ label {
       .sourceSansProFont(400, 12px);
       color: @darkGrayColor;
       margin-bottom: 0;
     }
-    input, textarea, select {
+    /deep/ input, textarea, select {
       @inputInnerTextPadding: 5px;
 
       background-color: @whiteColor;

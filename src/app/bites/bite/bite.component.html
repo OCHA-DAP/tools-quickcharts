@@ -25,7 +25,7 @@
     </div>
   </div>
   <div class="footer">
-    <div class="left-section pull-left">
+    <div class="left-section pull-left" *ngIf="allowShare">
       <a *ngIf="!toolsMode" href="javascript:void(0)" (click)="createEmbedLink()">
         <i class="glyphicon glyphicon-link"></i>
       </a>
@@ -34,16 +34,18 @@
       </a>
     </div>
     <form #settingsForm="ngForm" (ngModelChange)="settingsModelChanged($event)">
-      <div class="pull-right">
+      <div class="settings-menu-shadow" [class.open]="settingsDisplay" (click)="toggleSettings();"></div>
+      <div class="pull-right cancel-save-wrapper" [class.over-shadow]="settingsDisplay">
         <span class="powered-by" [class.display]="poweredByDisplay" *ngIf="poweredByDisplay">
           <a href="https://tools.humdata.org/quickcharts/" target="_blank">
-            <div *ngIf="poweredBySource != 'undefined' || poweredByUrl != 'undefined' || poweredByDate != 'undefined'" class="settings-menu powered-by-menu dropdown-menu" >
+            <div *ngIf="poweredBySource != 'undefined' || poweredByUrl != 'undefined' || poweredByDate != 'undefined'" class="settings-menu powered-by-menu dropdown-menu">
               <div *ngIf="poweredBySource != 'undefined'">
                 Source:
                 <div class="black-color">{{ poweredBySource }}</div>
               </div>
               <div *ngIf="poweredByUrl != 'undefined' && poweredByDate != 'undefined'">
-                <div><a href="{{ poweredByUrl }}" target="_blank">Data</a> - {{ poweredByDate }}</div>
+                <div>
+                  <a href="{{ poweredByUrl }}" target="_blank">Data</a> - {{ poweredByDate }}</div>
               </div>
             </div>
             Powered by
@@ -53,197 +55,164 @@
             </span>
           </a>
         </span>
-        <span>
-          <i (click)="toggleSettings(this)" class="glyphicon glyphicon-cog" [class.open]="settingsDisplay"></i>
+        <span *ngIf="!(biteLogic.tempShowSaveCancelButtons && hasModifyPermission); else saveCancelButtons;">
+          <i *ngIf="allowSettings" (click)="toggleSettings()" class="glyphicon glyphicon-cog footer-glyphicon" [class.open]="settingsDisplay"></i>
         </span>
-        <div class="settings-menu-shadow" [class.open]="settingsDisplay" (click)="toggleSettings(this);"></div>
-        <div class="settings-menu dropdown-menu"
-           [class.open]="settingsDisplay"
-           [class.arrow-right]="(index % 3 == 0) || (singleBite && poweredByDisplay)"
-           [class.arrow-single-embed]="(singleBite && poweredByDisplay)"
-           [class.arrow-left]="index % 3 > 0">
-          <div class="scrollable-content">
-            <div class="section">
-              <div class="section-title">
-                Chart title
-              </div>
-              <div class="element-group">
-                <input [(ngModel)]="settingsModel.title" type="text" placeholder="Custom chart title" name="title">
-              </div>
-              <hr/>
+        <ng-template #saveCancelButtons>
+          <a class="btn qc-btn qc-btn-secondary" (click)="cancel();">Cancel</a>
+          <!--
+              -->
+          <a class="btn btn-primary qc-btn" (click)="save();">Save</a>
+        </ng-template>
+
+      </div>
+      <div class="settings-menu dropdown-menu" [class.open]="settingsDisplay" [class.arrow-right]="(index % 3 == 0) || (singleBite && poweredByDisplay)"
+        [class.arrow-single-embed]="(singleBite && poweredByDisplay)" [class.arrow-left]="index % 3 > 0">
+        <div class="scrollable-content">
+          <div class="section">
+            <div class="section-title">
+              Chart title
             </div>
-            <div class="section" *ngIf="(bite.type != classTypes.ToplineBite) && (!asChartBite(bite).pieChart)">
-              <div class="section-title">
-                Axis & Grid
-              </div>
-              <div class="element-group" *ngIf="bite.type == classTypes.ChartBite || bite.type == classTypes.ComparisonChartBite">
-                <label >
-                  Reverse Axis
-                </label>
-                <div class="checkbox-slider pull-right">
-                  <input [checked]="settingsModel.swapAxis"
-                         (change)="settingsModel.swapAxis = $event.target.checked; renderContent()"
-                         type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="reverse-axis-{{uuid}}">
-                  <label class="checkbox-slider-label" for="reverse-axis-{{uuid}}">
-                    <span class="checkbox-slider-inner"></span>
-                    <span class="checkbox-slider-switch"></span>
-                  </label>
-                </div>
-              </div>
-              <div class="element-group">
-                <label >
-                  Show Grid
-                </label>
-                <div class="checkbox-slider pull-right">
-                  <input [checked]="settingsModel.showGrid"
-                         (change)="settingsModel.showGrid = $event.target.checked; renderContent()"
-                         type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="show-grid-{{uuid}}">
-                  <label class="checkbox-slider-label" for="show-grid-{{uuid}}">
-                    <span class="checkbox-slider-inner"></span>
-                    <span class="checkbox-slider-switch"></span>
-                  </label>
-                </div>
-              </div>
-              <div class="element-group">
-                <label>
-                  Chart values title
-                </label>
-                <div>
-                  <input type="text" placeholder="X Axis Label"
-                         [(ngModel)]="settingsModel.xAxisLabel"
-                         name="xAxisLabel">
-                </div>
-              </div>
-              <hr/>
+            <div class="element-group">
+              <input [(ngModel)]="settingsModel.title" type="text" placeholder="Custom chart title" name="title">
             </div>
-            <div class="section" *ngIf="bite.type == classTypes.ToplineBite">
-              <div class="section-title">
-                Number format
-              </div>
-              <div class="element-group">
-                <div class="almost-fifty pull-left">
-                  <label>Prefix</label>
-                </div>
-                <div class="almost-fifty pull-right">
-                  <label>Suffix</label>
-                </div>
-                <div>
-                  <input class="almost-fifty" type="text" placeholder="Prefix"
-                         [(ngModel)]="settingsModel.prefix" name="prefix">
-                  <input class="almost-fifty pull-right" type="text" placeholder="Sufix"
-                         [(ngModel)]="settingsModel.suffix" name="suffix">
-                </div>
-              </div>
-              <div class="element-group">
-                <label for="decimals-{{uuid}}">
-                  Decimals
-                </label>
-                <!--<input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">-->
-                <select id="decimals-{{uuid}}" [(ngModel)]="settingsModel.numberFormat" name="numberFormat">
-                  <option value=""> -- Select -- </option>
-                  <option value="de">1.000,00</option>
-                  <option value="us">1,000.00</option>
-                </select>
-              </div>
-              <div class="element-group">
-                <label >
-                  Abbreviate values
-                </label>
-                <div class="checkbox-slider pull-right">
-                  <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox"
-                         id="abbreviate-values-{{uuid}}" checked
-                         [(ngModel)]="settingsModel.abbreviateValues" name="abbreviateValues">
-                  <label class="checkbox-slider-label" for="abbreviate-values-{{uuid}}">
-                    <span class="checkbox-slider-inner"></span>
-                    <span class="checkbox-slider-switch"></span>
-                  </label>
-                </div>
-              </div>
-              <hr/>
+            <hr/>
+          </div>
+          <div class="section" *ngIf="(bite.type != classTypes.ToplineBite) && (!asChartBite(bite).pieChart)">
+            <div class="section-title">
+              Axis & Grid
             </div>
-            <div class="section">
-              <div class="section-title">
-                Display preference
+            <hxl-checkbox-slider *ngIf="bite.type == classTypes.ChartBite || bite.type == classTypes.ComparisonChartBite" (checked)="settingsModel.swapAxis=$event; renderContent();"
+              name="swap-axis" [uuid]="uuid" title="Reverse Axis" [initiallyChecked]="settingsModel.swapAxis">
+            </hxl-checkbox-slider>
+            <hxl-checkbox-slider (checked)="settingsModel.showGrid=$event; renderContent();" name="show-grid" [uuid]="uuid" title="Show Grid"
+              [initiallyChecked]="settingsModel.showGrid">
+            </hxl-checkbox-slider>
+            <hr/>
+          </div>
+          <div class="section" *ngIf="bite.type == classTypes.ToplineBite">
+            <div class="section-title">
+              Number format
+            </div>
+            <div class="element-group">
+              <div class="almost-fifty pull-left">
+                <label>Prefix</label>
               </div>
-              <div class="element-group" *ngIf="(bite.type == classTypes.ChartBite)">
-                <label >
-                  Sorting
-                </label>
-                <div class="pull-right">
-                  <div class="checkbox-slider pull-right">
-                    <input [checked]="settingsModel.sorting != null"
-                           (change)="toggleSorting(); renderContent()"
-                           type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="sorting-{{uuid}}">
-                    <label class="checkbox-slider-label" for="sorting-{{uuid}}">
-                      <span class="checkbox-slider-inner"></span>
-                      <span class="checkbox-slider-switch"></span>
-                    </label>
-                  </div>
-                  <i class="change-sorting glyphicon glyphicon-arrow-up" style="margin-bottom: 3px;"
-                    [ngClass]="{'glyphicon-arrow-down': settingsModel.sorting == SORT_DESC}"
-                    [style.display]="(!settingsModel.sorting ? 'none' : 'inline-block')"
-                    (click)="swapSorting()"></i>
-                </div>
+              <div class="almost-fifty pull-right">
+                <label>Suffix</label>
               </div>
-              <div class="element-group" *ngIf="showColorPatternChooser">
-                <label >
-                  Chart color
-                </label>
-                <div class="pull-right">
-                  <ul class="color-picker">
-                    <li *ngFor="let color of colorPattern" [ngStyle]="{'background-color': color}" class="color-item"
-                        [ngClass]="{'color-item-selected': color === settingsModel.customColor}"
-                        (click)="settingsModel.customColor = color; renderContent();">
-                    </li>
-                    <li class="color-item"
-                      [ngStyle]="{'background-color': (colorPattern.indexOf(settingsModel.customColor) >= 0) ? '#ffffff' : settingsModel.customColor}"
-                      [ngClass]="{'color-item-selected': (colorPattern.indexOf(settingsModel.customColor) == -1)}"
-                      (click)="showCustomColorSection()">
-                      <i class="glyphicon glyphicon-plus" style="display: table; font-size: 11px; margin-top: -1px; line-height: 1;"
-                        [ngStyle]="{'color': (colorPattern.indexOf(settingsModel.customColor) >= 0) ? '#888' : '#fff'}"></i>
-                    </li>
-                  </ul>
-                </div>
-                <div class="element-group" [style.display]="displayCustomColor ? 'block' : 'none'">
-                  <label for="custom-color-{{uuid}}">
-                    Custom color (<small>css hex format only</small>)
-                  </label>
-                  <!--<input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">-->
-                  <input #customColorInput id="custom-color-{{uuid}}" [(ngModel)]="this.temporaryCustomColor"
-                         name="customColor" type="text"
-                         (blur)="hideCustomColorSection()">
-                </div>
+              <div>
+                <input class="almost-fifty" type="text" placeholder="Prefix" [(ngModel)]="settingsModel.prefix" name="prefix">
+                <input class="almost-fifty pull-right" type="text" placeholder="Sufix" [(ngModel)]="settingsModel.suffix" name="suffix">
               </div>
-              <!-- TODO: not implemented yet -->
-              <div class="element-group" *ngIf="false && bite.type == classTypes.ToplineBite">
-                <label >
-                  Exclude 0 values
-                </label>
+            </div>
+            <div class="element-group">
+              <label for="decimals-{{uuid}}">
+                Decimals
+              </label>
+              <!--<input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">-->
+              <select id="decimals-{{uuid}}" [(ngModel)]="settingsModel.numberFormat" name="numberFormat">
+                <option value=""> -- Select -- </option>
+                <option value="de">1.000,00</option>
+                <option value="us">1,000.00</option>
+              </select>
+            </div>
+            <hxl-checkbox-slider (checked)="settingsModel.abbreviateValues=$event;" name="abbreviate-values" [uuid]="uuid" title="Abbreviate values"
+              [initiallyChecked]="settingsModel.abbreviateValues">
+            </hxl-checkbox-slider>
+            <hr/>
+          </div>
+          <div class="section">
+            <div class="section-title">
+              Display preference
+            </div>
+            <div class="element-group" *ngIf="(bite.type == classTypes.ChartBite)">
+              <label>
+                Sorting
+              </label>
+              <div class="pull-right">
                 <div class="checkbox-slider pull-right">
-                  <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="exclude-zero-{{uuid}}"
-                         checked [(ngModel)]="settingsModel.filterZero" name="filterZero">
-                  <label class="checkbox-slider-label" for="exclude-zero-{{uuid}}">
+                  <input [checked]="settingsModel.sorting != null" (change)="toggleSorting(); renderContent()" type="checkbox" name="checkbox-slider"
+                    class="checkbox-slider-checkbox" id="sorting-{{uuid}}">
+                  <label class="checkbox-slider-label" for="sorting-{{uuid}}">
                     <span class="checkbox-slider-inner"></span>
                     <span class="checkbox-slider-switch"></span>
                   </label>
                 </div>
+                <i class="change-sorting glyphicon glyphicon-arrow-up" style="margin-bottom: 3px;" [ngClass]="{'glyphicon-arrow-down': settingsModel.sorting == SORT_DESC}"
+                  [style.display]="(!settingsModel.sorting ? 'none' : 'inline-block')" (click)="swapSorting()"></i>
               </div>
-              <!-- TODO: not implemented yet -->
-              <div class="element-group" *ngIf="false && bite.type == classTypes.ToplineBite">
-                <label>
-                  Exclude custom value
+            </div>
+            <hxl-checkbox-slider *ngIf="(bite.type == classTypes.ComparisonChartBite)" (checked)="settingsModel.stackChart=$event; renderContent();"
+              name="stack-chart" [uuid]="uuid" title="Stack Chart" [initiallyChecked]="settingsModel.stackChart">
+            </hxl-checkbox-slider>
+            <div class="element-group">
+              <label>
+                Limit number of values
+              </label>
+              <div>
+                <input type="number" placeholder="enter limit" [(ngModel)]="settingsModel.limit" name="limit">
+              </div>
+            </div>
+            <div class="element-group">
+              <label>
+                Chart values title
+                <span *ngIf="(bite.type == classTypes.ComparisonChartBite)">1</span>
+              </label>
+              <div>
+                <input type="text" placeholder="X Axis Label" [(ngModel)]="settingsModel.xAxisLabel" name="xAxisLabel">
+              </div>
+            </div>
+            <div class="element-group" *ngIf="showColorPatternChooser">
+              <label>
+                Chart color
+                <span *ngIf="(bite.type == classTypes.ComparisonChartBite)">1</span>
+              </label>
+              <hxl-color-picker [colorPattern]="colorPattern" [selectedColor]="settingsModel.customColor" (onChange)="selectCustomColor($event)"></hxl-color-picker>
+            </div>
+            <div class="element-group" *ngIf="(bite.type == classTypes.ComparisonChartBite)">
+              <label>
+                Chart values title 2
+              </label>
+              <div>
+                <input type="text" placeholder="X Axis Label 2" [(ngModel)]="settingsModel.xAxisLabel2" name="xAxisLabel2">
+              </div>
+            </div>
+            <div class="element-group" *ngIf="(bite.type == classTypes.ComparisonChartBite)">
+              <label>
+                Chart color 2
+              </label>
+              <hxl-color-picker [colorPattern]="colorPattern" [selectedColor]="settingsModel.comparisonCustomColor" (onChange)="selectComparisonCustomColor($event)"></hxl-color-picker>
+            </div>
+
+
+            <!-- TODO: not implemented yet -->
+            <div class="element-group" *ngIf="false && bite.type == classTypes.ToplineBite">
+              <label>
+                Exclude 0 values
+              </label>
+              <div class="checkbox-slider pull-right">
+                <input type="checkbox" name="checkbox-slider" class="checkbox-slider-checkbox" id="exclude-zero-{{uuid}}" checked [(ngModel)]="settingsModel.filterZero"
+                  name="filterZero">
+                <label class="checkbox-slider-label" for="exclude-zero-{{uuid}}">
+                  <span class="checkbox-slider-inner"></span>
+                  <span class="checkbox-slider-switch"></span>
                 </label>
-                <input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">
               </div>
-              <div class="element-group">
-                <label>
-                  Description
-                </label>
-                <textarea
-                  [(ngModel)]="settingsModel.description"
-                  name="description" class="count" rows="4"></textarea>
-                <div class="count-container">{{settingsModel.descriptionRemaining}} chars left</div>
-              </div>
+            </div>
+            <!-- TODO: not implemented yet -->
+            <div class="element-group" *ngIf="false && bite.type == classTypes.ToplineBite">
+              <label>
+                Exclude custom value
+              </label>
+              <input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">
+            </div>
+            <div class="element-group">
+              <label>
+                Description
+              </label>
+              <textarea [(ngModel)]="settingsModel.description" name="description" class="count" rows="4"></textarea>
+              <div class="count-container">{{settingsModel.descriptionRemaining}} chars left</div>
             </div>
           </div>
         </div>

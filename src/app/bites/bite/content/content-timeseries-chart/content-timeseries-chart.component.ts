@@ -1,6 +1,7 @@
 import { C3ChartConfig } from './../content-chart/content-chart.component';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { ContentChartComponent } from '../content-chart/content-chart.component';
+import { TimeseriesChartBiteLogic } from 'hxl-preview-ng-lib';
 
 // declare let c3: any;
 
@@ -12,8 +13,9 @@ import { ContentChartComponent } from '../content-chart/content-chart.component'
 export class ContentTimeseriesChartComponent extends ContentChartComponent implements OnInit, AfterViewInit {
 
   protected overwriteXAxisLabel() {
-    if (this.bite.dataTitle && this.bite.values.length === 2) {
-      this.bite.values[1][0] = this.bite.dataTitle;
+    const tsBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
+    if (tsBiteLogic.dataTitle && tsBiteLogic.values.length === 2) {
+      tsBiteLogic.values[1][0] = this.biteLogic.dataTitle;
     }
   }
 
@@ -23,9 +25,10 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
   }
 
   protected generateOptionsData(config: C3ChartConfig) {
+    const tsBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
     config.data = {
       x: 'Date',
-      columns: this.bite.values,
+      columns: tsBiteLogic.values,
       type: 'line'
     };
   }

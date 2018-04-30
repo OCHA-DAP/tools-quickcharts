@@ -1,7 +1,7 @@
 import { ContentComparisonChartComponent } from './content/content-comparison-chart/content-comparison-chart.component';
 import { Component, OnInit, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import {Input, Output} from '@angular/core';
-import { Bite } from 'hxl-preview-ng-lib';
+import { Bite, ChartBiteLogic, ChartUIProperties, ComparisonChartBiteLogic } from 'hxl-preview-ng-lib';
 import { KeyFigureBite } from 'hxl-preview-ng-lib';
 import { ChartBite, ComparisonChartBite } from 'hxl-preview-ng-lib';
 import { TimeseriesChartBite } from 'hxl-preview-ng-lib';
@@ -12,6 +12,8 @@ import { ContentTimeseriesChartComponent } from './content/content-timeseries-ch
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { BiteLogicFactory, ColorUsage, KeyFigureBiteLogic, BiteLogic } from 'hxl-preview-ng-lib';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AnalyticsService } from '../shared/analytics.service';
+import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib/src/types/comparison-chart-bite';
 
 @Component({
   selector: 'hxl-bite',
@@ -32,7 +34,13 @@ export class BiteComponent implements OnInit {
   @Input()
   listIsFull: boolean;
   @Input()
+  hasModifyPermission = false;
+  @Input()
   availableBites: Bite[];
+  @Input()
+  allowShare: boolean;
+  @Input()
+  allowSettings: boolean;
 
   @Output()
   onAdd = new EventEmitter<Bite>();
@@ -42,11 +50,12 @@ export class BiteComponent implements OnInit {
   onSwitch = new EventEmitter<{oldBite: Bite, newBite: Bite}>();
 
   @Output()
+  onSave = new EventEmitter<number>();
+  @Output()
+  onCancel = new EventEmitter<number>();
+
+  @Output()
   onEmbedUrlCreate = new EventEmitter<string>();
-
-  @ViewChild('customColorInput')
-  private customColorInput: ElementRef;
-
 
   @ViewChild(ContentChartComponent)
   private chartComponent: ContentChartComponent;
@@ -59,11 +68,11 @@ export class BiteComponent implements OnInit {
 
   classTypes: any = {};
   settingsDisplay: Boolean = false;
-  private uuid: number;
+  protected uuid: number;
   poweredByDisplay: Boolean = false;
-  private poweredBySource: String;
-  private poweredByUrl: String;
-  private poweredByDate: String;
+  protected poweredBySource: String;
+  protected poweredByUrl: String;
+  protected poweredByDate: String;
 
   showColorPatternChooser: Boolean = false;
   displayCustomColor: Boolean = false;
@@ -73,10 +82,11 @@ export class BiteComponent implements OnInit {
   biteLogic: BiteLogic;
   settingsModel: SettingsModel;
   temporaryCustomColor: string;
-  private colorPattern: string[] = ChartBite.colorPattern;
+  protected colorPattern: string[] = ChartBite.colorPattern;
   private SORT_DESC: string = ChartBite.SORT_DESC;
 
-  constructor(private logger: Logger, private biteService: BiteService, private sanitizer: DomSanitizer) {
+  constructor(private logger: Logger, private biteService: BiteService, private sanitizer: DomSanitizer,
+              private analyticsService: AnalyticsService) {
     this.classTypes.ToplineBite = KeyFigureBite.type();
     this.classTypes.ChartBite = ChartBite.type();
     this.classTypes.ComparisonChartBite = ComparisonChartBite.type();
@@ -92,28 +102,40 @@ export class BiteComponent implements OnInit {
     this.displayableAvailableBites = this.biteService.generateBiteSelectionMenu(this.availableBites);
     this.biteLogic = BiteLogicFactory.createBiteLogic(this.bite);
     this.settingsModel = new SettingsModel(this.biteLogic, this.biteService, this);
-    this.showColorPatternChooser = this.biteLogic.colorUsage() === ColorUsage.ONE;
+    this.showColorPatternChooser = this.biteLogic.colorUsage() !== ColorUsage.NONE;
   }
 
   switchBite(newBite: Bite) {
+    this.analyticsService.trackSwitchBite(this.bite, newBite);
     this.onSwitch.emit({oldBite: this.bite, newBite: newBite});
   }
 
-  toggleSettings(self) {
-    this.settingsDisplay = !this.settingsDisplay;
+  cancel() {
+    this.onCancel.emit(this.index);
+    this.toggleSettings(false);
+    this.biteLogic.tempShowSaveCancelButtons = false;
   }
 
-  showCustomColorSection() {
-    const bite: ChartBite = this.bite as ChartBite;
-    if (this.colorPattern.indexOf(bite.color) >= 0) {
-      this.temporaryCustomColor = this.settingsModel.customColor;
+  save() {
+    this.onSave.emit(this.index);
+    this.toggleSettings(false);
+    this.biteLogic.tempShowSaveCancelButtons = false;
+  }
+
+  toggleSettings(show?: boolean) {
+    if (show === true) {
+      this.settingsDisplay = true;
+    } else if (show === false) {
+      this.settingsDisplay = false;
+    } else {
+      this.settingsDisplay = !this.settingsDisplay;
     }
-    this.displayCustomColor = true;
-
-    setTimeout(() => {
-      this.customColorInput.nativeElement.focus();
-    }, 2);
+    if (this.settingsDisplay) {
+      this.biteLogic.tempShowSaveCancelButtons = true;
+      this.analyticsService.trackSettingsMenuOpen(this.bite);
+    }
   }
+
   toggleSorting() {
     if (!this.settingsModel.sorting) {
       this.settingsModel.sorting = this.SORT_DESC;
@@ -132,12 +154,6 @@ export class BiteComponent implements OnInit {
     this.renderContent();
   }
 
-  hideCustomColorSection() {
-    this.displayCustomColor = false;
-    this.settingsModel.customColor = this.temporaryCustomColor;
-    this.renderContent();
-  }
-
   getUUID() {
     return this.uuid;
   }
@@ -152,17 +168,30 @@ export class BiteComponent implements OnInit {
   }
 
   createEmbedLink() {
-    const embedUrl = this.biteService.exportBitesToURL([this.bite], true);
+    const embedUrl = this.biteService.exportBitesToURL([this.bite], null, null, true);
     this.onEmbedUrlCreate.emit(embedUrl);
+    this.analyticsService.trackEmbed();
   }
 
   saveAsImage() {
-    this.biteService.saveAsImage([this.bite], true);
+    this.biteService.saveAsImage([this.bite], null, null, true);
+    this.analyticsService.trackSaveImage();
   }
 
   asChartBite(bite: Bite): ChartBite {
     return <ChartBite>bite;
   }
+
+  selectCustomColor(color: string) {
+    this.settingsModel.customColor = color;
+    this.renderContent();
+  }
+
+  selectComparisonCustomColor(color: string) {
+    this.settingsModel.comparisonCustomColor = color;
+    this.renderContent();
+  }
+
 }
 
 class SettingsModel {
@@ -171,12 +200,24 @@ class SettingsModel {
   private maxDescriptionLength = 200;
   public descriptionRemaining: number;
   private descriptionStr: string;
+  // noinspection TsLint
+
+  private changeHandler: ProxyHandler<Bite> = {
+    set: function (target: Bite, p: PropertyKey, value: any, receiver: any): boolean {
+      this.biteComponent.analyticsService.trackSettingsChanged(target);
+      // The default behavior to store the value
+      target[p] = value;
+      return true;
+    }.bind(this)
+  };
 
   constructor(private biteLogic: BiteLogic, private biteService: BiteService, private biteComponent: BiteComponent) {
+    this.bite = new Proxy<Bite>(biteLogic.getBite(), this.changeHandler);
     this.computeDescriptionLength();
     this.descriptionStr = this.biteLogic.description;
-    this.bite = biteLogic.getBite();
   }
+
+
   get title(): string {
     return this.biteLogic.title;
   }
@@ -197,29 +238,53 @@ class SettingsModel {
   }
 
   get xAxisLabel(): string {
-    return this.bite.dataTitle;
+    return this.biteLogic.dataTitle;
   }
 
   set xAxisLabel(label: string) {
-    this.bite.dataTitle = label;
+    this.bite.uiProperties.dataTitle = label;
+    this.biteComponent.renderContent();
+  }
+
+  get limit(): number {
+    const biteLogic = this.biteLogic as ChartBiteLogic;
+    return biteLogic.limit;
+  }
+
+  set limit(label: number) {
+    const uiProperties = this.bite.uiProperties as ChartUIProperties;
+    uiProperties.limit = label;
+    this.biteComponent.renderContent();
+  }
+
+  get xAxisLabel2(): string {
+    const biteLogic: ComparisonChartBiteLogic = (<ComparisonChartBiteLogic>this.biteLogic);
+    return biteLogic.comparisonDataTitle;
+  }
+
+  set xAxisLabel2(label: string) {
+    const uiProperties: ComparisonChartUIProperties = (<ComparisonChartUIProperties>this.bite.uiProperties);
+    uiProperties.comparisonDataTitle = label;
     this.biteComponent.renderContent();
   }
 
   get swapAxis(): boolean {
-    return (<ChartBite>this.bite).swapAxis;
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    return chartBiteLogic.swapAxis;
   }
   set swapAxis(value: boolean) {
-    const chartBite: ChartBite = <ChartBite>this.bite;
-    chartBite.swapAxis = value;
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    chartBiteLogic.uiProperties.swapAxis = value;
   }
 
   get showGrid(): boolean {
-    return (<ChartBite>this.bite).showGrid;
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    return chartBiteLogic.showGrid;
   }
 
   set showGrid(value: boolean) {
-    const chartBite: ChartBite = <ChartBite>this.bite;
-    chartBite.showGrid = value;
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    chartBiteLogic.uiProperties.showGrid = value;
   }
 
   // get filterZero(): boolean {
@@ -261,72 +326,99 @@ class SettingsModel {
   // }
 
   get prefix(): string {
-    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
-    return keyFigureBite.preText;
+    const kfBiteLogic = this.biteLogic as KeyFigureBiteLogic;
+    return kfBiteLogic.preText;
   }
   set prefix(prefix: string) {
-    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
-    keyFigureBite.preText = prefix;
+    const kfBiteLogic = this.biteLogic as KeyFigureBiteLogic;
+    kfBiteLogic.uiProperties.preText = prefix;
   }
 
   get suffix(): string {
-    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
-    return keyFigureBite.postText;
+    const kfBiteLogic = this.biteLogic as KeyFigureBiteLogic;
+    return kfBiteLogic.postText;
   }
   set suffix(suffix: string) {
-    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
-    keyFigureBite.postText = suffix;
+    const kfBiteLogic = this.biteLogic as KeyFigureBiteLogic;
+    kfBiteLogic.uiProperties.postText = suffix;
   }
 
   get numberFormat(): string {
-    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
-    return keyFigureBite.numberFormat;
+    const kfBiteLogic = this.biteLogic as KeyFigureBiteLogic;
+    return kfBiteLogic.numberFormat;
   }
   set numberFormat(numberFormat: string) {
-    const keyFigureBite: KeyFigureBite = this.bite as KeyFigureBite;
-    keyFigureBite.numberFormat = numberFormat;
+    const kfBiteLogic = this.biteLogic as KeyFigureBiteLogic;
+    kfBiteLogic.uiProperties.numberFormat = numberFormat;
   }
 
   get abbreviateValues(): boolean {
-    const bite: KeyFigureBite = this.bite as KeyFigureBite;
-    if (bite.unit === 'none') {
+    const kfBiteLogic = this.biteLogic as KeyFigureBiteLogic;
+    if (kfBiteLogic.unit === 'none') {
       return false;
     }
-    return !!bite.unit;
+    return !!kfBiteLogic.unit;
   }
   set abbreviateValues(abbreviateValues: boolean) {
-    const bite: KeyFigureBite = this.bite as KeyFigureBite;
+    const kfBiteLogic = this.biteLogic as KeyFigureBiteLogic;
     if (abbreviateValues) {
-      const biteLogic: KeyFigureBiteLogic = BiteLogicFactory.createBiteLogic(bite) as KeyFigureBiteLogic;
-      biteLogic.computeBiteUnit(true);
+      kfBiteLogic.uiProperties.unit = null;
     } else {
-      bite.unit = 'none';
+      kfBiteLogic.uiProperties.unit = 'none';
     }
+  }
+
+  private colorTest(color): boolean {
+    const WHITE = '#ffffff';
+    return (color !== WHITE && /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color));
   }
 
   get customColor(): string {
-    const bite: ChartBite = this.bite as ChartBite;
-    return bite.color;
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    return chartBiteLogic.color;
   }
 
   set customColor(color: string) {
-    const bite: ChartBite = this.bite as ChartBite;
-    const WHITE = '#ffffff';
-    if ((color !== WHITE && /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color))) {
-      bite.color = color;
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    if (this.colorTest(color)) {
+      chartBiteLogic.uiProperties.color = color;
     } else {
-      bite.color = ChartBite.colorPattern[0];
+      chartBiteLogic.uiProperties.color = ChartBite.colorPattern[0];
+    }
+  }
+
+  get comparisonCustomColor(): string {
+    const chartBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    return chartBiteLogic.comparisonColor;
+  }
+
+  set comparisonCustomColor(color: string) {
+    const chartBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    if (this.colorTest(color)) {
+      chartBiteLogic.uiProperties.comparisonColor = color;
+    } else {
+      chartBiteLogic.uiProperties.comparisonColor = ChartBite.colorPattern[0];
     }
   }
 
   get sorting(): string {
-    const bite: ChartBite = this.bite as ChartBite;
-    return bite.sorting;
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    return chartBiteLogic.sorting;
   }
 
   set sorting(sorting: string) {
-    const bite: ChartBite = this.bite as ChartBite;
-    bite.sorting = sorting;
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    chartBiteLogic.uiProperties.sorting = sorting;
+  }
+
+  get stackChart(): boolean {
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    return cmpBiteLogic.stackChart;
+  }
+
+  set stackChart(stackChart: boolean) {
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    cmpBiteLogic.uiProperties.stackChart = stackChart;
   }
 
   computeDescriptionLength() {

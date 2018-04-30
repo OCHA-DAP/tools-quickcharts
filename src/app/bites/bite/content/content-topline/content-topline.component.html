@@ -4,21 +4,21 @@
   <div class="row">
     <div class="col-xs-12">
       <span class="prefix-value">
-          <hxl-inline-edit [(ngModel)]="bite.preText"
-                           [hidden]="!bite.init" [placeholder]="'...'" [maxEditorWidth]="'70px'"></hxl-inline-edit>
+          <hxl-inline-edit [(ngModel)]="biteLogic.preText"
+                           [placeholder]="'...'" [maxEditorWidth]="'70px'"></hxl-inline-edit>
         </span>
     </div>
 
     <div class="col-xs-12">
       <div class="value">
-        {{ (bite.value | numberFormat:bite.numberFormat:bite.unit) }}
-        <span *ngIf="bite.unit && bite.unit !== 'none'" class="unit">{{bite.unit}}</span>
+        {{ (biteLogic.value | numberFormat:biteLogic.numberFormat:biteLogic.unit) }}
+        <span *ngIf="biteLogic.unit && biteLogic.unit !== 'none'" class="unit">{{biteLogic.unit}}</span>
       </div>
     </div>
 
     <div class="col-xs-12">
       <span class="suffix-value">
-          <hxl-inline-edit [(ngModel)]="bite.postText"
+          <hxl-inline-edit [(ngModel)]="biteLogic.postText"
                            [placeholder]="'...'" [maxEditorWidth]="'70px'"></hxl-inline-edit>
       </span>
     </div>
