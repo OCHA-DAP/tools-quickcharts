@@ -5,15 +5,15 @@
       <!--<span class="list-header-title">Quick Charts</span>-->
       <i *ngIf="spinnerActive"><img class="img-color" src="./assets/images/loading-spinner.gif"> Loading ...</i>
     </div>
-    <div class="col-xs-2 right-menu" *ngIf="!toolsMode">
-      <hxl-simple-dropdown *ngIf="allowShare" [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="shareChartsMenu"
+    <div class="col-xs-2 right-menu">
+      <hxl-simple-dropdown *ngIf="!toolsMode && allowShare" [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="shareChartsMenu"
                            linkText="Share" (selected)="doSaveAction($event)">
       </hxl-simple-dropdown>
       <hxl-simple-dropdown *ngIf="allowSettings" [glyphiconClass]="'glyphicon-cog'" [items]="adminChartsMenu"
                            [makeGray]="true" (selected)="doSaveAction($event)">
       </hxl-simple-dropdown>
 
-      <hxl-simple-modal [title]="'Save Configuration'" #savedModal>
+      <hxl-simple-modal *ngIf="!toolsMode" [title]="'Save Configuration'" #savedModal>
         {{savedModalMessage}}
       </hxl-simple-modal>
 
