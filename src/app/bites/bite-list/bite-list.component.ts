@@ -369,13 +369,13 @@ export class BiteListComponent implements OnInit {
   getEmbedLink() {
     const customCookbookURL = this.showCustomCookbookControls ? this.customCookbookUrl : null;
     return this.biteService.exportBitesToURL(this.biteList, customCookbookURL,
-              this.cookbooksAndTags.chosenCookbook.name, false);
+              this.getChosenCookbookName(), false);
   }
 
   saveAsImage() {
     const customCookbookURL = this.showCustomCookbookControls ? this.customCookbookUrl : null;
     return this.biteService.exportBitesToURL(this.biteList, customCookbookURL,
-              this.cookbooksAndTags.chosenCookbook.name, false);
+              this.getChosenCookbookName(), false);
   }
 
 
@@ -397,6 +397,7 @@ export class BiteListComponent implements OnInit {
 
     } else if (payload.name === 'show-recipe-section') {
       this.showCookbookControls = payload.checked;
+      window.parent.postMessage(`iframe-height-update`, '*');
     }
   }
 
