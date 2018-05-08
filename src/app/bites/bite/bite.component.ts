@@ -1,5 +1,5 @@
 import { ContentComparisonChartComponent } from './content/content-comparison-chart/content-comparison-chart.component';
-import { Component, OnInit, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import {Input, Output} from '@angular/core';
 import { Bite, ChartBiteLogic, ChartUIProperties, ComparisonChartBiteLogic } from 'hxl-preview-ng-lib';
 import { KeyFigureBite } from 'hxl-preview-ng-lib';
@@ -21,7 +21,7 @@ import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib/src/types/compar
   styleUrls: ['./bite.component.less']
 })
 
-export class BiteComponent implements OnInit {
+export class BiteComponent implements OnInit, OnChanges {
 
   @Input()
   bite: Bite;
@@ -99,10 +99,14 @@ export class BiteComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.displayableAvailableBites = this.biteService.generateBiteSelectionMenu(this.availableBites);
     this.biteLogic = BiteLogicFactory.createBiteLogic(this.bite);
     this.settingsModel = new SettingsModel(this.biteLogic, this.biteService, this);
     this.showColorPatternChooser = this.biteLogic.colorUsage() !== ColorUsage.NONE;
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['availableBites']) {
+      this.displayableAvailableBites = this.biteService.generateBiteSelectionMenu(this.availableBites);
+    }
   }
 
   switchBite(newBite: Bite) {

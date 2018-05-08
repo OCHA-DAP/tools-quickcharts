@@ -335,19 +335,20 @@ export class BiteListComponent implements OnInit {
   }
 
   generateAvailableBites(biteObs: Observable<Bite>, onCompleteCallback: () => void) {
-    this.availableBites = [];
+    const newAvailableBites = [];
     // const loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
     biteObs
       .subscribe(
       bite => {
         // this.logger.log('Available bite ' + JSON.stringify(bite));
-        this.availableBites.push(bite);
+        newAvailableBites.push(bite);
       },
       errObj => {
         this.logger.log('in ERROR...');
       },
       () => {
         this.logger.log('on COMPLETE...');
+        this.availableBites = newAvailableBites;
         if (this.availableBites && this.biteList && this.availableBites.length === 0 && this.biteList.length === 0) {
           // Your files contains HXL tags which are not supported by Quick Charts
           this.hxlUnsupported = true;
