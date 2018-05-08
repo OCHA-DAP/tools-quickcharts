@@ -42,7 +42,9 @@
           <input class="form-control" type="text" *ngIf="showCustomCookbookControls; else hdxCookbookControls"
               [value]="customCookbookUrl"
               (change)="customCookbookSelected($event.target.value)"
-              placeholder="https://raw.githubusercontent.com/OCHA-DAP/hxl-recipes/master/recipes/recipes.json" />
+              placeholder="https://raw.githubusercontent.com/OCHA-DAP/hxl-recipes/master/recipes/recipes.json"
+              (blur)="$event.target.placeholder = 'https://raw.githubusercontent.com/OCHA-DAP/hxl-recipes/master/recipes/recipes.json'"
+              (focus)="$event.target.placeholder = ''"/>
           <ng-template #hdxCookbookControls>
             <select *ngIf="cookbooksAndTags" class="form-control" (change)="cookbookSelected($event.target.value)">
               <option *ngFor="let cookbook of cookbooksAndTags.cookbooks; let idx = index;"
