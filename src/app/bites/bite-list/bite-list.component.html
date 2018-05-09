@@ -99,5 +99,8 @@
               (onEmbedUrlCreate)="singleEmbedUrlCreated($event)">
     </hxl-bite>
   </div>
+  <div *ngIf="!spinnerActive && (bitesUnrendered > 2)" class="no-bites-rendered">
+    <h2>No chart was created based on the recipe selected. <br> Please choose another recipe.</h2>
+  </div>
 </div>
 

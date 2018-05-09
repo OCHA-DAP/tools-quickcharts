@@ -20,6 +20,7 @@ import { DOCUMENT } from '@angular/platform-browser';
 })
 export class BiteListComponent implements OnInit {
   biteList: Array<Bite>;
+  bitesUnrendered = 0;
   availableBites: Array<Bite>;
 
   listIsFull: boolean;
@@ -178,15 +179,16 @@ export class BiteListComponent implements OnInit {
    */
   private loadDefaultBites() {
 
+    this.bitesUnrendered = 0;
     // splitting the bites by their type
     const listA = this.availableBites.filter(bite => bite.type === ChartBite.type() || bite.type === ComparisonChartBite.type());
     const listB = this.availableBites.filter(bite => bite.type === KeyFigureBite.type());
     const listC = this.availableBites.filter(bite => bite.type === TimeseriesChartBite.type());
-
     const handleValue = (value, observer) => {
       if (!value) {
         // we have exhausted all available bites, send event into analytics
         this.analyticsService.trackNoMoreBitesToRender();
+        this.bitesUnrendered++;
       } else {
         observer.next(value);
       }
