@@ -5,8 +5,7 @@
 
 export const environment = {
   production: false,
-  // hxlProxy: '/hxlproxy/data.json',
-  hxlProxy: 'https://proxy.hxlstandard.org/data.json',
+  hxlProxy: '/hxlproxy/data.json',
   maxBites: 6,
   snapService: '/snap',
   googleAnalyticsKey: 'UA-48221887-3',
