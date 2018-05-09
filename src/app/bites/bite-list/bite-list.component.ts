@@ -397,7 +397,10 @@ export class BiteListComponent implements OnInit {
 
     } else if (payload.name === 'show-recipe-section') {
       this.showCookbookControls = payload.checked;
-      window.parent.postMessage(`iframe-height-update`, '*');
+      setTimeout(() => {
+        const scrollHeight = window.document.body.scrollHeight;
+        window.parent.postMessage(`iframeHeightUpdate:${scrollHeight}`, '*');
+      }, 50);
     }
   }
 
