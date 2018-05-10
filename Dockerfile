@@ -1,4 +1,4 @@
-FROM alpine:3.6 AS builder
+FROM alpine:3.7 AS builder
 
 EXPOSE 80
 

@@ -20,6 +20,7 @@ import { DOCUMENT } from '@angular/platform-browser';
 })
 export class BiteListComponent implements OnInit {
   biteList: Array<Bite>;
+  bitesUnrendered = 0;
   availableBites: Array<Bite>;
 
   listIsFull: boolean;
@@ -178,15 +179,16 @@ export class BiteListComponent implements OnInit {
    */
   private loadDefaultBites() {
 
+    this.bitesUnrendered = 0;
     // splitting the bites by their type
     const listA = this.availableBites.filter(bite => bite.type === ChartBite.type() || bite.type === ComparisonChartBite.type());
     const listB = this.availableBites.filter(bite => bite.type === KeyFigureBite.type());
     const listC = this.availableBites.filter(bite => bite.type === TimeseriesChartBite.type());
-
     const handleValue = (value, observer) => {
       if (!value) {
         // we have exhausted all available bites, send event into analytics
         this.analyticsService.trackNoMoreBitesToRender();
+        this.bitesUnrendered++;
       } else {
         observer.next(value);
       }
@@ -335,19 +337,20 @@ export class BiteListComponent implements OnInit {
   }
 
   generateAvailableBites(biteObs: Observable<Bite>, onCompleteCallback: () => void) {
-    this.availableBites = [];
+    const newAvailableBites = [];
     // const loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
     biteObs
       .subscribe(
       bite => {
         // this.logger.log('Available bite ' + JSON.stringify(bite));
-        this.availableBites.push(bite);
+        newAvailableBites.push(bite);
       },
       errObj => {
         this.logger.log('in ERROR...');
       },
       () => {
         this.logger.log('on COMPLETE...');
+        this.availableBites = newAvailableBites;
         if (this.availableBites && this.biteList && this.availableBites.length === 0 && this.biteList.length === 0) {
           // Your files contains HXL tags which are not supported by Quick Charts
           this.hxlUnsupported = true;
@@ -368,13 +371,13 @@ export class BiteListComponent implements OnInit {
   getEmbedLink() {
     const customCookbookURL = this.showCustomCookbookControls ? this.customCookbookUrl : null;
     return this.biteService.exportBitesToURL(this.biteList, customCookbookURL,
-              this.cookbooksAndTags.chosenCookbook.name, false);
+              this.getChosenCookbookName(), false);
   }
 
   saveAsImage() {
     const customCookbookURL = this.showCustomCookbookControls ? this.customCookbookUrl : null;
     return this.biteService.exportBitesToURL(this.biteList, customCookbookURL,
-              this.cookbooksAndTags.chosenCookbook.name, false);
+              this.getChosenCookbookName(), false);
   }
 
 
@@ -396,6 +399,10 @@ export class BiteListComponent implements OnInit {
 
     } else if (payload.name === 'show-recipe-section') {
       this.showCookbookControls = payload.checked;
+      setTimeout(() => {
+        const scrollHeight = window.document.body.scrollHeight;
+        window.parent.postMessage(`iframeHeightUpdate:${scrollHeight}`, '*');
+      }, 50);
     }
   }
 

@@ -148,9 +148,11 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
         type: 'bar'
       };
     } else {
+      // this.sortedCategories can be set when sorting is selected, otherwise use bite categories
+      const categories = this.sortedCategories || this.biteLogic.categories;
       const pieValues = [];
       for (let i = 1; i < values.length; i++) {
-        pieValues.push([this.biteLogic.categories[i - 1], values[i]]);
+        pieValues.push([categories[i - 1], values[i]]);
       }
       // console.log(pieValues);
 

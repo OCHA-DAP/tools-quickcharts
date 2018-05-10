@@ -62,7 +62,7 @@
 
   .cookbook-controls-container {
     background-color: @almostWhiteGrayColor;
-    transition: max-height .3s linear;
+    //transition: max-height .3s linear; //removing animation as we need to get the new container height ASAP and send it to the parent iframe to adjust :)
     max-height: 0px;
     overflow: hidden;
   }
@@ -108,5 +108,16 @@ hxl-simple-modal {
       }
     }
   }
+}
 
+.no-bites-rendered {
+  min-height: 452px;
+  position: relative;
+  h2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
 }

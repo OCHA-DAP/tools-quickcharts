@@ -5,7 +5,12 @@ ul{
   &.dropdown-menu {
     max-height:355px;
     min-width: 200px;
+    max-width: 295px;
     overflow: auto;
+    &>li>a {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 
@@ -13,6 +18,9 @@ li{
   &.dropdown-header{
     text-transform: uppercase;
     .gothamLightFont(@size: 12px);
+  }
+  &.selected > a {
+    font-weight: 600;
   }
 }
 

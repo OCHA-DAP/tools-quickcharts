@@ -5,7 +5,10 @@
   <div class="title">
     <div class="title-content" title="{{biteLogic.title}}">{{biteLogic.title}}</div>
     <div class="title-menu">
-      <hxl-simple-dropdown [items]="displayableAvailableBites" (selected)="switchBite($event)"></hxl-simple-dropdown>
+      <hxl-simple-dropdown [items]="displayableAvailableBites" (selected)="switchBite($event)"
+                           [classDecorator]="selectedBiteClassRenderer"
+                           [classDecoratorParam]="bite"
+      ></hxl-simple-dropdown>
     </div>
   </div>
   <div *ngIf="!bite.errorMsg; else errorMessage">
