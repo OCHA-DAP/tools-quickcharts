@@ -311,7 +311,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
       event.stopPropagation();
       const eventDelta = normalizeWheel(event);
 
-      const delta = -1 * (this.biteLogic.swapAxis ? eventDelta.pixelY : eventDelta.pixelX);
+      const MOUSE_SCROLL_WHEEL_FIX = 0.001; // mouse scroll wheel produces exact delta's that cause a rendering bug in C3
+      const delta = -1 * (this.biteLogic.swapAxis ? eventDelta.pixelY : eventDelta.pixelX) + MOUSE_SCROLL_WHEEL_FIX;
 
       if (!c3_chart.internal.brush.leftMargin) {
         c3_chart.internal.brush.leftMargin = 0;
@@ -336,7 +337,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
         c3_chart.internal.redrawForBrush();
         c3_chart.internal.brush.leftMarginRedraw = c3_chart.internal.brush.leftMargin;
         this.analyticsService.trackChartScroll(this.bite);
-        // console.log('Redraw for delta: ' + delta / 10);
+        // console.log(`Redraw for delta:  ${delta / 10} [${leftMargin}, ${leftMargin + this.maxNumberOfValues} `);
       } else {
         // console.log('Skipped redraw');
       }
