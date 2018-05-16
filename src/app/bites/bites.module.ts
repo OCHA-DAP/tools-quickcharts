@@ -22,6 +22,7 @@ import { CommonModule as MyCommonModule } from '../common/common.module';
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 import { SimpleModule } from 'hxl-preview-ng-lib';
 import { ColorPickerComponent } from './shared/color-picker/color-picker.component';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import { ColorPickerComponent } from './shared/color-picker/color-picker.compone
     MyCommonModule,
     SimpleModule,
     BsDropdownModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    TooltipModule.forRoot()
   ],
   exports: [
     BitesComponent,
