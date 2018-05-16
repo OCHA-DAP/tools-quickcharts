@@ -16,6 +16,9 @@ import { AsyncSubject } from 'rxjs/AsyncSubject';
 
 @Injectable()
 export class BiteService {
+  public static CHART_SETTINGS_PARAM = ';chartSettings=';
+  public static CHART_SHARE_PARAM = ';chartShare=';
+
   public quickChartsTitle = 'Quick Charts';
   public url: string;
   private nextId = 0;
@@ -87,7 +90,8 @@ export class BiteService {
 
   saveAsImage(biteList: Bite[], customCookbookUrl: string, chosenCookbookName: string, isSingleWidgetMode: boolean ) {
     const snapService = environment.snapService;
-    const url = this.exportBitesToURL(biteList, customCookbookUrl, chosenCookbookName, isSingleWidgetMode);
+    let url = this.exportBitesToURL(biteList, customCookbookUrl, chosenCookbookName, isSingleWidgetMode);
+    url += BiteService.CHART_SETTINGS_PARAM + false + BiteService.CHART_SHARE_PARAM + false;
     const urlEncoded = encodeURIComponent(url);
     const viewPortWidth = isSingleWidgetMode ? 500 : 1280;
     const pngDownloadUrl = `${snapService}/png?viewport={"width": ${viewPortWidth}, "height": 1}&url=${urlEncoded}`;

@@ -459,7 +459,8 @@ export class BiteListComponent implements OnInit {
 
   // extended embed url + sharing controls
   public get fullEmbedUrl(): string {
-    return this.embedUrl + ';chartSettings=' + this.shareAllowSettings + ';chartShare=' + this.shareAllowShare;
+    return this.embedUrl + BiteService.CHART_SETTINGS_PARAM + this.shareAllowSettings +
+      BiteService.CHART_SHARE_PARAM + this.shareAllowShare;
   }
   // extended embed url + sharing controls
   public get fullIframeUrl(): string {
