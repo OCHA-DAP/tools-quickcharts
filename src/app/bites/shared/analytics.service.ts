@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
-import { AnalyticsService as GenericAnalyticsService, Bite, GA_PAGEVIEW } from 'hxl-preview-ng-lib';
+import { AnalyticsService as GenericAnalyticsService, Bite, GA_PAGEVIEW, GaExtras } from 'hxl-preview-ng-lib';
 import { AppConfigService } from '../../shared/app-config.service';
 
 declare const ga: any;
 declare const mixpanel: any;
+
+const SINGLE_WIDGET_TEXT = 'single widget';
+const ALL_WIDGETS_TEXT = 'all widgets';
 
 /**
  * Service that will try to abstract sending the analytics events
@@ -66,20 +69,53 @@ export class AnalyticsService {
     this.genericAnalyticsService.trackEventCategory('hxl preview edit');
   }
 
-  public trackEmbed() {
-    this.trackAction('action-embed');
-
-    const data = {
-      action: 'embed button click'
-    };
-    this.genericAnalyticsService.trackEventCategory('viz export click', data, data);
+  private generateGATypeDimensionText(singleWidget: boolean): string {
+    return singleWidget ? SINGLE_WIDGET_TEXT : ALL_WIDGETS_TEXT;
   }
-  public trackSaveImage() {
-    this.trackAction('action-save-image');
-    const data = {
-      action: 'export image click'
+
+  private generateMPFormatText(isImage: boolean, singleWidget: boolean): string {
+    let text = singleWidget ? SINGLE_WIDGET_TEXT : ALL_WIDGETS_TEXT;
+    text += isImage ? ' snapped image' : ' link';
+    return text;
+  }
+
+  public trackEmbed(embedUrl: string, singleWidget: boolean) {
+    this.trackAction('action-embed');
+    const gaData: GaExtras = {
+      category: 'quickcharts',
+      action: 'share',
+      label: embedUrl,
+      dimensionInfo: {
+        'dimension2': this.generateGATypeDimensionText(singleWidget)
+      }
     };
-    this.genericAnalyticsService.trackEventCategory('viz export click', data, data);
+
+    const mpData = {
+      'share format': this.generateMPFormatText(false, singleWidget),
+      'shared item': 'quickchart',
+      'shared url': embedUrl
+    };
+
+    this.genericAnalyticsService.trackEventCategory('share', gaData, mpData);
+  }
+  public trackSaveImage( singleWidget: boolean) {
+    this.trackAction('action-save-image');
+
+    const gaData: GaExtras = {
+      category: 'quickcharts',
+      action: 'share',
+      label: 'image',
+      dimensionInfo: {
+        'dimension2': this.generateGATypeDimensionText(singleWidget)
+      }
+
+    };
+
+    const mpData = {
+      'share format': this.generateMPFormatText(true, singleWidget),
+      'shared item': 'quickchart',
+    };
+    this.genericAnalyticsService.trackEventCategory('share', gaData, mpData);
   }
   public trackSwitchBite(oldBite: Bite, newBite: Bite) {
     this.trackBiteSwitch(oldBite, newBite);

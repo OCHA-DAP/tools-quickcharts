@@ -388,11 +388,11 @@ export class BiteListComponent implements OnInit {
                     this.getChosenCookbookName(), false);
       this.iframeUrl = this.generateIframeUrl(this.embedUrl);
       this.embedLinkModal.show();
-      this.analyticsService.trackEmbed();
+      this.analyticsService.trackEmbed(this.embedUrl, false);
     } else if (payload.name === 'image') {
       this.biteService.saveAsImage(this.biteList, this.getCustomCookbookURL(),
                     this.getChosenCookbookName(), false);
-      this.analyticsService.trackSaveImage();
+      this.analyticsService.trackSaveImage(false);
     } else if (payload.name === 'save-views') {
       const biteListToSave = this.resetMode ? [] : this.biteList;
       this.saveBitesToServer(biteListToSave);
