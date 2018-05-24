@@ -7,5 +7,5 @@ export const environment = {
   prodMixpanelKey: '5cbf12bc9984628fb2c55a49daf32e74',
   testMixpanelKey: '99035923ee0a67880e6c05ab92b6cbc0',
   prodHostname: 'tools.humdata.org', // used by analytics code to decide which key to use
-  recipeUrl: 'https://raw.githubusercontent.com/OCHA-DAP/hxl-recipes/1.0.1/cookbook-library.json'
+  recipeUrl: 'https://raw.githubusercontent.com/OCHA-DAP/hxl-recipes/1.0.2/cookbook-library.json'
 };
