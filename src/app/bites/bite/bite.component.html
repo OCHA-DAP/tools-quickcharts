@@ -29,10 +29,10 @@
   </div>
   <div class="footer">
     <div class="left-section pull-left" *ngIf="allowShare">
-      <a *ngIf="!toolsMode" href="javascript:void(0)" (click)="createEmbedLink()">
+      <a *ngIf="!toolsMode" href="javascript:void(0)" (click)="createEmbedLink()" placement="auto" tooltip="Get a link to embed this on another web page">
         <i class="glyphicon glyphicon-link"></i>
       </a>
-      <a href="javascript:void(0)" (click)="saveAsImage()">
+      <a href="javascript:void(0)" (click)="saveAsImage()" placement="auto" tooltip="Download a snapshot to put in a document">
         <i class="glyphicon glyphicon-save-file"></i>
       </a>
     </div>

@@ -73,16 +73,23 @@ export class BiteListComponent implements OnInit {
   @HostListener('window:message', ['$event'])
   onEmbedUrl($event) {
     const action = $event.data;
-    const GET_EMBED_URL = 'getEmbedUrl:';
-    if (action && action.startsWith && action.startsWith(GET_EMBED_URL)) {
-      if (window.parent) {
-        console.log('Sending event back to parent :)');
-        const parentOrigin: string = action.slice(GET_EMBED_URL.length);
-        // console.log(`Parent Origin: ${parentOrigin}`);
-        const url = this.getEmbedLink();
-        window.parent.postMessage(`embedUrl:${url}`, parentOrigin);
-        return;
+    // const GET_EMBED_URL = 'getEmbedUrl:';
+    if (action && action.getEmbedUrl && window.parent) {
+      console.log('Sending event back to parent :)');
+      const parentOrigin: string = action.getEmbedUrl;
+      // console.log(`Parent Origin: ${parentOrigin}`);
+      const url = this.getEmbedLink();
+
+      if (action.forShare) {
+        if (action.forImage) {
+          this.analyticsService.trackSaveImage(false);
+        } else {
+          this.analyticsService.trackEmbed(url, false);
+        }
       }
+
+      window.parent.postMessage(`embedUrl:${url}`, parentOrigin);
+      return;
     }
     // console.log('Unknown message: ' + $event.data);
   }
@@ -388,11 +395,11 @@ export class BiteListComponent implements OnInit {
                     this.getChosenCookbookName(), false);
       this.iframeUrl = this.generateIframeUrl(this.embedUrl);
       this.embedLinkModal.show();
-      this.analyticsService.trackEmbed();
+      this.analyticsService.trackEmbed(this.embedUrl, false);
     } else if (payload.name === 'image') {
       this.biteService.saveAsImage(this.biteList, this.getCustomCookbookURL(),
                     this.getChosenCookbookName(), false);
-      this.analyticsService.trackSaveImage();
+      this.analyticsService.trackSaveImage(false);
     } else if (payload.name === 'save-views') {
       const biteListToSave = this.resetMode ? [] : this.biteList;
       this.saveBitesToServer(biteListToSave);
@@ -459,7 +466,8 @@ export class BiteListComponent implements OnInit {
 
   // extended embed url + sharing controls
   public get fullEmbedUrl(): string {
-    return this.embedUrl + ';chartSettings=' + this.shareAllowSettings + ';chartShare=' + this.shareAllowShare;
+    return this.embedUrl + BiteService.CHART_SETTINGS_PARAM + this.shareAllowSettings +
+      BiteService.CHART_SHARE_PARAM + this.shareAllowShare;
   }
   // extended embed url + sharing controls
   public get fullIframeUrl(): string {
