@@ -73,16 +73,23 @@ export class BiteListComponent implements OnInit {
   @HostListener('window:message', ['$event'])
   onEmbedUrl($event) {
     const action = $event.data;
-    const GET_EMBED_URL = 'getEmbedUrl:';
-    if (action && action.startsWith && action.startsWith(GET_EMBED_URL)) {
-      if (window.parent) {
-        console.log('Sending event back to parent :)');
-        const parentOrigin: string = action.slice(GET_EMBED_URL.length);
-        // console.log(`Parent Origin: ${parentOrigin}`);
-        const url = this.getEmbedLink();
-        window.parent.postMessage(`embedUrl:${url}`, parentOrigin);
-        return;
+    // const GET_EMBED_URL = 'getEmbedUrl:';
+    if (action && action.getEmbedUrl && window.parent) {
+      console.log('Sending event back to parent :)');
+      const parentOrigin: string = action.getEmbedUrl;
+      // console.log(`Parent Origin: ${parentOrigin}`);
+      const url = this.getEmbedLink();
+
+      if (action.forShare) {
+        if (action.forImage) {
+          this.analyticsService.trackSaveImage(false);
+        } else {
+          this.analyticsService.trackEmbed(url, false);
+        }
       }
+
+      window.parent.postMessage(`embedUrl:${url}`, parentOrigin);
+      return;
     }
     // console.log('Unknown message: ' + $event.data);
   }
