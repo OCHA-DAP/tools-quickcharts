@@ -251,9 +251,13 @@ export class BiteListComponent implements OnInit {
       const availableInfo = this.biteService.generateAvailableCookbooksAndBites(hxlPreviewConfig.recipeUrl,
                           hxlPreviewConfig.cookbookName);
       if (hxlPreviewConfig.bites && hxlPreviewConfig.bites.length > 0) {
-        hxlPreviewConfig.bites.forEach( b => {
+        hxlPreviewConfig.bites.forEach( (b, idx) => {
           this.biteService.initBite(b).subscribe( bite => {
+            bite['_configOrder'] = idx;
             this.biteList.push(bite);
+            this.biteList.sort((a, b) => {
+              return a['_configOrder'] - b['_configOrder'];
+            });
             // Keep a copy of the loaded configuration to be able to revert to it
             const backupBite = this.biteService.cloneObjectLiteral(bite);
             this.originalBitesBackup.push(backupBite);
