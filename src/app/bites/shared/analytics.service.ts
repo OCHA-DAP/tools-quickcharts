@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Logger } from 'angular2-logger/core';
-import { AnalyticsService as GenericAnalyticsService, Bite, GA_PAGEVIEW, GaExtras } from 'hxl-preview-ng-lib';
+import { AnalyticsService as GenericAnalyticsService, Bite, GA_PAGEVIEW, GaExtras, MapOfStrings } from 'hxl-preview-ng-lib';
 import { AppConfigService } from '../../shared/app-config.service';
 
 declare const ga: any;
@@ -123,7 +123,7 @@ export class AnalyticsService {
     const data = {
       action: 'switch bite'
     };
-    this.genericAnalyticsService.trackEventCategory('viz interaction', data, data);
+    this.trackVizInteraction('viz interaction', data, data);
   }
   public trackSettingsMenuOpen(bite: Bite) {
     if (this.trackEventAllowed(bite, AnalyticsService.TRACK_EVENT_SETTINGS_OPEN)) {
@@ -131,7 +131,7 @@ export class AnalyticsService {
       const data = {
         action: 'open settings menu'
       };
-      this.genericAnalyticsService.trackEventCategory('viz interaction', data, data);
+      this.trackVizInteraction('viz interaction', data, data);
     }
   }
   public trackSettingsChanged(bite: Bite) {
@@ -140,7 +140,7 @@ export class AnalyticsService {
       const data = {
         action: 'settings edit'
       };
-      this.genericAnalyticsService.trackEventCategory('viz interaction', data, data);
+      this.trackVizInteraction('viz interaction', data, data);
     }
   }
   public trackChartScroll(bite: Bite) {
@@ -149,8 +149,15 @@ export class AnalyticsService {
       const data = {
         action: 'viz scroll'
       };
-      this.genericAnalyticsService.trackEventCategory('viz interaction', data, data);
+      this.trackVizInteraction('viz interaction', data, data);
     }
+  }
+
+  private trackVizInteraction(category: string, additionalGaData?: GaExtras, additionalMpData?: MapOfStrings) {
+    additionalMpData = Object.assign({
+      'viz type': 'quickchart'
+    }, additionalMpData);
+    this.genericAnalyticsService.trackEventCategory(category, additionalGaData, additionalMpData);
   }
 
   private trackAction(actionName: string) {
