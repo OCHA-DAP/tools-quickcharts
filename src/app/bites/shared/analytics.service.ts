@@ -61,8 +61,15 @@ export class AnalyticsService {
   }
 
 
-  public trackView() {
-    this.genericAnalyticsService.trackEventCategory('hxl preview', {'type': GA_PAGEVIEW});
+  public trackView(sample: string) {
+    const mpData = {};
+    if (sample === 'true') {
+      mpData['sample'] = true;
+    } else if (sample === 'false') {
+      mpData['sample'] = false;
+    }
+
+    this.genericAnalyticsService.trackEventCategory('hxl preview', {'type': GA_PAGEVIEW}, mpData);
   }
 
   public trackSave() {

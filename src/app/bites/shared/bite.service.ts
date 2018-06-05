@@ -132,9 +132,17 @@ export class BiteService {
     const httpRecipeUrl = this.appConfigService.get('recipeUrl');
     const recipeUrlParam = httpRecipeUrl ? `;recipeUrl=${encodeURIComponent(httpRecipeUrl)}` : '';
 
+    let sample = '';
+    const sampleConfig = this.appConfigService.get('sample');
+    if (sampleConfig === 'true') {
+      sample = ';sample=true';
+    } else if (sampleConfig === 'false') {
+      sample = ';sample=false';
+    }
+
     return `${protocol}//${hostname}${port}${pathWithoutParams};` +
            `url=${url};embeddedSource=${embeddedSource};embeddedUrl=${embeddedUrl};embeddedDate=${embeddedDate};` +
-           `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}${recipeUrlParam}`;
+           `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}${recipeUrlParam}${sample}`;
   }
 
   /**
