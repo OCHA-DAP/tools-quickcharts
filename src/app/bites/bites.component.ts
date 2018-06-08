@@ -32,7 +32,7 @@ export class BitesComponent implements OnInit {
       (params: Params) => {
         this.appConfigService.init(params);
         this.analyticsService.init();
-        this.analyticsService.trackView();
+        this.analyticsService.trackView(this.appConfigService.get('sample'));
         this.hxlProxyService.init({'hxlProxy': this.appConfigService.get('hxlProxy')});
         const onlyViewMode = this.appConfigService.get('onlyViewMode');
         if (onlyViewMode === 'true') {
