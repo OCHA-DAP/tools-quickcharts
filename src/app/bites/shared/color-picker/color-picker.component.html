@@ -20,5 +20,6 @@
   <!--<input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">-->
   <input #customColorInput id="custom-color-{{uuid}}" [(ngModel)]="this.temporaryCustomColor"
          name="customColor" type="text"
-         (blur)="hideCustomColorSection()">
+         (blur)="hideCustomColorSection()"
+         placeholder="#00ff00">
 </div>
