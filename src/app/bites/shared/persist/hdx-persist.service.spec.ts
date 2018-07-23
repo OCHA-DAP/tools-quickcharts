@@ -2,8 +2,7 @@
 
 import { TestBed, async, inject } from '@angular/core/testing';
 import { HdxPersistService } from './hdx-persist.service';
-import { Logger } from 'angular2-logger/core';
-import { Http } from '@angular/http';
+import { Logger } from 'simple-angular-logger';
 import { AppConfigService } from '../../../shared/app-config.service';
 
 describe('Service: HdxPersist', () => {

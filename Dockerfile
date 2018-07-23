@@ -9,7 +9,7 @@ COPY . .
 
 RUN npm install -g @angular/cli && \
     npm install && \
-    ng build --target=production --environment=$BUILD_ENV  --aot=false -bh $BASE_HREF/ && \
+    ng build --prod --aot --base-href $BASE_HREF/ && \
     cp -a docker/default.conf dist && \
     sed -i "s%{{BASE_HREF}}%${BASE_HREF}%" dist/default.conf
 

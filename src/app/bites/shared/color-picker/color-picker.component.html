@@ -14,11 +14,11 @@
   </ul>
 </div>
 <div class="element-group" [style.display]="displayCustomColor ? 'block' : 'none'">
-  <label for="custom-color-{{uuid}}">
+  <label>
     Custom color (<small>css hex format only</small>)
   </label>
   <!--<input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">-->
-  <input #customColorInput id="custom-color-{{uuid}}" [(ngModel)]="this.temporaryCustomColor"
+  <input #customColorInput [(ngModel)]="this.temporaryCustomColor"
          name="customColor" type="text"
          (blur)="hideCustomColorSection()"
          placeholder="#00ff00">

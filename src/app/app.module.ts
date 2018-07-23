@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Http, HttpModule, RequestOptions, XHRBackend } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { BitesModule } from './bites/bites.module';
@@ -9,18 +8,27 @@ import { HxlBitesRoutingModule } from './app-routing.module';
 import { AppConfigService } from './shared/app-config.service';
 import { DomEventsService } from './shared/dom-events.service';
 import { AnalyticsService } from './bites/shared/analytics.service';
-import { LOG_LOGGER_PROVIDERS } from 'angular2-logger/app/core/providers';
 import { HttpService } from './shared/http.service';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+// Import the module and model classes.
+import { LoggerModule, Options, Level } from 'simple-angular-logger';
+import { environment } from '../environments/environment';
+import { HxlproxyService, SimpleModule } from 'hxl-preview-ng-lib';
+import { RecipeService } from './bites/shared/recipe.service';
+
+export function loggerOptions(): Options {
+  if (environment.production) {
+    return { level: Level.WARN };
+  } else {
+    return { level: Level.LOG };
+  }
+}
 
 export const HTTP_SERVICE_PROVIDERS: any = {
-  provide: Http,
-  useFactory: httpFactory,
-  deps: [XHRBackend, RequestOptions]
+  provide: HTTP_INTERCEPTORS,
+  useClass: HttpService,
+  multi: true
 };
-
-export function httpFactory(backend: XHRBackend, options: RequestOptions) {
-  return new HttpService(backend, options);
-}
 
 @NgModule({
   declarations: [
@@ -29,16 +37,20 @@ export function httpFactory(backend: XHRBackend, options: RequestOptions) {
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     BitesModule,
-    HxlBitesRoutingModule
+    HxlBitesRoutingModule,
+    LoggerModule.forRoot(loggerOptions),
+    SimpleModule
   ],
   providers: [
-    LOG_LOGGER_PROVIDERS,
     HTTP_SERVICE_PROVIDERS,
     AppConfigService,
     AnalyticsService,
-    DomEventsService
+    HttpService,
+    DomEventsService,
+    HxlproxyService,
+    RecipeService
   ],
   bootstrap: [AppComponent]
 })

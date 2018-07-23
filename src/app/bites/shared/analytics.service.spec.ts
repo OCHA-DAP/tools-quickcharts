@@ -2,7 +2,7 @@
 
 import { TestBed, async, inject } from '@angular/core/testing';
 import { AnalyticsService } from './analytics.service';
-import { Logger } from 'angular2-logger/core';
+import { Logger } from 'simple-angular-logger';
 import { AppConfigService } from '../../shared/app-config.service';
 
 describe('Service: Analytics', () => {

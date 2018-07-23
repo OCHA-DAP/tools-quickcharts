@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SimpleDropdownComponent } from './simple-dropdown.component';
 import { BsDropdownModule } from 'ngx-bootstrap';
-import { LOG_LOGGER_PROVIDERS } from 'angular2-logger/core';
+import { LoggerModule } from 'simple-angular-logger';
 
 describe('SimpleDropdownComponent', () => {
   let component: SimpleDropdownComponent;
@@ -12,7 +12,7 @@ describe('SimpleDropdownComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ SimpleDropdownComponent ],
       imports: [BsDropdownModule.forRoot()],
-      providers: [LOG_LOGGER_PROVIDERS]
+      providers: [LoggerModule]
     })
     .compileComponents();
   }));

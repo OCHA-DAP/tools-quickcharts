@@ -1,7 +1,7 @@
 import { HxlproxyService } from 'hxl-preview-ng-lib';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterState, ActivatedRoute, Params } from '@angular/router';
-import { Logger } from 'angular2-logger/core';
+import { Logger } from 'simple-angular-logger';
 import { BiteService } from './shared/bite.service';
 import { AppConfigService } from '../shared/app-config.service';
 import { AnalyticsService } from './shared/analytics.service';

@@ -1,7 +1,7 @@
 import { HxlPreviewConfig } from './persist/hxl-preview-config';
 import { Injectable } from '@angular/core';
 import { Bite } from 'hxl-preview-ng-lib';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export abstract class PersistService {

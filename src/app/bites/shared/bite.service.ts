@@ -3,16 +3,15 @@ import { Injectable } from '@angular/core';
 import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite,
         BiteLogicFactory, ChartBiteLogic, BiteConfig } from 'hxl-preview-ng-lib';
 import { RecipeService } from './recipe.service';
-import { Logger } from 'angular2-logger/core';
+import { Logger } from 'simple-angular-logger';
 import { CookBookService, CookbooksAndTags } from 'hxl-preview-ng-lib';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
 import { DomEventsService } from '../../shared/dom-events.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { PersisUtil } from './persist/persist-util';
-import { Observable } from 'rxjs/Observable';
+import { Observable,  AsyncSubject, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AsyncSubject } from 'rxjs/AsyncSubject';
 
 @Injectable()
 export class BiteService {
@@ -56,7 +55,7 @@ export class BiteService {
 
   public loadSavedPreview(resetMode: boolean): Observable<HxlPreviewConfig> {
     if (resetMode) {
-      return Observable.of({
+      return of({
         configVersion: 0,
         bites: []
       });
@@ -64,7 +63,7 @@ export class BiteService {
 
     const embeddedConfig = this.appConfigService.get('embeddedConfig');
     if (embeddedConfig && embeddedConfig.length) {
-      return Observable.of(this.persistUtil.configToBitelist(embeddedConfig));
+      return of(this.persistUtil.configToBitelist(embeddedConfig));
     } else {
       return this.persistService.load();
     }

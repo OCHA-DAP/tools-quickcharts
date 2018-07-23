@@ -2,9 +2,8 @@
 
 import { TestBed, async, inject } from '@angular/core/testing';
 import { RecipeService } from './recipe.service';
-import { Logger } from 'angular2-logger/core';
+import { Logger } from 'simple-angular-logger';
 // import { HxlproxyService } from './hxlproxy.service';
-import { Http, ConnectionBackend, RequestOptions } from '@angular/http';
 
 describe('Service: Recipe', () => {
   // beforeEach(() => {
