@@ -15,6 +15,7 @@ import { LoggerModule, Options, Level } from 'simple-angular-logger';
 import { environment } from '../environments/environment';
 import { HxlproxyService, SimpleModule } from 'hxl-preview-ng-lib';
 import { RecipeService } from './bites/shared/recipe.service';
+import { HttpEventsService } from './shared/http-events.service';
 
 export function loggerOptions(): Options {
   if (environment.production) {
@@ -44,10 +45,11 @@ export const HTTP_SERVICE_PROVIDERS: any = {
     SimpleModule
   ],
   providers: [
+    HttpEventsService,
+    HttpService,
     HTTP_SERVICE_PROVIDERS,
     AppConfigService,
     AnalyticsService,
-    HttpService,
     DomEventsService,
     HxlproxyService,
     RecipeService

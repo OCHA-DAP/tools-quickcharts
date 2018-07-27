@@ -2,17 +2,22 @@ import { Injectable } from '@angular/core';
 import { Observable,  BehaviorSubject, timer as observableTimer } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEventsService } from './http-events.service';
 declare const $: any;
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class HttpService implements HttpInterceptor {
   public pendingRequests = 0;
   public showLoading = false;
-  public loadingChange = new BehaviorSubject(false);
+
+  constructor(private httpEventsService: HttpEventsService) {
+  }
 
   changeShowLoading(value: boolean): void {
     this.showLoading = value;
-    this.loadingChange.next(value);
+    this.httpEventsService.loadingChange.next(value);
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

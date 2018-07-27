@@ -10,8 +10,9 @@ import { Observable } from 'rxjs';
 import { HttpService } from '../../shared/http.service';
 import { AnalyticsService } from '../shared/analytics.service';
 import { DOCUMENT } from '@angular/platform-browser';
-import { debounce, distinctUntilChanged } from 'rxjs/operators';
+import { debounce, distinctUntilChanged, tap } from 'rxjs/operators';
 import { timer } from 'rxjs/internal/observable/timer';
+import { HttpEventsService } from '../../shared/http-events.service';
 
 @Component({
   selector: 'hxl-bite-list',
@@ -87,7 +88,7 @@ export class BiteListComponent implements OnInit {
   }
 
   constructor(public biteService: BiteService, private appConfig: AppConfigService, private logger: Logger,
-              private httpService: HttpService, zone: NgZone, private analyticsService: AnalyticsService,
+              private httpEventsService: HttpEventsService, zone: NgZone, private analyticsService: AnalyticsService,
               @Inject( DOCUMENT ) private dom: Document) {
     // window['angularComponentRef'] = {component: this, zone: zone};
 
@@ -95,9 +96,10 @@ export class BiteListComponent implements OnInit {
     this.listIsFull = false;
     this.logger = logger;
     this.hxlUnsupported = false;
-    this.spinnerActive = httpService.loadingChange.value;
-    this.httpService.loadingChange
+    this.spinnerActive = httpEventsService.loadingChange.getValue();
+    this.httpEventsService.loadingChange
       .pipe(
+        tap((val) => { console.log('Value: ' + val); }),
         distinctUntilChanged(),
         debounce(val => timer(val ? 100 : 800)),
       )
