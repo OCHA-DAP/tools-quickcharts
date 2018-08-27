@@ -76,13 +76,11 @@
     <a href="{{fullEmbedUrl}}" target="_blank">See example here</a>:
     <input type="text" onfocus="this.setSelectionRange(0, 0); this.setSelectionRange(0, this.value.length)"
            onClick="this.setSelectionRange(0, 0); this.setSelectionRange(0, this.value.length)" readonly
-           [(ngModel)]="shareUrlMode ? fullEmbedUrl : fullIframeUrl" style="width: 100%;" />
+           [ngModel]="shareUrlMode ? fullEmbedUrl : fullIframeUrl" style="width: 100%;" />
   </hxl-simple-modal>
 </div>
 
 <div
-  [sortablejs]="biteList"
-  [sortablejsOptions]="sortableMain"
   class="row"
 >
   <div

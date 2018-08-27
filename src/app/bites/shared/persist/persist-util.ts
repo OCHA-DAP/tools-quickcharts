@@ -1,6 +1,6 @@
 import { HxlPreviewConfig } from './hxl-preview-config';
 import { Bite, BiteLogicFactory } from 'hxl-preview-ng-lib';
-import { Logger } from 'angular2-logger/core';
+import { Logger } from 'simple-angular-logger';
 
 abstract class Patcher {
 

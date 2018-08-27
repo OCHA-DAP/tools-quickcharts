@@ -1,17 +1,18 @@
 import { SimpleDropdownPayload } from './../../common/component/simple-dropdown/simple-dropdown.component';
 import { Bite, ChartBite, KeyFigureBite, TimeseriesChartBite, ComparisonChartBite, CookbooksAndTags } from 'hxl-preview-ng-lib';
 import { Component, ElementRef, HostListener, Inject, NgZone, OnInit, ViewChild } from '@angular/core';
-import {SortablejsOptions} from 'angular-sortablejs';
 import {BiteService} from '../shared/bite.service';
-import {Logger} from 'angular2-logger/core';
+import {Logger} from 'simple-angular-logger';
 import {AppConfigService} from '../../shared/app-config.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { SimpleModalComponent } from 'hxl-preview-ng-lib';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { HttpService } from '../../shared/http.service';
-import { Http } from '@angular/http';
 import { AnalyticsService } from '../shared/analytics.service';
 import { DOCUMENT } from '@angular/platform-browser';
+import { debounce, distinctUntilChanged, tap } from 'rxjs/operators';
+import { timer } from 'rxjs/internal/observable/timer';
+import { HttpEventsService } from '../../shared/http-events.service';
 
 @Component({
   selector: 'hxl-bite-list',
@@ -31,18 +32,10 @@ export class BiteListComponent implements OnInit {
 
   adminChartsMenu: SimpleDropdownItem[];
   shareChartsMenu: SimpleDropdownItem[];
-
-  sortableMain: SortablejsOptions = {
-    handle: '.drag-handle',
-    animation: 150,
-    ghostClass: 'sortable-ghost',
-    forceFallback: true
-  };
-
   protected originalBitesBackup: Bite[];
 
-  protected showCookbookControls = false;
-  protected showCustomCookbookControls = false;
+  public showCookbookControls = false;
+  public showCustomCookbookControls = false;
   protected customCookbookUrl = '';
   protected cookbooksAndTags: CookbooksAndTags;
 
@@ -66,7 +59,7 @@ export class BiteListComponent implements OnInit {
   allowSettings = true;
 
   /* share Widget configs */
-  private shareUrlMode = false;
+  shareUrlMode = false;
   shareAllowSettings = true;
   shareAllowShare = true;
 
@@ -94,20 +87,26 @@ export class BiteListComponent implements OnInit {
     // console.log('Unknown message: ' + $event.data);
   }
 
-  constructor(public biteService: BiteService, private appConfig: AppConfigService, private logger: Logger, http: Http,
-              zone: NgZone, private analyticsService: AnalyticsService, @Inject( DOCUMENT ) private dom: Document) {
+  constructor(public biteService: BiteService, private appConfig: AppConfigService, private logger: Logger,
+              private httpEventsService: HttpEventsService, zone: NgZone, private analyticsService: AnalyticsService,
+              @Inject( DOCUMENT ) private dom: Document) {
     // window['angularComponentRef'] = {component: this, zone: zone};
 
     this.biteList = [];
     this.listIsFull = false;
     this.logger = logger;
     this.hxlUnsupported = false;
-    const httpService: HttpService = <HttpService>http;
-    this.spinnerActive = httpService.loadingChange.value;
-    httpService.loadingChange.distinctUntilChanged().debounce(val => Observable.timer(val ? 100 : 800)).subscribe((value) => {
-      this.spinnerActive = value;
-      console.log('SPINNER ACTIVE CHANGE;');
-    });
+    this.spinnerActive = httpEventsService.loadingChange.getValue();
+    this.httpEventsService.loadingChange
+      .pipe(
+        tap((val) => { console.log('Value: ' + val); }),
+        distinctUntilChanged(),
+        debounce(val => timer(val ? 100 : 800)),
+      )
+      .subscribe((value) => {
+        this.spinnerActive = value;
+        console.log('SPINNER ACTIVE CHANGE;');
+      });
 
     this.shareChartsMenu = [
       {

@@ -44,7 +44,8 @@ export class AppConfigService {
   }
 
   public thisIsProd() {
-    return this.get('loc_hostname') === this.get('prodHostname');
+    const prodHostnames: string[] = environment['prodHostnames'];
+    return prodHostnames.includes(this.get('loc_hostname'));
   }
 
 }

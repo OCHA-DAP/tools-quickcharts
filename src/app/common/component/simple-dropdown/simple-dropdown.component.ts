@@ -1,5 +1,5 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
-import { Logger } from 'angular2-logger/core';
+import { Logger } from 'simple-angular-logger';
 
 export interface SimpleDropdownPayload {
   name: string;

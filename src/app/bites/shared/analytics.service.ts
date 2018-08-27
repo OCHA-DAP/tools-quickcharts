@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Logger } from 'angular2-logger/core';
+import { Logger } from 'simple-angular-logger';
 import { AnalyticsService as GenericAnalyticsService, Bite, GA_PAGEVIEW, GaExtras, MapOfStrings } from 'hxl-preview-ng-lib';
 import { AppConfigService } from '../../shared/app-config.service';
 

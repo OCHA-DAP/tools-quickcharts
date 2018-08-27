@@ -43,7 +43,4 @@ export class ColorPickerComponent implements OnInit {
     this.displayCustomColor = false;
     this.onChange.emit(this.temporaryCustomColor);
   }
-
-  
-
 }

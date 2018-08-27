@@ -9,7 +9,6 @@ import { ContentChartComponent } from './bite/content/content-chart/content-char
 import { ContentTimeseriesChartComponent } from './bite/content/content-timeseries-chart/content-timeseries-chart.component';
 import { ContentComparisonChartComponent } from './bite/content/content-comparison-chart/content-comparison-chart.component';
 import { BiteService } from './shared/bite.service';
-import { SortablejsModule } from 'angular-sortablejs';
 import { RecipeService } from './shared/recipe.service';
 import { HxlproxyService } from 'hxl-preview-ng-lib';
 import { CookBookService } from 'hxl-preview-ng-lib';
@@ -28,7 +27,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   imports: [
     CommonModule,
     BitesRoutingModule,
-    SortablejsModule,
     FormsModule,
     MyCommonModule,
     SimpleModule,

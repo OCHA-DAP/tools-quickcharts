@@ -1,50 +1,45 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-
-import { Http, XHRBackend, RequestOptions, Request, RequestOptionsArgs, Response } from '@angular/http';
-import 'rxjs/Rx';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable,  BehaviorSubject, timer as observableTimer } from 'rxjs';
+import { finalize, tap } from 'rxjs/operators';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEventsService } from './http-events.service';
 declare const $: any;
 
-@Injectable()
-export class HttpService extends Http {
+@Injectable({
+  providedIn: 'root',
+})
+export class HttpService implements HttpInterceptor {
   public pendingRequests = 0;
   public showLoading = false;
-  public loadingChange = new BehaviorSubject(false);
 
-  constructor(backend: XHRBackend, defaultOptions: RequestOptions) {
-    super(backend, defaultOptions);
+  constructor(private httpEventsService: HttpEventsService) {
   }
 
   changeShowLoading(value: boolean): void {
     this.showLoading = value;
-    this.loadingChange.next(value);
+    this.httpEventsService.loadingChange.next(value);
   }
 
-  request(url: string | Request, options?: RequestOptionsArgs): Observable<Response> {
-    return this.intercept(super.request(url, options));
-  }
-
-  intercept(observable: Observable<Response>): Observable<Response> {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // console.log('In the intercept routine..');
     this.turnOnModal();
-    return observable
+    return next.handle(req).pipe(
       // .catch((err, source) => {
       //   console.log('Caught error: ' + err);
       // })
-      .do((res: Response) => {
+      tap((res: HttpEvent<any>) => {
         // console.log('Response: ' + res);
       }, (err: any) => {
         // console.log('Caught error: ' + err);
-      })
-      .finally(() => {
+      }),
+      finalize(() => {
         // console.log('Finally.. delaying, though.');
         // this.turnOffModal();
-        const timer = Observable.timer(300);
+        const timer = observableTimer(300);
         timer.subscribe(t => {
           this.turnOffModal();
         });
-      });
+      }));
   }
 
   private turnOnModal() {
