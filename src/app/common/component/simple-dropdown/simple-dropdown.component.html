@@ -3,7 +3,7 @@
       [class.make-gray]="makeGray">
     <span *ngIf="linkText">{{linkText}}</span>
     <i class="glyphicon {{glyphiconClass ? glyphiconClass : 'glyphicon-triangle-bottom'}}"
-        [style.font-size]="linkText ? '10px' : '' "></i>
+        [style.font-size]="linkText ? '10px' : '' " [style.margin-left]="linkText ? '3px' : ''"></i>
 
   </a>
   <ng-template #dropdownButton >
