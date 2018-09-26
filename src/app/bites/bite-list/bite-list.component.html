@@ -3,7 +3,7 @@
     <div class="col-xs-10">
       <hxl-inline-edit id="list-header-title" class="list-header-title" [(ngModel)]="biteService.quickChartsTitle" [editMode]="toolsMode" [placeholder]="'...'" [showEditIcon]="true" [maxEditorWidth]="'80%'"></hxl-inline-edit>
       <!--<span class="list-header-title">Quick Charts</span>-->
-      <i *ngIf="spinnerActive"><img class="img-color" src="./assets/images/loading-spinner.gif"> Loading ...</i>
+      <i *ngIf="spinnerActive" style="margin-left: 10px;"><img class="img-color" src="./assets/images/loading-spinner.gif"> Loading ...</i>
     </div>
     <div class="col-xs-2 right-menu">
       <hxl-simple-dropdown *ngIf="!toolsMode && allowShare" [glyphiconClass]="'glyphicon-triangle-bottom'" [items]="shareChartsMenu"
