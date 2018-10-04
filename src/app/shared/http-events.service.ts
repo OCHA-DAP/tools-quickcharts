@@ -9,7 +9,7 @@ export class HttpEventsService {
   public loadingChange = new BehaviorSubject(false);
 
   constructor() {
-    console.error('New httpInterceptor!');
+    // console.error('New httpInterceptor!');
     this.loadingChange.subscribe((value) => { console.warn('Interceptor:' + value); })
   }
 
