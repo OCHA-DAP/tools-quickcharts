@@ -5,6 +5,7 @@ import { Logger } from 'simple-angular-logger';
 import { BiteService } from './shared/bite.service';
 import { AppConfigService } from '../shared/app-config.service';
 import { AnalyticsService } from './shared/analytics.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'hxl-bites',
@@ -15,8 +16,9 @@ export class BitesComponent implements OnInit {
   onlyViewMode: boolean;
   recipeUrl: string;
   private state: RouterState;
+  externalCss: string;
 
-  constructor(router: Router, private logger: Logger, private biteService: BiteService,
+  constructor(router: Router, private logger: Logger, public sanitizer: DomSanitizer, private biteService: BiteService,
               private appConfigService: AppConfigService, private analyticsService: AnalyticsService,
               private hxlProxyService: HxlproxyService) {
     this.onlyViewMode = false;
@@ -38,6 +40,7 @@ export class BitesComponent implements OnInit {
         if (onlyViewMode === 'true') {
           this.onlyViewMode = true;
         }
+        this.externalCss = this.appConfigService.get('externalCss');
 
         this.biteService.init();
       }
