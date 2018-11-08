@@ -36,6 +36,7 @@ export class BiteListComponent implements OnInit {
 
   public showCookbookControls = false;
   public showCustomCookbookControls = false;
+  private allowBiteSwitch = true;
   protected customCookbookUrl = '';
   protected cookbooksAndTags: CookbooksAndTags;
 
@@ -133,6 +134,7 @@ export class BiteListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.allowBiteSwitch = !(this.appConfig.get('allowBiteSwitch') === 'false');
     this.init();
     this.adminChartsMenu = [
       {
@@ -254,8 +256,8 @@ export class BiteListComponent implements OnInit {
           this.biteService.initBite(b).subscribe( bite => {
             bite['_configOrder'] = idx;
             this.biteList.push(bite);
-            this.biteList.sort((a, b) => {
-              return a['_configOrder'] - b['_configOrder'];
+            this.biteList.sort((b1, b2) => {
+              return b1['_configOrder'] - b2['_configOrder'];
             });
             // Keep a copy of the loaded configuration to be able to revert to it
             const backupBite = this.biteService.cloneObjectLiteral(bite);
@@ -347,6 +349,7 @@ export class BiteListComponent implements OnInit {
   }
 
   generateAvailableBites(biteObs: Observable<Bite>, onCompleteCallback: () => void) {
+    if (this.allowBiteSwitch) {
     const newAvailableBites = [];
     // const loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
     biteObs
@@ -370,6 +373,7 @@ export class BiteListComponent implements OnInit {
         }
       }
       );
+  }
   }
 
   singleEmbedUrlCreated(event: string) {

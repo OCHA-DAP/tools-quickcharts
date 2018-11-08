@@ -139,9 +139,13 @@ export class BiteService {
       sample = ';sample=false';
     }
 
+    const allowBiteSwitch = this.appConfigService.get('allowBiteSwitchInExport') === 'false' ?
+            ';allowBiteSwitch=false' : '';
+
     return `${protocol}//${hostname}${port}${pathWithoutParams};` +
            `url=${url};embeddedSource=${embeddedSource};embeddedUrl=${embeddedUrl};embeddedDate=${embeddedDate};` +
-           `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}${recipeUrlParam}${sample}`;
+           `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}` +
+           `${recipeUrlParam}${sample}${allowBiteSwitch}`;
   }
 
   /**
