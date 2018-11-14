@@ -62,7 +62,7 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
     const config = super.generateOptions();
     const tsBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
     config.point = {
-      show: tsBiteLogic.showPoints
+      show: (tsBiteLogic.showPoints ? true : false)
     };
     return config;
   }
