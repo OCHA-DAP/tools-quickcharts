@@ -91,6 +91,10 @@
             <hxl-checkbox-slider (checked)="settingsModel.showGrid=$event; renderContent();" name="show-grid" [uuid]="uuid" title="Show Grid"
               [initiallyChecked]="settingsModel.showGrid">
             </hxl-checkbox-slider>
+            <hxl-checkbox-slider *ngIf="bite.type == classTypes.TimeseriesChartBite" (checked)="settingsModel.showPoints=$event; renderContent();"
+                                 name="show-points" [uuid]="uuid" title="Show Points"
+                                 [initiallyChecked]="settingsModel.showPoints">
+            </hxl-checkbox-slider>
             <hr/>
           </div>
           <div class="section" *ngIf="bite.type == classTypes.ToplineBite">
