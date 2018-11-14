@@ -1,5 +1,5 @@
-import { ChartBite, ComparisonChartBiteLogic } from 'hxl-preview-ng-lib';
-import { ContentChartComponent, C3ChartConfig } from './../content-chart/content-chart.component';
+import { ChartBite, ComparisonChartBiteLogic, ChartUIProperties } from 'hxl-preview-ng-lib';
+import { ContentChartComponent, C3ChartConfig, CategValuesElement, ChartDataSorter } from './../content-chart/content-chart.component';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib/src/types/comparison-chart-bite';
 
@@ -11,6 +11,11 @@ import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib/src/types/compar
 export class ContentComparisonChartComponent extends ContentChartComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit(): void {
+    (this.bite.uiProperties as ChartUIProperties).sortingByValue1 = null; // No values sorting for comparison charts enabled
+    super.ngAfterViewInit();
   }
 
   protected generateOptionsTooltip(config: C3ChartConfig) {
@@ -63,19 +68,18 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
   }
 
   protected generateOptionsData(config: C3ChartConfig) {
+    super.generateOptionsData(config);
+
+    const dataSorter = this.dataSorter;
     const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
-    let comparisonValues = cmpBiteLogic.comparisonValues;
-    if (cmpBiteLogic.values.length > 2 && cmpBiteLogic.stackChart) {
-      comparisonValues = cmpBiteLogic.comparisonValues.map( (val, i) => i > 0 ? val - cmpBiteLogic.values[i] : val);
-    }
+
     const values = [
-      cmpBiteLogic.values,
-      comparisonValues
+      dataSorter.getSortedValues(),
+      dataSorter.getSortedComparisonValues()
     ];
-    config.data = {
-      columns: values,
-      type: 'bar',
-    };
+
+    config.data.columns = values;
+
     // if we have more than 1 row of data
     if (cmpBiteLogic.values.length > 2 && cmpBiteLogic.stackChart) {
       config.data.groups = [[
@@ -93,5 +97,55 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
     if (cmpBiteLogic.values.length <= 2) {
       config.axis.rotated = false;
     }
+  }
+
+  protected get dataSorter(): ComparisonChartDataSorter {
+    let sorter = this._dataSorter as ComparisonChartDataSorter;
+    if (!sorter) {
+      sorter = new ComparisonChartDataSorter(this.biteLogic);
+      this._dataSorter = sorter;
+    }
+    return sorter;
+  }
+
+}
+
+export interface ComparisonCategValuesElement extends CategValuesElement {
+  cmpValue: number|string;
+}
+
+export class ComparisonChartDataSorter extends ChartDataSorter {
+  protected comparisonValuesLabel: string;
+
+  protected createCategValuesArray() {
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    const comparisonValues = this.computeComparisonValues();
+    this.comparisonValuesLabel = comparisonValues[0] as string;
+    this.categAndValues =
+          this.biteLogic.values.slice(1).map( (val, i) => ({
+            value: val,
+            cmpValue: comparisonValues[i + 1],
+            category: this.biteLogic.categories[i]
+          }));
+  }
+
+  private computeComparisonValues(): (number|string)[] {
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    let comparisonValues = cmpBiteLogic.comparisonValues;
+    if (cmpBiteLogic.values.length > 2 && cmpBiteLogic.stackChart) {
+      comparisonValues = cmpBiteLogic.comparisonValues.map( (val, i) => i > 0 ? val - cmpBiteLogic.values[i] : val);
+    }
+    return comparisonValues;
+  }
+
+  public getSortedComparisonValues() {
+    if (this.categAndValues) {
+      const comparisonCategAndValues = this.categAndValues as ComparisonCategValuesElement[];
+      const cmpValues = comparisonCategAndValues.map(item => item.cmpValue);
+      cmpValues.unshift(this.comparisonValuesLabel);
+      return cmpValues;
+    }
+
+    return this.computeComparisonValues();
   }
 }

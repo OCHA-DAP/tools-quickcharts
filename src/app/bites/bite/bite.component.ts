@@ -155,19 +155,19 @@ export class BiteComponent implements OnInit, OnChanges {
   }
 
   toggleSorting() {
-    if (!this.settingsModel.sorting) {
-      this.settingsModel.sorting = this.SORT_DESC;
+    if (!this.settingsModel.sortingByValue1) {
+      this.settingsModel.sortingByValue1 = this.SORT_DESC;
     } else {
-      this.settingsModel.sorting = null;
+      this.settingsModel.sortingByValue1 = null;
     }
     this.renderContent();
   }
 
   swapSorting() {
-    if (this.settingsModel.sorting === ChartBite.SORT_ASC) {
-      this.settingsModel.sorting = ChartBite.SORT_DESC;
+    if (this.settingsModel.sortingByValue1 === ChartBite.SORT_ASC) {
+      this.settingsModel.sortingByValue1 = ChartBite.SORT_DESC;
     } else {
-      this.settingsModel.sorting = ChartBite.SORT_ASC;
+      this.settingsModel.sortingByValue1 = ChartBite.SORT_ASC;
     }
     this.renderContent();
   }
@@ -425,14 +425,14 @@ class SettingsModel {
     }
   }
 
-  get sorting(): string {
+  get sortingByValue1(): string {
     const chartBiteLogic = this.biteLogic as ChartBiteLogic;
-    return chartBiteLogic.sorting;
+    return chartBiteLogic.sortingByValue1;
   }
 
-  set sorting(sorting: string) {
+  set sortingByValue1(sortingByValue1: string) {
     const chartBiteLogic = this.biteLogic as ChartBiteLogic;
-    chartBiteLogic.uiProperties.sorting = sorting;
+    chartBiteLogic.uiProperties.sortingByValue1 = sortingByValue1;
   }
 
   get stackChart(): boolean {
