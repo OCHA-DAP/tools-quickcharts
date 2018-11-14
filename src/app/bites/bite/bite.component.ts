@@ -20,6 +20,7 @@ import { BiteLogicFactory, ColorUsage, KeyFigureBiteLogic, BiteLogic } from 'hxl
 import { DomSanitizer } from '@angular/platform-browser';
 import { AnalyticsService } from '../shared/analytics.service';
 import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib/src/types/comparison-chart-bite';
+import {TimeseriesChartBiteLogic} from "hxl-preview-ng-lib/src/types/timeseries-chart-bite-logic";
 
 @Component({
   selector: 'hxl-bite',
@@ -309,6 +310,16 @@ class SettingsModel {
   set showGrid(value: boolean) {
     const chartBiteLogic = this.biteLogic as ChartBiteLogic;
     chartBiteLogic.uiProperties.showGrid = value;
+  }
+
+  get showPoints(): boolean {
+    const timeseriesChartBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
+    return timeseriesChartBiteLogic.showPoints;
+  }
+
+  set showPoints(value: boolean) {
+    const timeseriesChartBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
+    timeseriesChartBiteLogic.uiProperties.showPoints = value;
   }
 
   // get filterZero(): boolean {
