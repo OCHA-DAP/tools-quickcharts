@@ -142,10 +142,16 @@ export class BiteService {
     const allowBiteSwitch = this.appConfigService.get('allowBiteSwitchInExport') === 'false' ?
             ';allowBiteSwitch=false' : '';
 
+    const externalColorPattern = this.appConfigService.get('externalColorPattern') ?
+      ';externalColorPattern=' + encodeURIComponent(this.appConfigService.get('externalColorPattern')) : '';
+
+    const allowCustomColor = this.appConfigService.get('allowCustomColor') ?
+      ';allowCustomColor=' + this.appConfigService.get('allowCustomColor') : '';
+
     return `${protocol}//${hostname}${port}${pathWithoutParams};` +
            `url=${url};embeddedSource=${embeddedSource};embeddedUrl=${embeddedUrl};embeddedDate=${embeddedDate};` +
            `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}` +
-           `${recipeUrlParam}${sample}${allowBiteSwitch}`;
+           `${recipeUrlParam}${sample}${allowBiteSwitch}${externalColorPattern}${allowCustomColor}`;
   }
 
   /**
