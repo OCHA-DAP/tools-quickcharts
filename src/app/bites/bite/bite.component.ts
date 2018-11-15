@@ -3,24 +3,28 @@ import { Component, OnInit, EventEmitter, ViewChild, OnChanges, SimpleChanges } 
 import {Input, Output} from '@angular/core';
 import {
   Bite,
+  BiteLogic,
+  BiteLogicFactory,
+  ChartBite,
   ChartBiteLogic,
   ChartComputedProperties,
   ChartUIProperties,
-  ComparisonChartBiteLogic
+  ComparisonChartBite,
+  ComparisonChartBiteLogic,
+  ComparisonChartUIProperties,
+  KeyFigureBite,
+  KeyFigureBiteLogic,
+  TimeseriesChartBiteLogic,
+  TimeseriesChartBite,
+  ColorUsage
 } from 'hxl-preview-ng-lib';
-import { KeyFigureBite } from 'hxl-preview-ng-lib';
-import { ChartBite, ComparisonChartBite } from 'hxl-preview-ng-lib';
-import { TimeseriesChartBite } from 'hxl-preview-ng-lib';
 import { Logger } from 'simple-angular-logger';
 import { BiteService } from 'app/bites/shared/bite.service';
 import { ContentChartComponent } from './content/content-chart/content-chart.component';
 import { ContentTimeseriesChartComponent } from './content/content-timeseries-chart/content-timeseries-chart.component';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
-import { BiteLogicFactory, ColorUsage, KeyFigureBiteLogic, BiteLogic } from 'hxl-preview-ng-lib';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AnalyticsService } from '../shared/analytics.service';
-import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib/src/types/comparison-chart-bite';
-import {TimeseriesChartBiteLogic} from "hxl-preview-ng-lib/src/types/timeseries-chart-bite-logic";
 
 @Component({
   selector: 'hxl-bite',
@@ -160,21 +164,42 @@ export class BiteComponent implements OnInit, OnChanges {
     }
   }
 
-  toggleSorting() {
-    if (!this.settingsModel.sortingByValue1) {
-      this.settingsModel.sortingByValue1 = this.SORT_DESC;
-    } else {
-      this.settingsModel.sortingByValue1 = null;
-    }
+  toggleSortingForValue1() {
+    this.settingsModel.sortingByValue1 = this.settingsModel.sortingByValue1 ? null : this.SORT_DESC;
+
     this.renderContent();
   }
 
-  swapSorting() {
-    if (this.settingsModel.sortingByValue1 === ChartBite.SORT_ASC) {
-      this.settingsModel.sortingByValue1 = ChartBite.SORT_DESC;
-    } else {
-      this.settingsModel.sortingByValue1 = ChartBite.SORT_ASC;
-    }
+  swapSortingForValue1() {
+    this.settingsModel.sortingByValue1 =
+        this.settingsModel.sortingByValue1 === ChartBite.SORT_ASC ? ChartBite.SORT_DESC : ChartBite.SORT_ASC;
+
+    this.renderContent();
+  }
+
+  toggleSortingForValue2() {
+    this.settingsModel.sortingByValue2 = this.settingsModel.sortingByValue2 ? null : this.SORT_DESC;
+
+    this.renderContent();
+  }
+
+  swapSortingForValue2() {
+    this.settingsModel.sortingByValue2 =
+        this.settingsModel.sortingByValue2 === ChartBite.SORT_ASC ? ChartBite.SORT_DESC : ChartBite.SORT_ASC;
+
+    this.renderContent();
+  }
+
+  toggleSortingForCategory1() {
+    this.settingsModel.sortingByCategory1 = this.settingsModel.sortingByCategory1 ? null : this.SORT_DESC;
+
+    this.renderContent();
+  }
+
+  swapSortingForCategory1() {
+    this.settingsModel.sortingByCategory1 =
+        this.settingsModel.sortingByCategory1 === ChartBite.SORT_ASC ? ChartBite.SORT_DESC : ChartBite.SORT_ASC;
+
     this.renderContent();
   }
 
@@ -448,7 +473,27 @@ class SettingsModel {
 
   set sortingByValue1(sortingByValue1: string) {
     const chartBiteLogic = this.biteLogic as ChartBiteLogic;
-    chartBiteLogic.uiProperties.sortingByValue1 = sortingByValue1;
+    chartBiteLogic.sortingByValue1 = sortingByValue1;
+  }
+
+  get sortingByValue2(): string {
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    return cmpBiteLogic.sortingByValue2;
+  }
+
+  set sortingByValue2(sortingByValue2: string) {
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    cmpBiteLogic.sortingByValue2 = sortingByValue2;
+  }
+
+  get sortingByCategory1(): string {
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    return chartBiteLogic.sortingByCategory1;
+  }
+
+  set sortingByCategory1(sortingByCategory1: string) {
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    chartBiteLogic.sortingByCategory1 = sortingByCategory1;
   }
 
   get stackChart(): boolean {

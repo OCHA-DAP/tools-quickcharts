@@ -26,7 +26,7 @@
     "bootstrap": "^3.3.7",
     "c3": "^0.4.11",
     "core-js": "^2.4.1",
-    "hxl-preview-ng-lib": "https://github.com/OCHA-DAP/hxl-preview-ng-lib/raw/master/build/hxl-preview-ng-lib-1.0.3.tgz",
+    "hxl-preview-ng-lib": "https://github.com/OCHA-DAP/hxl-preview-ng-lib/raw/master/build/hxl-preview-ng-lib-1.0.4.tgz",
     "ngx-bootstrap": "^3.0.1",
     "rxjs": "^6.2.2",
     "zone.js": "^0.8.26"
