@@ -172,7 +172,8 @@ export class BiteListComponent implements OnInit {
     this.allowSettings = chartSettings !== 'false';
     const chartShare = this.appConfig.get('chartShare');
     this.allowShare = chartShare !== 'false';
-    this.externalColorPattern = (this.appConfig.get('externalColorPattern') ? this.appConfig.get('externalColorPattern').split(',') : null );
+    this.externalColorPattern =
+        (this.appConfig.get('externalColorPattern') ? this.appConfig.get('externalColorPattern').split(',') : null );
     this.allowCustomColor = this.appConfig.get('allowCustomColor') ? this.appConfig.get('allowCustomColor') === 'true' : true;
   }
 
