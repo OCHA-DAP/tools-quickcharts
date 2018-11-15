@@ -380,6 +380,19 @@ export class ChartDataSorter {
   }
 
   public process() {
+
+    if (this.biteLogic.sortingByValue1 !== null || this.biteLogic.limit !== null ||
+          this.biteLogic.sortingByCategory1) {
+
+      const reverseByCategory = this.sort();
+      this.limit(!reverseByCategory);
+    }
+  }
+
+  /**
+   * @returns true if the sorting was done by reversed category, otherwise false
+   */
+  protected sort(): boolean {
     const ascSort = function(a, b) {
       return a.value - b.value;
     };
@@ -387,26 +400,31 @@ export class ChartDataSorter {
       return b.value - a.value;
     };
 
-
-    // If we have dates on X axis and no sorting by value we need to make sure X is sorted chronologically
-    const sortXAxisDatesAsc: boolean = !this.biteLogic.swapAxis && this.biteLogic.isGroupedByDateColumn()
-    if (this.biteLogic.sortingByValue1 !== null || this.biteLogic.limit !== null || sortXAxisDatesAsc) {
-      this.createCategValuesArray();
-      this.valuesLabel = this.biteLogic.values[0];
-
-      if (this.biteLogic.sortingByValue1 !== null) {
-        if (this.biteLogic.sortingByValue1 === ChartBite.SORT_ASC) {
-          this.categAndValues.sort(ascSort);
-        } else {
-          this.categAndValues.sort(descSort);
-        }
-      } else if (sortXAxisDatesAsc) {
-        this.categAndValues.reverse();
+    let reverseByCategory = false;
+    this.createCategValuesArray();
+    this.valuesLabel = this.biteLogic.values[0];
+    if (this.biteLogic.sortingByValue1 !== null) {
+      if (this.biteLogic.sortingByValue1 === ChartBite.SORT_ASC) {
+        this.categAndValues.sort(ascSort);
+      } else {
+        this.categAndValues.sort(descSort);
       }
+    }
+    if (this.biteLogic.sortingByCategory1 === ChartBite.SORT_ASC) {
+      this.categAndValues.reverse();
+      reverseByCategory = true;
+    }
+    return reverseByCategory;
+  }
 
-      const valuesLimit = this.biteLogic.limit;
-      if (valuesLimit && valuesLimit > 0) {
-        this.categAndValues = this.categAndValues.slice(0, valuesLimit);
+  protected limit(fromStart = true) {
+    const limit = this.biteLogic.limit;
+    if (limit && limit > 0) {
+      if (fromStart) {
+        this.categAndValues = this.categAndValues.slice(0, limit);
+      } else {
+        const length = this.categAndValues.length;
+        this.categAndValues = this.categAndValues.slice(length - limit, length);
       }
     }
   }

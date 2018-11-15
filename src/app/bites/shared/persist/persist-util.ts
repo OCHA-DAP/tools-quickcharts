@@ -84,7 +84,7 @@ export class PersisUtil {
 
   static readonly patchers: Patcher[] = [new From2To3Patcher(), new From3To4Patcher()];
 
-  readonly CONFIG_VERSION = 3;
+  readonly CONFIG_VERSION = 4;
 
   constructor(private logger: Logger) {}
 
