@@ -175,7 +175,7 @@
                 Chart color
                 <span *ngIf="(bite.type == classTypes.ComparisonChartBite)">1</span>
               </label>
-              <hxl-color-picker [colorPattern]="colorPattern" [selectedColor]="settingsModel.customColor" (onChange)="selectCustomColor($event)"></hxl-color-picker>
+              <hxl-color-picker [colorPattern]="colorPattern" [allowCustomColor]="allowCustomColor" [selectedColor]="settingsModel.customColor" (onChange)="selectCustomColor($event)"></hxl-color-picker>
             </div>
             <div class="element-group" *ngIf="(bite.type == classTypes.ComparisonChartBite)">
               <label>
@@ -189,7 +189,7 @@
               <label>
                 Chart color 2
               </label>
-              <hxl-color-picker [colorPattern]="colorPattern" [selectedColor]="settingsModel.comparisonCustomColor" (onChange)="selectComparisonCustomColor($event)"></hxl-color-picker>
+              <hxl-color-picker [colorPattern]="colorPattern" [allowCustomColor]="allowCustomColor" [selectedColor]="settingsModel.comparisonCustomColor" (onChange)="selectComparisonCustomColor($event)"></hxl-color-picker>
             </div>
 
 

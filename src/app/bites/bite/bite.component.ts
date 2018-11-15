@@ -48,6 +48,10 @@ export class BiteComponent implements OnInit, OnChanges {
   allowShare: boolean;
   @Input()
   allowSettings: boolean;
+  @Input()
+  externalColorPattern: string[];
+  @Input()
+  allowCustomColor: true;
 
   @Output()
   onAdd = new EventEmitter<Bite>();
@@ -109,6 +113,7 @@ export class BiteComponent implements OnInit, OnChanges {
     this.biteLogic = BiteLogicFactory.createBiteLogic(this.bite);
     this.settingsModel = new SettingsModel(this.biteLogic, this.biteService, this);
     this.showColorPatternChooser = this.biteLogic.colorUsage() !== ColorUsage.NONE;
+    this.colorPattern = this.externalColorPattern ? this.externalColorPattern : this.colorPattern;
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['availableBites']) {
