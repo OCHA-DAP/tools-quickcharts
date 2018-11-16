@@ -13,6 +13,13 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./bites.component.less']
 })
 export class BitesComponent implements OnInit {
+
+  static ALLOWED_DOMAINS_FOR_EXTERNAL_CSS = [
+    'hpc.tools',
+    'ralfbaumbach.org',
+    'alexandru-m-g.github.io'
+  ]
+
   onlyViewMode: boolean;
   recipeUrl: string;
   private state: RouterState;
@@ -40,11 +47,26 @@ export class BitesComponent implements OnInit {
         if (onlyViewMode === 'true') {
           this.onlyViewMode = true;
         }
-        this.externalCss = this.appConfigService.get('externalCss');
-
+        const externalCss = this.appConfigService.get('externalCss');
+        if (this.parseUrlString(externalCss)) {
+          this.externalCss = externalCss;
+        }
         this.biteService.init();
       }
     );
+  }
+
+  private parseUrlString(url: string): boolean {
+    if (url && url.indexOf('://')) {
+      const restOfUrl = url.substr(url.indexOf('://') + 3);
+      const hostname = restOfUrl.split('/')[0];
+      for (const allowedDomains of BitesComponent.ALLOWED_DOMAINS_FOR_EXTERNAL_CSS) {
+        if (hostname.endsWith(allowedDomains)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
 }

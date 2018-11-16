@@ -148,10 +148,13 @@ export class BiteService {
     const allowCustomColor = this.appConfigService.get('allowCustomColor') ?
       ';allowCustomColor=' + this.appConfigService.get('allowCustomColor') : '';
 
+    const externalCss = this.appConfigService.get('externalCss') ?
+          ';externalCss=' + encodeURIComponent(this.appConfigService.get('externalCss')) : '';
+
     return `${protocol}//${hostname}${port}${pathWithoutParams};` +
            `url=${url};embeddedSource=${embeddedSource};embeddedUrl=${embeddedUrl};embeddedDate=${embeddedDate};` +
            `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}` +
-           `${recipeUrlParam}${sample}${allowBiteSwitch}${externalColorPattern}${allowCustomColor}`;
+           `${recipeUrlParam}${sample}${allowBiteSwitch}${externalColorPattern}${allowCustomColor}${externalCss}`;
   }
 
   /**
