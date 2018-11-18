@@ -118,6 +118,7 @@ export class BiteComponent implements OnInit, OnChanges {
     this.settingsModel = new SettingsModel(this.biteLogic, this.biteService, this);
     this.showColorPatternChooser = this.biteLogic.colorUsage() !== ColorUsage.NONE;
     this.colorPattern = this.externalColorPattern ? this.externalColorPattern : this.colorPattern;
+    this.biteLogic.initColorsIfNeeded(this.colorPattern);
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['availableBites']) {

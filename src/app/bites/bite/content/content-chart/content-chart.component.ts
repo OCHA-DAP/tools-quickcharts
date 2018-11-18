@@ -99,7 +99,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   protected generateOptionsColor(config: C3ChartConfig) {
-    let pattern = ChartBite.colorPattern;
+    let pattern = this.biteLogic.internalColorPattern;
 
     // added check for this.bite.color since saved bites might not have any
     if (this.biteLogic.colorUsage() === ColorUsage.ONE && this.biteLogic.color) {
