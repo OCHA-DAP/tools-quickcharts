@@ -5,6 +5,7 @@
         (click)="onChange.emit(color)">
     </li>
     <li class="color-item"
+        *ngIf="allowCustomColor"
         [ngStyle]="{'background-color': (colorPattern.indexOf(selectedColor) >= 0) ? '#ffffff' : selectedColor}"
         [ngClass]="{'color-item-selected': (colorPattern.indexOf(selectedColor) == -1)}"
         (click)="showCustomColorSection()">

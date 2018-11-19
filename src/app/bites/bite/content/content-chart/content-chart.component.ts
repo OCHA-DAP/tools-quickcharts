@@ -26,6 +26,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
   elementRef: ElementRef;
   maxNumberOfValues = 7.5;
 
+  _dataSorter: ChartDataSorter;
+
   private sortedCategories: string[];
 
   constructor(elementRef: ElementRef, private analyticsService: AnalyticsService) {
@@ -97,7 +99,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   protected generateOptionsColor(config: C3ChartConfig) {
-    let pattern = ChartBite.colorPattern;
+    let pattern = this.biteLogic.internalColorPattern;
 
     // added check for this.bite.color since saved bites might not have any
     if (this.biteLogic.colorUsage() === ColorUsage.ONE && this.biteLogic.color) {
@@ -109,38 +111,11 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   protected generateOptionsData(config: C3ChartConfig) {
-    // const values = this.bite.values.slice(); // copy values
-    let values = this.biteLogic.values;
-    const ascSort = function(a, b){
-      return a.value - b.value;
-    };
-    const descSort = function(a, b){
-      return b.value - a.value;
-    };
-    if (this.biteLogic.sorting !== null || this.biteLogic.limit !== null) {
-      const valuesLabel = this.biteLogic.values[0];
-      let valAndCategArray =
-          this.biteLogic.values.slice(1).map( (val, i) => ({value: val, category: this.biteLogic.categories[i]}));
+    const dataSorter = this.dataSorter;
+    dataSorter.process();
 
-      if (this.biteLogic.sorting !== null) {
-        if (this.biteLogic.sorting === ChartBite.SORT_ASC) {
-          valAndCategArray.sort(ascSort);
-        } else {
-          valAndCategArray.sort(descSort);
-        }
-      }
-
-      const valuesLimit = this.biteLogic.limit;
-      if (valuesLimit && valuesLimit > 0) {
-        valAndCategArray = valAndCategArray.slice(0, valuesLimit);
-      }
-
-      values = valAndCategArray.map(item => item.value);
-      values.unshift(valuesLabel);
-      this.sortedCategories = valAndCategArray.map(item => item.category);
-    } else {
-      this.sortedCategories = null;
-    }
+    this.sortedCategories = dataSorter.getSortedCategories();
+    const values = dataSorter.getSortedValues();
 
     if (!this.biteLogic.pieChart) {
       config.data = {
@@ -170,7 +145,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
       rotated: this.biteLogic.swapAxis,
       x: {
         type: 'category',
-        categories: this.biteLogic.categories,
+        categories: categories, // is actually not used because it's being overwritten by formatter below
         tick: {
         },
         height: 50
@@ -355,7 +330,102 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
   }
+
+  protected get dataSorter(): ChartDataSorter {
+    let sorter = this._dataSorter;
+    if (!sorter) {
+      sorter = new ChartDataSorter(this.biteLogic);
+      this._dataSorter = sorter;
+    }
+    return sorter;
+  }
 }
 
 // tslint:disable-next-line:interface-over-type-literal
 export type C3ChartConfig = { [s: string]: any; };
+
+export interface CategValuesElement {
+  category: any;
+  value: number|string;
+}
+
+export class ChartDataSorter {
+
+  private valuesLabel: string;
+
+  protected categAndValues: CategValuesElement[];
+
+  constructor(protected biteLogic: ChartBiteLogic) {}
+
+  protected createCategValuesArray() {
+    this.categAndValues =
+          this.biteLogic.values.slice(1).map( (val, i) => ({value: val, category: this.biteLogic.categories[i]}));
+  }
+
+  public getSortedCategories() {
+    if (this.categAndValues) {
+      return this.categAndValues.map(item => item.category);
+    }
+
+    return this.biteLogic.categories;
+  }
+
+  public getSortedValues() {
+    if (this.categAndValues) {
+      const values = this.categAndValues.map(item => item.value);
+      values.unshift(this.valuesLabel);
+      return values;
+    }
+    return this.biteLogic.values;
+  }
+
+  public process() {
+
+    if (this.biteLogic.sortingByValue1 !== null || this.biteLogic.limit !== null ||
+          this.biteLogic.sortingByCategory1) {
+
+      const reverseByCategory = this.sort();
+      this.limit(!reverseByCategory);
+    }
+  }
+
+  /**
+   * @returns true if the sorting was done by reversed category, otherwise false
+   */
+  protected sort(): boolean {
+    const ascSort = function(a, b) {
+      return a.value - b.value;
+    };
+    const descSort = function(a, b) {
+      return b.value - a.value;
+    };
+
+    let reverseByCategory = false;
+    this.createCategValuesArray();
+    this.valuesLabel = this.biteLogic.values[0];
+    if (this.biteLogic.sortingByValue1 !== null) {
+      if (this.biteLogic.sortingByValue1 === ChartBite.SORT_ASC) {
+        this.categAndValues.sort(ascSort);
+      } else {
+        this.categAndValues.sort(descSort);
+      }
+    }
+    if (this.biteLogic.sortingByCategory1 === ChartBite.SORT_ASC) {
+      this.categAndValues.reverse();
+      reverseByCategory = true;
+    }
+    return reverseByCategory;
+  }
+
+  protected limit(fromStart = true) {
+    const limit = this.biteLogic.limit;
+    if (limit && limit > 0) {
+      if (fromStart) {
+        this.categAndValues = this.categAndValues.slice(0, limit);
+      } else {
+        const length = this.categAndValues.length;
+        this.categAndValues = this.categAndValues.slice(length - limit, length);
+      }
+    }
+  }
+}

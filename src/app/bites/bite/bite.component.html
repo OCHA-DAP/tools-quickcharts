@@ -91,6 +91,10 @@
             <hxl-checkbox-slider (checked)="settingsModel.showGrid=$event; renderContent();" name="show-grid" [uuid]="uuid" title="Show Grid"
               [initiallyChecked]="settingsModel.showGrid">
             </hxl-checkbox-slider>
+            <hxl-checkbox-slider *ngIf="bite.type == classTypes.TimeseriesChartBite" (checked)="settingsModel.showPoints=$event; renderContent();"
+                                 name="show-points" [uuid]="uuid" title="Show Points"
+                                 [initiallyChecked]="settingsModel.showPoints">
+            </hxl-checkbox-slider>
             <hr/>
           </div>
           <div class="section" *ngIf="bite.type == classTypes.ToplineBite">
@@ -129,21 +133,58 @@
             <div class="section-title">
               Display preference
             </div>
-            <div class="element-group" *ngIf="(bite.type == classTypes.ChartBite)">
+            <div class="element-group" *ngIf="(biteLogic.sortingByValue1Label)">
               <label>
-                Sorting
+                {{biteLogic.sortingByValue1Label}}
               </label>
               <div class="pull-right">
                 <div class="checkbox-slider pull-right">
-                  <input [checked]="settingsModel.sorting != null" (change)="toggleSorting(); renderContent()" type="checkbox" name="checkbox-slider"
-                    class="checkbox-slider-checkbox" id="sorting-{{uuid}}">
-                  <label class="checkbox-slider-label" for="sorting-{{uuid}}">
+                  <input [checked]="settingsModel.sortingByValue1 != null" (change)="toggleSortingForValue1();" type="checkbox" name="checkbox-slider"
+                    class="checkbox-slider-checkbox" id="sortingByValue1-{{uuid}}">
+                  <label class="checkbox-slider-label" for="sortingByValue1-{{uuid}}">
                     <span class="checkbox-slider-inner"></span>
                     <span class="checkbox-slider-switch"></span>
                   </label>
                 </div>
-                <i class="change-sorting glyphicon glyphicon-arrow-up" style="margin-bottom: 3px;" [ngClass]="{'glyphicon-arrow-down': settingsModel.sorting == SORT_DESC}"
-                  [style.display]="(!settingsModel.sorting ? 'none' : 'inline-block')" (click)="swapSorting()"></i>
+                <i class="change-sorting glyphicon" style="margin-bottom: 3px;"
+                  [ngClass]="{'glyphicon-arrow-down': settingsModel.sortingByValue1 === SORT_DESC, 'glyphicon-arrow-up': settingsModel.sortingByValue1 !== SORT_DESC}"
+                  [style.display]="(!settingsModel.sortingByValue1 ? 'none' : 'inline-block')" (click)="swapSortingForValue1()"></i>
+              </div>
+            </div>
+            <div class="element-group" *ngIf="(biteLogic.sortingByValue2Label)">
+              <label>
+                {{biteLogic.sortingByValue2Label}}
+              </label>
+              <div class="pull-right">
+                <div class="checkbox-slider pull-right">
+                  <input [checked]="settingsModel.sortingByValue2 != null" (change)="toggleSortingForValue2();" type="checkbox" name="checkbox-slider"
+                    class="checkbox-slider-checkbox" id="sortingByValue2-{{uuid}}">
+                  <label class="checkbox-slider-label" for="sortingByValue2-{{uuid}}">
+                    <span class="checkbox-slider-inner"></span>
+                    <span class="checkbox-slider-switch"></span>
+                  </label>
+                </div>
+                <i class="change-sorting glyphicon" style="margin-bottom: 3px;"
+                  [ngClass]="{'glyphicon-arrow-down': settingsModel.sortingByValue2 === SORT_DESC, 'glyphicon-arrow-up': settingsModel.sortingByValue2 !== SORT_DESC}"
+                  [style.display]="(!settingsModel.sortingByValue2 ? 'none' : 'inline-block')" (click)="swapSortingForValue2()"></i>
+              </div>
+            </div>
+            <div class="element-group" *ngIf="(biteLogic.sortingByCategory1Label)">
+              <label>
+                {{biteLogic.sortingByCategory1Label}}
+              </label>
+              <div class="pull-right">
+                <div class="checkbox-slider pull-right">
+                  <input [checked]="settingsModel.sortingByCategory1 != null" (change)="toggleSortingForCategory1();" type="checkbox" name="checkbox-slider"
+                    class="checkbox-slider-checkbox" id="sortingByCategory1-{{uuid}}">
+                  <label class="checkbox-slider-label" for="sortingByCategory1-{{uuid}}">
+                    <span class="checkbox-slider-inner"></span>
+                    <span class="checkbox-slider-switch"></span>
+                  </label>
+                </div>
+                <i class="change-sorting glyphicon" style="margin-bottom: 3px;"
+                  [ngClass]="{'glyphicon-arrow-down': settingsModel.sortingByCategory1 === SORT_DESC, 'glyphicon-arrow-up': settingsModel.sortingByCategory1 !== SORT_DESC}"
+                  [style.display]="(!settingsModel.sortingByCategory1 ? 'none' : 'inline-block')" (click)="swapSortingForCategory1()"></i>
               </div>
             </div>
             <hxl-checkbox-slider *ngIf="(bite.type == classTypes.ComparisonChartBite)" (checked)="settingsModel.stackChart=$event; renderContent();"
@@ -171,7 +212,7 @@
                 Chart color
                 <span *ngIf="(bite.type == classTypes.ComparisonChartBite)">1</span>
               </label>
-              <hxl-color-picker [colorPattern]="colorPattern" [selectedColor]="settingsModel.customColor" (onChange)="selectCustomColor($event)"></hxl-color-picker>
+              <hxl-color-picker [colorPattern]="colorPattern" [allowCustomColor]="allowCustomColor" [selectedColor]="settingsModel.customColor" (onChange)="selectCustomColor($event)"></hxl-color-picker>
             </div>
             <div class="element-group" *ngIf="(bite.type == classTypes.ComparisonChartBite)">
               <label>
@@ -185,7 +226,7 @@
               <label>
                 Chart color 2
               </label>
-              <hxl-color-picker [colorPattern]="colorPattern" [selectedColor]="settingsModel.comparisonCustomColor" (onChange)="selectComparisonCustomColor($event)"></hxl-color-picker>
+              <hxl-color-picker [colorPattern]="colorPattern" [allowCustomColor]="allowCustomColor" [selectedColor]="settingsModel.comparisonCustomColor" (onChange)="selectComparisonCustomColor($event)"></hxl-color-picker>
             </div>
 
 
