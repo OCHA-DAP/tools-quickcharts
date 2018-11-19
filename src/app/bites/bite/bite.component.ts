@@ -3,23 +3,28 @@ import { Component, OnInit, EventEmitter, ViewChild, OnChanges, SimpleChanges } 
 import {Input, Output} from '@angular/core';
 import {
   Bite,
+  BiteLogic,
+  BiteLogicFactory,
+  ChartBite,
   ChartBiteLogic,
   ChartComputedProperties,
   ChartUIProperties,
-  ComparisonChartBiteLogic
+  ComparisonChartBite,
+  ComparisonChartBiteLogic,
+  ComparisonChartUIProperties,
+  KeyFigureBite,
+  KeyFigureBiteLogic,
+  TimeseriesChartBiteLogic,
+  TimeseriesChartBite,
+  ColorUsage
 } from 'hxl-preview-ng-lib';
-import { KeyFigureBite } from 'hxl-preview-ng-lib';
-import { ChartBite, ComparisonChartBite } from 'hxl-preview-ng-lib';
-import { TimeseriesChartBite } from 'hxl-preview-ng-lib';
 import { Logger } from 'simple-angular-logger';
 import { BiteService } from 'app/bites/shared/bite.service';
 import { ContentChartComponent } from './content/content-chart/content-chart.component';
 import { ContentTimeseriesChartComponent } from './content/content-timeseries-chart/content-timeseries-chart.component';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
-import { BiteLogicFactory, ColorUsage, KeyFigureBiteLogic, BiteLogic } from 'hxl-preview-ng-lib';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AnalyticsService } from '../shared/analytics.service';
-import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib/src/types/comparison-chart-bite';
 
 @Component({
   selector: 'hxl-bite',
@@ -47,6 +52,10 @@ export class BiteComponent implements OnInit, OnChanges {
   allowShare: boolean;
   @Input()
   allowSettings: boolean;
+  @Input()
+  externalColorPattern: string[];
+  @Input()
+  allowCustomColor: true;
 
   @Output()
   onAdd = new EventEmitter<Bite>();
@@ -108,6 +117,8 @@ export class BiteComponent implements OnInit, OnChanges {
     this.biteLogic = BiteLogicFactory.createBiteLogic(this.bite);
     this.settingsModel = new SettingsModel(this.biteLogic, this.biteService, this);
     this.showColorPatternChooser = this.biteLogic.colorUsage() !== ColorUsage.NONE;
+    this.colorPattern = this.externalColorPattern ? this.externalColorPattern : this.colorPattern;
+    this.biteLogic.initColorsIfNeeded(this.colorPattern);
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['availableBites']) {
@@ -154,21 +165,42 @@ export class BiteComponent implements OnInit, OnChanges {
     }
   }
 
-  toggleSorting() {
-    if (!this.settingsModel.sorting) {
-      this.settingsModel.sorting = this.SORT_DESC;
-    } else {
-      this.settingsModel.sorting = null;
-    }
+  toggleSortingForValue1() {
+    this.settingsModel.sortingByValue1 = this.settingsModel.sortingByValue1 ? null : this.SORT_DESC;
+
     this.renderContent();
   }
 
-  swapSorting() {
-    if (this.settingsModel.sorting === ChartBite.SORT_ASC) {
-      this.settingsModel.sorting = ChartBite.SORT_DESC;
-    } else {
-      this.settingsModel.sorting = ChartBite.SORT_ASC;
-    }
+  swapSortingForValue1() {
+    this.settingsModel.sortingByValue1 =
+        this.settingsModel.sortingByValue1 === ChartBite.SORT_ASC ? ChartBite.SORT_DESC : ChartBite.SORT_ASC;
+
+    this.renderContent();
+  }
+
+  toggleSortingForValue2() {
+    this.settingsModel.sortingByValue2 = this.settingsModel.sortingByValue2 ? null : this.SORT_DESC;
+
+    this.renderContent();
+  }
+
+  swapSortingForValue2() {
+    this.settingsModel.sortingByValue2 =
+        this.settingsModel.sortingByValue2 === ChartBite.SORT_ASC ? ChartBite.SORT_DESC : ChartBite.SORT_ASC;
+
+    this.renderContent();
+  }
+
+  toggleSortingForCategory1() {
+    this.settingsModel.sortingByCategory1 = this.settingsModel.sortingByCategory1 ? null : this.SORT_DESC;
+
+    this.renderContent();
+  }
+
+  swapSortingForCategory1() {
+    this.settingsModel.sortingByCategory1 =
+        this.settingsModel.sortingByCategory1 === ChartBite.SORT_ASC ? ChartBite.SORT_DESC : ChartBite.SORT_ASC;
+
     this.renderContent();
   }
 
@@ -311,6 +343,16 @@ class SettingsModel {
     chartBiteLogic.uiProperties.showGrid = value;
   }
 
+  get showPoints(): boolean {
+    const timeseriesChartBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
+    return timeseriesChartBiteLogic.showPoints;
+  }
+
+  set showPoints(value: boolean) {
+    const timeseriesChartBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
+    timeseriesChartBiteLogic.uiProperties.showPoints = value;
+  }
+
   // get filterZero(): boolean {
   //   return this.bite.filteredValues.indexOf(0) >= 0;
   // }
@@ -425,14 +467,34 @@ class SettingsModel {
     }
   }
 
-  get sorting(): string {
+  get sortingByValue1(): string {
     const chartBiteLogic = this.biteLogic as ChartBiteLogic;
-    return chartBiteLogic.sorting;
+    return chartBiteLogic.sortingByValue1;
   }
 
-  set sorting(sorting: string) {
+  set sortingByValue1(sortingByValue1: string) {
     const chartBiteLogic = this.biteLogic as ChartBiteLogic;
-    chartBiteLogic.uiProperties.sorting = sorting;
+    chartBiteLogic.sortingByValue1 = sortingByValue1;
+  }
+
+  get sortingByValue2(): string {
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    return cmpBiteLogic.sortingByValue2;
+  }
+
+  set sortingByValue2(sortingByValue2: string) {
+    const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
+    cmpBiteLogic.sortingByValue2 = sortingByValue2;
+  }
+
+  get sortingByCategory1(): string {
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    return chartBiteLogic.sortingByCategory1;
+  }
+
+  set sortingByCategory1(sortingByCategory1: string) {
+    const chartBiteLogic = this.biteLogic as ChartBiteLogic;
+    chartBiteLogic.sortingByCategory1 = sortingByCategory1;
   }
 
   get stackChart(): boolean {

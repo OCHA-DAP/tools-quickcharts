@@ -5,6 +5,7 @@ import { Logger } from 'simple-angular-logger';
 import { BiteService } from './shared/bite.service';
 import { AppConfigService } from '../shared/app-config.service';
 import { AnalyticsService } from './shared/analytics.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'hxl-bites',
@@ -12,11 +13,19 @@ import { AnalyticsService } from './shared/analytics.service';
   styleUrls: ['./bites.component.less']
 })
 export class BitesComponent implements OnInit {
+
+  static ALLOWED_DOMAINS_FOR_EXTERNAL_CSS = [
+    'hpc.tools',
+    'ralfbaumbach.org',
+    'alexandru-m-g.github.io'
+  ]
+
   onlyViewMode: boolean;
   recipeUrl: string;
   private state: RouterState;
+  externalCss: string;
 
-  constructor(router: Router, private logger: Logger, private biteService: BiteService,
+  constructor(router: Router, private logger: Logger, public sanitizer: DomSanitizer, private biteService: BiteService,
               private appConfigService: AppConfigService, private analyticsService: AnalyticsService,
               private hxlProxyService: HxlproxyService) {
     this.onlyViewMode = false;
@@ -38,10 +47,26 @@ export class BitesComponent implements OnInit {
         if (onlyViewMode === 'true') {
           this.onlyViewMode = true;
         }
-
+        const externalCss = this.appConfigService.get('externalCss');
+        if (this.parseUrlString(externalCss)) {
+          this.externalCss = externalCss;
+        }
         this.biteService.init();
       }
     );
+  }
+
+  private parseUrlString(url: string): boolean {
+    if (url && url.indexOf('://')) {
+      const restOfUrl = url.substr(url.indexOf('://') + 3);
+      const hostname = restOfUrl.split('/')[0];
+      for (const allowedDomains of BitesComponent.ALLOWED_DOMAINS_FOR_EXTERNAL_CSS) {
+        if (hostname.endsWith(allowedDomains)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
 }

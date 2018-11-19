@@ -60,8 +60,9 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
   protected generateOptions(): C3ChartConfig {
     this.overwriteXAxisLabel();
     const config = super.generateOptions();
+    const tsBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
     config.point = {
-      show: false
+      show: (tsBiteLogic.showPoints ? true : false)
     };
     return config;
   }
