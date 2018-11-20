@@ -2,7 +2,7 @@ import { SimpleDropdownPayload } from './../../common/component/simple-dropdown/
 import { Bite, ChartBite, KeyFigureBite, TimeseriesChartBite, ComparisonChartBite, CookbooksAndTags } from 'hxl-preview-ng-lib';
 import { Component, ElementRef, HostListener, Inject, NgZone, OnInit, ViewChild } from '@angular/core';
 import {BiteService} from '../shared/bite.service';
-import {Logger} from 'simple-angular-logger';
+import { NGXLogger as Logger } from 'ngx-logger';
 import {AppConfigService} from '../../shared/app-config.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { SimpleModalComponent } from 'hxl-preview-ng-lib';
