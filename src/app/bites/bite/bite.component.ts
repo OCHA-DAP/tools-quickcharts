@@ -18,7 +18,7 @@ import {
   TimeseriesChartBite,
   ColorUsage
 } from 'hxl-preview-ng-lib';
-import { Logger } from 'simple-angular-logger';
+import { NGXLogger as Logger } from 'ngx-logger';
 import { BiteService } from 'app/bites/shared/bite.service';
 import { ContentChartComponent } from './content/content-chart/content-chart.component';
 import { ContentTimeseriesChartComponent } from './content/content-timeseries-chart/content-timeseries-chart.component';

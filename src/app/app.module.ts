@@ -11,19 +11,11 @@ import { AnalyticsService } from './bites/shared/analytics.service';
 import { HttpService } from './shared/http.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 // Import the module and model classes.
-import { LoggerModule, Options, Level } from 'simple-angular-logger';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from '../environments/environment';
 import { HxlproxyService, SimpleModule } from 'hxl-preview-ng-lib';
 import { RecipeService } from './bites/shared/recipe.service';
 import { HttpEventsService } from './shared/http-events.service';
-
-export function loggerOptions(): Options {
-  if (environment.production) {
-    return { level: Level.WARN };
-  } else {
-    return { level: Level.LOG };
-  }
-}
 
 export const HTTP_SERVICE_PROVIDERS: any = {
   provide: HTTP_INTERCEPTORS,
@@ -41,7 +33,7 @@ export const HTTP_SERVICE_PROVIDERS: any = {
     HttpClientModule,
     BitesModule,
     HxlBitesRoutingModule,
-    LoggerModule.forRoot(loggerOptions),
+    LoggerModule.forRoot({level: environment.production ? NgxLoggerLevel.WARN : NgxLoggerLevel.LOG}),
     SimpleModule
   ],
   providers: [

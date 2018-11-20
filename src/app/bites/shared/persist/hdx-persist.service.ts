@@ -2,7 +2,7 @@
 import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { HxlPreviewConfig } from './hxl-preview-config';
 import { Injectable } from '@angular/core';
-import { Logger } from 'simple-angular-logger';
+import { NGXLogger as Logger } from 'ngx-logger';
 import { PersistService } from '../persist.service';
 import { Bite } from 'hxl-preview-ng-lib';
 import { AppConfigService } from '../../../shared/app-config.service';

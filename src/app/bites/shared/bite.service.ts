@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite,
         BiteLogicFactory, ChartBiteLogic, BiteConfig } from 'hxl-preview-ng-lib';
 import { RecipeService } from './recipe.service';
-import { Logger } from 'simple-angular-logger';
+import { NGXLogger as Logger } from 'ngx-logger';
 import { CookBookService, CookbooksAndTags } from 'hxl-preview-ng-lib';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';

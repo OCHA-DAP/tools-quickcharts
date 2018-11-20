@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { Bite } from 'hxl-preview-ng-lib';
 import { Observable, concat } from 'rxjs';
 import { HxlproxyService } from 'hxl-preview-ng-lib';
-import { Logger } from 'simple-angular-logger';
 import { BiteLogicFactory } from 'hxl-preview-ng-lib';
 
 @Injectable()
 export class RecipeService {
 
-  constructor(private hxlProxyService: HxlproxyService, private logger: Logger) { }
+  constructor(private hxlProxyService: HxlproxyService) { }
 
   // testProcessBite() {
   //   let bite1 = new KeyFigureBite('KF Bite', '#affected+buildings+partially', 'PRE', 'POST', 'descr');
