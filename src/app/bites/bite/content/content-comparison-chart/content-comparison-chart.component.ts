@@ -86,6 +86,7 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
         values[0][0],
         values[1][0]
       ]];
+      config.data.order = null; // stack the values in the order that they are given in config.data.columns
     }
   }
 
