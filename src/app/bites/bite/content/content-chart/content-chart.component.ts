@@ -433,11 +433,11 @@ export class ChartDataSorter {
 
   protected limit(fromStart = true) {
     const limit = this.biteLogic.limit;
-    if (limit && limit > 0) {
+    const length = this.categAndValues.length;
+    if (limit && limit > 0 && limit < length) {
       if (fromStart) {
         this.categAndValues = this.categAndValues.slice(0, limit);
       } else {
-        const length = this.categAndValues.length;
         this.categAndValues = this.categAndValues.slice(length - limit, length);
       }
     }
