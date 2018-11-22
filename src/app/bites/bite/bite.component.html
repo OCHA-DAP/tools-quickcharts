@@ -14,8 +14,8 @@
   <div *ngIf="!bite.errorMsg; else errorMessage">
     <div class="content" [ngSwitch]="bite.type">
       <hxl-content-topline *ngSwitchCase="classTypes.ToplineBite" [bite]="bite"></hxl-content-topline>
-      <hxl-content-chart *ngSwitchCase="classTypes.ChartBite" [bite]="bite"></hxl-content-chart>
-      <hxl-content-comparison-chart *ngSwitchCase="classTypes.ComparisonChartBite" [bite]="bite"></hxl-content-comparison-chart>
+      <hxl-content-chart *ngSwitchCase="classTypes.ChartBite" [bite]="bite" [originalMaxNumberOfValues]="maxNumberOfValues"></hxl-content-chart>
+      <hxl-content-comparison-chart *ngSwitchCase="classTypes.ComparisonChartBite" [bite]="bite" [originalMaxNumberOfValues]="maxNumberOfValues"></hxl-content-comparison-chart>
       <hxl-content-timeseries-chart *ngSwitchCase="classTypes.TimeseriesChartBite" [bite]="bite"></hxl-content-timeseries-chart>
     </div>
   </div>
@@ -190,7 +190,7 @@
             <hxl-checkbox-slider *ngIf="(bite.type == classTypes.ComparisonChartBite)" (checked)="settingsModel.stackChart=$event; renderContent();"
               name="stack-chart" [uuid]="uuid" title="Stack Chart" [initiallyChecked]="settingsModel.stackChart">
             </hxl-checkbox-slider>
-            <div class="element-group">
+            <div class="element-group" *ngIf="bite.type === classTypes.ChartBite || bite.type === classTypes.ComparisonChartBite">
               <label>
                 Limit number of values
               </label>
@@ -198,7 +198,7 @@
                 <input type="number" placeholder="enter limit" [(ngModel)]="settingsModel.limit" name="limit">
               </div>
             </div>
-            <div class="element-group">
+            <div class="element-group" *ngIf="bite.type !== classTypes.ToplineBite">
               <label>
                 Chart values title
                 <span *ngIf="(bite.type == classTypes.ComparisonChartBite)">1</span>

@@ -56,6 +56,8 @@ export class BiteComponent implements OnInit, OnChanges {
   externalColorPattern: string[];
   @Input()
   allowCustomColor: true;
+  @Input()
+  maxNumberOfValues: number;
 
   @Output()
   onAdd = new EventEmitter<Bite>();

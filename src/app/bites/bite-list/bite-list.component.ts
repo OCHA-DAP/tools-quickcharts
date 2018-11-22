@@ -61,6 +61,7 @@ export class BiteListComponent implements OnInit {
 
   externalColorPattern: string[];
   allowCustomColor = true;
+  maxNumberOfValues = 7.5;
 
   /* share Widget configs */
   shareUrlMode = false;
@@ -175,6 +176,8 @@ export class BiteListComponent implements OnInit {
     this.externalColorPattern =
         (this.appConfig.get('externalColorPattern') ? this.appConfig.get('externalColorPattern').split(',') : null );
     this.allowCustomColor = this.appConfig.get('allowCustomColor') ? this.appConfig.get('allowCustomColor') === 'true' : true;
+    this.maxNumberOfValues = this.appConfig.get('maxNumberOfValues') ?
+        parseInt(this.appConfig.get('maxNumberOfValues'), 10) + 0.5  : this.maxNumberOfValues;
   }
 
   protected hasModifyPermission (): boolean {
