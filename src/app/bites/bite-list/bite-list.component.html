@@ -93,6 +93,7 @@
               [singleBite]="biteList.length === 1" [toolsMode]="toolsMode" [hasModifyPermission]="hasModifyPermission()"
               [allowShare]="allowShare" [allowSettings]="allowSettings" [externalColorPattern]="externalColorPattern"
               [allowCustomColor]="allowCustomColor"
+              [maxNumberOfValues]="maxNumberOfValues"
               (onDelete)="deleteBite($event)" (onSwitch)="switchBite($event)"
               (onCancel)="cancelBite($event - 1)" (onSave)="saveBite($event - 1)"
               (onEmbedUrlCreate)="singleEmbedUrlCreated($event)">
