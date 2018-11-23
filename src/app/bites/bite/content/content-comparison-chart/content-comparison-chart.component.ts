@@ -1,7 +1,7 @@
 import { ChartBite, ComparisonChartBiteLogic, ChartUIProperties } from 'hxl-preview-ng-lib';
 import { ContentChartComponent, C3ChartConfig, CategValuesElement, ChartDataSorter } from './../content-chart/content-chart.component';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib/src/types/comparison-chart-bite';
+import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib';
 
 @Component({
   selector: 'hxl-content-comparison-chart',
