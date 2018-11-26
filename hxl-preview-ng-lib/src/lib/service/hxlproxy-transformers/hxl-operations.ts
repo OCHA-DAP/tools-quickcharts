@@ -1,3 +1,4 @@
+import { Pattern } from './../../util/hxl/pattern';
 import { SpecialFilterValues } from './hxl-operations';
 import { HxlFilter } from '../../types/ingredients';
 
@@ -128,7 +129,8 @@ export class CleanOperation extends  AbstractOperation {
   constructor(dateCol: string) {
     super(new CleanRecipe(dateCol));
     if (dateCol && dateCol.length > 0) {
-      (this.recipe as CleanRecipe).date_format = '%Y-%m-%d';
+      (this.recipe as CleanRecipe).date_format =
+          Pattern.matchPatternToColumn('#date+year', dateCol) ? '%Y-01-01' : '%Y-%m-%d';
     }
   }
 }
