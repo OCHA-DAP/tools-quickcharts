@@ -1,7 +1,7 @@
 import { ChartBite, ComparisonChartBiteLogic, ChartUIProperties } from 'hxl-preview-ng-lib';
 import { ContentChartComponent, C3ChartConfig, CategValuesElement, ChartDataSorter } from './../content-chart/content-chart.component';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib/src/types/comparison-chart-bite';
+import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib';
 
 @Component({
   selector: 'hxl-content-comparison-chart',
@@ -86,6 +86,7 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
         values[0][0],
         values[1][0]
       ]];
+      config.data.order = null; // stack the values in the order that they are given in config.data.columns
     }
   }
 

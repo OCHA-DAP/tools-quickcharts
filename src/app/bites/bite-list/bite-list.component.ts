@@ -2,7 +2,7 @@ import { SimpleDropdownPayload } from './../../common/component/simple-dropdown/
 import { Bite, ChartBite, KeyFigureBite, TimeseriesChartBite, ComparisonChartBite, CookbooksAndTags } from 'hxl-preview-ng-lib';
 import { Component, ElementRef, HostListener, Inject, NgZone, OnInit, ViewChild } from '@angular/core';
 import {BiteService} from '../shared/bite.service';
-import {Logger} from 'simple-angular-logger';
+import { NGXLogger as Logger } from 'ngx-logger';
 import {AppConfigService} from '../../shared/app-config.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { SimpleModalComponent } from 'hxl-preview-ng-lib';
@@ -61,6 +61,7 @@ export class BiteListComponent implements OnInit {
 
   externalColorPattern: string[];
   allowCustomColor = true;
+  maxNumberOfValues = 7.5;
 
   /* share Widget configs */
   shareUrlMode = false;
@@ -175,6 +176,8 @@ export class BiteListComponent implements OnInit {
     this.externalColorPattern =
         (this.appConfig.get('externalColorPattern') ? this.appConfig.get('externalColorPattern').split(',') : null );
     this.allowCustomColor = this.appConfig.get('allowCustomColor') ? this.appConfig.get('allowCustomColor') === 'true' : true;
+    this.maxNumberOfValues = this.appConfig.get('maxNumberOfValues') ?
+        parseInt(this.appConfig.get('maxNumberOfValues'), 10) + 0.5  : this.maxNumberOfValues;
   }
 
   protected hasModifyPermission (): boolean {

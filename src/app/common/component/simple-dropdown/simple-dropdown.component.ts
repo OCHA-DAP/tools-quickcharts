@@ -1,5 +1,4 @@
 import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
-import { Logger } from 'simple-angular-logger';
 
 export interface SimpleDropdownPayload {
   name: string;
@@ -42,7 +41,7 @@ export class SimpleDropdownComponent implements OnInit {
   classDecoratorParam: any;
 
 
-  constructor(private logger: Logger) {
+  constructor() {
     this.selected = new EventEmitter<any>();
   }
 

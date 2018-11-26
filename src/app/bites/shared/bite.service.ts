@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite,
         BiteLogicFactory, ChartBiteLogic, BiteConfig } from 'hxl-preview-ng-lib';
 import { RecipeService } from './recipe.service';
-import { Logger } from 'simple-angular-logger';
+import { NGXLogger as Logger } from 'ngx-logger';
 import { CookBookService, CookbooksAndTags } from 'hxl-preview-ng-lib';
 import { PersistService } from './persist.service';
 import { AppConfigService } from '../../shared/app-config.service';
@@ -151,10 +151,14 @@ export class BiteService {
     const externalCss = this.appConfigService.get('externalCss') ?
           ';externalCss=' + encodeURIComponent(this.appConfigService.get('externalCss')) : '';
 
+    const maxNumberOfValues = this.appConfigService.get('maxNumberOfValues') ?
+    ';maxNumberOfValues=' + this.appConfigService.get('maxNumberOfValues') : '';
+
     return `${protocol}//${hostname}${port}${pathWithoutParams};` +
            `url=${url};embeddedSource=${embeddedSource};embeddedUrl=${embeddedUrl};embeddedDate=${embeddedDate};` +
            `embeddedConfig=${embeddedConfig}${singleWidgetMode};embeddedTitle=${embeddedTitle}` +
-           `${recipeUrlParam}${sample}${allowBiteSwitch}${externalColorPattern}${allowCustomColor}${externalCss}`;
+           `${recipeUrlParam}${sample}${allowBiteSwitch}${externalColorPattern}${allowCustomColor}${externalCss}` +
+           `${maxNumberOfValues}`;
   }
 
   /**

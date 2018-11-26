@@ -20,11 +20,14 @@ declare const d3: any;
 export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
   @Input()
   bite: ChartBite;
+  @Input()
+  originalMaxNumberOfValues = 7.5;
+
+  maxNumberOfValues = 7.5;
 
   biteLogic: ChartBiteLogic;
 
   elementRef: ElementRef;
-  maxNumberOfValues = 7.5;
 
   _dataSorter: ChartDataSorter;
 
@@ -232,6 +235,17 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   render(): void {
+    this.maxNumberOfValues = this.originalMaxNumberOfValues;
+    let numOfValues = this.biteLogic.values.length;
+    if ( this.biteLogic.limit && this.biteLogic.limit < numOfValues ) {
+      numOfValues = this.biteLogic.limit;
+    }
+    if (numOfValues < 2.5) {
+      this.maxNumberOfValues = 2.5;
+    } else if (numOfValues < this.originalMaxNumberOfValues) {
+      this.maxNumberOfValues = numOfValues + 0.5;
+    }
+
     const c3_chart = c3.generate(this.generateOptions());
     // Reasonable defaults
     const PIXEL_STEP  = 10;
@@ -419,11 +433,11 @@ export class ChartDataSorter {
 
   protected limit(fromStart = true) {
     const limit = this.biteLogic.limit;
-    if (limit && limit > 0) {
+    const length = this.categAndValues.length;
+    if (limit && limit > 0 && limit < length) {
       if (fromStart) {
         this.categAndValues = this.categAndValues.slice(0, limit);
       } else {
-        const length = this.categAndValues.length;
         this.categAndValues = this.categAndValues.slice(length - limit, length);
       }
     }
