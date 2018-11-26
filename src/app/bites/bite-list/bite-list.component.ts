@@ -332,7 +332,7 @@ export class BiteListComponent implements OnInit {
   }
 
   private getChosenCookbookName(): string {
-    return this.cookbooksAndTags && this.cookbooksAndTags.chosenCookbook ?
+    return this.cookbooksAndTags && this.cookbooksAndTags.chosenCookbook && !this.showCustomCookbookControls ?
                 this.cookbooksAndTags.chosenCookbook.name : null;
   }
 
