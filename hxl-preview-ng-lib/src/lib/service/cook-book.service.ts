@@ -33,6 +33,9 @@ export class CookBookService {
   }
 
   private hxlMatcher(generalColumn: string, dataColumn: string): boolean {
+    if (dataColumn.indexOf('#') < 0) {
+      dataColumn = '#' + dataColumn.trim();
+    }
     return Pattern.matchPatternToColumn(generalColumn, dataColumn);
   }
 
@@ -138,7 +141,7 @@ export class CookBookService {
         let avAggCols: string[] = [];
         if (biteConfig.ingredients.aggregateColumns) {
           biteConfig.ingredients.aggregateColumns.forEach(col => {
-            if (!(biteConfig.type === 'timeseries' && col.indexOf('#date') >= 0)) {
+            if (!(biteConfig.type === 'timeseries' && this.hxlMatcher('#date', col))) {
               aggregateColumns.push(col);
             }
           });
@@ -164,7 +167,7 @@ export class CookBookService {
 
         if (biteConfig.type === TimeseriesChartBite.type()) {
           hxlTags.forEach(col => {
-            if (col.indexOf('#date') >= 0) {
+            if (this.hxlMatcher('#date', col)) {
               dateColumns.push(col);
             }
           });
