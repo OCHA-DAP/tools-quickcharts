@@ -40,6 +40,7 @@ class CutRecipe extends BasicRecipe {
 }
 
 class CleanRecipe extends BasicRecipe {
+  public date_format: string;
   /**
    *
    * @param date Tag that contains dates to clean
@@ -126,6 +127,9 @@ export class CutOperation extends AbstractOperation {
 export class CleanOperation extends  AbstractOperation {
   constructor(dateCol: string) {
     super(new CleanRecipe(dateCol));
+    if (dateCol && dateCol.length > 0) {
+      (this.recipe as CleanRecipe).date_format = '%Y-%m-%d';
+    }
   }
 }
 
