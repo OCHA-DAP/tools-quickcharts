@@ -6,7 +6,7 @@ import { NGXLogger as Logger } from 'ngx-logger';
 import {AppConfigService} from '../../shared/app-config.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { SimpleModalComponent } from 'hxl-preview-ng-lib';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { HttpService } from '../../shared/http.service';
 import { AnalyticsService } from '../shared/analytics.service';
 import { DOCUMENT } from '@angular/platform-browser';
@@ -23,6 +23,7 @@ export class BiteListComponent implements OnInit {
   biteList: Array<Bite>;
   bitesUnrendered = 0;
   availableBites: Array<Bite>;
+  private biteLoadSubscription: Subscription = null;
 
   listIsFull: boolean;
 
@@ -332,7 +333,7 @@ export class BiteListComponent implements OnInit {
   }
 
   private getChosenCookbookName(): string {
-    return this.cookbooksAndTags && this.cookbooksAndTags.chosenCookbook ?
+    return this.cookbooksAndTags && this.cookbooksAndTags.chosenCookbook && !this.showCustomCookbookControls ?
                 this.cookbooksAndTags.chosenCookbook.name : null;
   }
 
@@ -361,8 +362,10 @@ export class BiteListComponent implements OnInit {
     if (this.allowBiteSwitch) {
     const newAvailableBites = [];
     // const loadedHashCodeList: number[] = this.biteList ? this.biteList.map(bite => bite.hashCode) : [];
-    biteObs
-      .subscribe(
+    if (this.biteLoadSubscription && !this.biteLoadSubscription.closed) {
+      this.biteLoadSubscription.unsubscribe();
+    }
+    this.biteLoadSubscription = biteObs.subscribe(
       bite => {
         // this.logger.log('Available bite ' + JSON.stringify(bite));
         newAvailableBites.push(bite);
@@ -469,7 +472,7 @@ export class BiteListComponent implements OnInit {
   }
 
   protected customCookbookSelected(url: string) {
-    console.log(url);
+    this.logger.log('Custom cookbook selected ' + url);
     this.customCookbookUrl = url;
     this.biteList = [];
     const availableInfo = this.biteService.generateAvailableCookbooksAndBites(url);

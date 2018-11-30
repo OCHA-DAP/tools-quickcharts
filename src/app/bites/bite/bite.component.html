@@ -22,7 +22,7 @@
   <ng-template #errorMessage>
     <div class="content">{{bite.errorMsg}}</div>
   </ng-template>
-  <div class="description">
+  <div class="description" [class.empty]="biteLogic.description.length==0">
     <div class="description-content">
       {{ biteLogic.description }}
     </div>
