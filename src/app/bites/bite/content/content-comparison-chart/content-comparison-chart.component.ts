@@ -10,6 +10,8 @@ import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib';
 })
 export class ContentComparisonChartComponent extends ContentChartComponent implements OnInit, AfterViewInit {
 
+  protected sortedComparisonValues: any[];
+
   ngOnInit() {
   }
 
@@ -21,8 +23,8 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
   protected generateOptionsTooltip(config: C3ChartConfig) {
     const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
     const values = [
-      cmpBiteLogic.values,
-      cmpBiteLogic.comparisonValues
+      this.sortedValues,
+      this.sortedComparisonValues
     ];
     config.tooltip = {
       format: {
@@ -73,9 +75,11 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
     const dataSorter = this.dataSorter;
     const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
 
+    this.sortedComparisonValues = dataSorter.getSortedComparisonValues();
+
     const values = [
-      dataSorter.getSortedValues(),
-      dataSorter.getSortedComparisonValues()
+      this.sortedValues,
+      this.sortedComparisonValues
     ];
 
     config.data.columns = values;

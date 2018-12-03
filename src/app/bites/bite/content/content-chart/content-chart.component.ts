@@ -31,7 +31,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
 
   _dataSorter: ChartDataSorter;
 
-  private sortedCategories: string[];
+  protected sortedCategories: string[];
+  protected sortedValues: any[];
 
   constructor(elementRef: ElementRef, private analyticsService: AnalyticsService) {
     this.elementRef = elementRef;
@@ -118,19 +119,19 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
     dataSorter.process();
 
     this.sortedCategories = dataSorter.getSortedCategories();
-    const values = dataSorter.getSortedValues();
+    this.sortedValues = dataSorter.getSortedValues();
 
     if (!this.biteLogic.pieChart) {
       config.data = {
-        columns: [values],
+        columns: [this.sortedValues],
         type: 'bar'
       };
     } else {
       // this.sortedCategories can be set when sorting is selected, otherwise use bite categories
       const categories = this.sortedCategories || this.biteLogic.categories;
       const pieValues = [];
-      for (let i = 1; i < values.length; i++) {
-        pieValues.push([categories[i - 1], values[i]]);
+      for (let i = 1; i < this.sortedValues.length; i++) {
+        pieValues.push([categories[i - 1], this.sortedValues[i]]);
       }
       // console.log(pieValues);
 
