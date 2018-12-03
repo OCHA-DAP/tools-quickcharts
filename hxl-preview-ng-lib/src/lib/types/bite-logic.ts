@@ -203,6 +203,10 @@ export abstract class BiteLogic {
     return description;
   }
 
+  public get descriptionLength(): number {
+    return this.description ? this.description.length : 0;
+  }
+
   public get dataTitle(): string {
     const defaultDataTitle = this.bite.computedProperties.dataTitle;
     const dataTitle = this.bite.uiProperties.dataTitle == null ? defaultDataTitle : this.bite.uiProperties.dataTitle;
