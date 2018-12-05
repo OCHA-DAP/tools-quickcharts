@@ -60,7 +60,15 @@ export class ChartBiteLogic extends BiteLogic {
 
   public isGroupedByDateColumn(): boolean {
     if (this.bite.ingredient.aggregateColumn) {
-      return this.bite.ingredient.aggregateColumn.indexOf('#date') >= 0
+      return this.bite.ingredient.aggregateColumn.indexOf('#date') >= 0;
+    }
+    return false;
+  }
+
+  public hasData(): boolean {
+    // for pie charts we need at least 2 values (plus the title)
+    if (this.values != null && this.values.length >= 3) {
+      return true;
     }
     return false;
   }

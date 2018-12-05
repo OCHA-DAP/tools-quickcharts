@@ -30,7 +30,7 @@ export class ComparisonChartBiteLogic extends ChartBiteLogic {
       this.dataProperties.comparisonValues = [this.bite.ingredient.comparisonValueColumn];
 
       for (let i = 2; i < hxlData.length; i++) {
-        let computedValue = hxlData[i][compColIndex];
+        const computedValue = hxlData[i][compColIndex];
 
         // If we have more than 1 row of data
         // if (hxlData.length > 3) {
@@ -48,9 +48,10 @@ export class ComparisonChartBiteLogic extends ChartBiteLogic {
 
   protected populateDataTitleWithHxlProxyInfo(): BiteLogic {
     super.populateDataTitleWithHxlProxyInfo();
-      let computedProperties: ComparisonChartComputedProperties = (<ComparisonChartComputedProperties>this.bite.computedProperties);
+      const computedProperties: ComparisonChartComputedProperties =
+                      (<ComparisonChartComputedProperties>this.bite.computedProperties);
       if (!computedProperties.comparisonDataTitle) {
-          let ingredient = this.bite.ingredient;
+          const ingredient = this.bite.ingredient;
           computedProperties.comparisonDataTitle = ingredient.comparisonValueColumn;
       }
     return this;
@@ -59,11 +60,12 @@ export class ComparisonChartBiteLogic extends ChartBiteLogic {
 
   public populateWithTitle(columnNames: string[], hxlTags: string[]): BiteLogic {
     super.populateWithTitle(columnNames, hxlTags);
-    let computedProperties: ComparisonChartComputedProperties = (<ComparisonChartComputedProperties>this.bite.computedProperties);
+    const computedProperties: ComparisonChartComputedProperties =
+                  (<ComparisonChartComputedProperties>this.bite.computedProperties);
     const availableTags = {};
     hxlTags.forEach((v, idx) => availableTags[v] = idx);
 
-    let ingrValColumn = this.bite.ingredient.comparisonValueColumn;
+    const ingrValColumn = this.bite.ingredient.comparisonValueColumn;
     const valueColumn = columnNames[availableTags[ingrValColumn]];
     const hxlValueColumn = hxlTags[availableTags[ingrValColumn]];
     computedProperties.comparisonDataTitle = (valueColumn && valueColumn.length > 0 ) ? valueColumn : hxlValueColumn;
@@ -87,6 +89,14 @@ export class ComparisonChartBiteLogic extends ChartBiteLogic {
     if (!this.uiProperties.comparisonColor) {
       this.uiProperties.comparisonColor = colorPattern[1];
     }
+  }
+
+  public hasData(): boolean {
+    // we need at least 1 datapoint to show a comparison chart
+    if (this.values != null && this.values.length >= 2) {
+      return true;
+    }
+    return false;
   }
 
   public get dataProperties(): ComparisonChartDataProperties {
@@ -113,11 +123,13 @@ export class ComparisonChartBiteLogic extends ChartBiteLogic {
   }
 
   public get comparisonDataTitle(): string {
-    let uiProperties: ComparisonChartUIProperties = (<ComparisonChartUIProperties>this.bite.uiProperties);
-    let computedProperties: ComparisonChartComputedProperties = (<ComparisonChartComputedProperties>this.bite.computedProperties);
+    const uiProperties: ComparisonChartUIProperties = (<ComparisonChartUIProperties>this.bite.uiProperties);
+    const computedProperties: ComparisonChartComputedProperties =
+              (<ComparisonChartComputedProperties>this.bite.computedProperties);
 
     const defaultDataTitle = computedProperties.comparisonDataTitle;
-    const comparisonDataTitle = uiProperties.comparisonDataTitle == null ? defaultDataTitle : uiProperties.comparisonDataTitle;
+    const comparisonDataTitle =
+              uiProperties.comparisonDataTitle == null ? defaultDataTitle : uiProperties.comparisonDataTitle;
     return comparisonDataTitle;
   }
 

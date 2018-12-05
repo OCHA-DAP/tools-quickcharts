@@ -128,6 +128,16 @@ export class TimeseriesChartBiteLogic extends ChartBiteLogic {
     }
   }
 
+  public hasData(): boolean {
+    // values is an array of array
+    // First sub-array represents the date points
+    // each additional sub-array represent a timeseries/line in the chart
+    if (this.values != null && this.values.length >= 2) {
+      return true;
+    }
+    return false;
+  }
+
   public get uiProperties(): TimeseriesChartUIProperties {
     return this.bite.uiProperties as TimeseriesChartUIProperties;
   }
