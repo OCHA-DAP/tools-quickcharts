@@ -17,7 +17,8 @@ export class BitesComponent implements OnInit {
   static ALLOWED_DOMAINS_FOR_EXTERNAL_CSS = [
     'hpc.tools',
     'ralfbaumbach.org',
-    'alexandru-m-g.github.io'
+    'alexandru-m-g.github.io',
+    'hum-insight.info'
   ]
 
   onlyViewMode: boolean;
