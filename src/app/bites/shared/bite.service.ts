@@ -222,9 +222,7 @@ export class BiteService {
             // should we check if bite can render?
             if (replaceIndex === undefined) {
               // check if bite can render
-              if (chartBiteLogic.values == null ||
-                 ((chartBiteLogic.values[0] instanceof Array) && (chartBiteLogic.values[0].length < 2)) ||
-                 (!(chartBiteLogic.values[0] instanceof Array) && (chartBiteLogic.values.length < 3))) {
+              if (!chartBiteLogic.hasData()) {
                 observable.next(false);
                 observable.complete();
                 return;
