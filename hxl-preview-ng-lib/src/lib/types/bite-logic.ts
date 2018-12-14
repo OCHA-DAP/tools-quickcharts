@@ -1,4 +1,6 @@
 import { Bite, UIProperties, ComputedProperties, DataProperties } from './bite';
+import { Pattern } from '../util/hxl/pattern';
+
 export abstract class BiteLogic {
 
   protected tagToIndexMap: { [s: string]: number; } = {};
@@ -14,11 +16,11 @@ export abstract class BiteLogic {
    * Generally used before saving the bite. We don't want the values to be saved as well.
    * The bites should have fresh data loaded from the data source each time.
    *
-   * @return
    */
   public unpopulateBite(): BiteLogic {
     this.bite.dataProperties = this.initDataProperties();
     this.bite.tempShowSaveCancelButtons = false;
+    this.bite.errorMsg = null;
     return this;
   }
 
@@ -41,7 +43,7 @@ export abstract class BiteLogic {
     if (hxlData && hxlData.length > 2) {
       for (let i = 0; i < hxlData[1].length; i++) {
         const currentTag: string = hxlData[1][i];
-        if (currentTag === hxlTag) {
+        if (Pattern.matchPatternToColumn(hxlTag, currentTag)) {
           return i;
         }
       }
@@ -79,7 +81,7 @@ export abstract class BiteLogic {
       /* tslint:enable */
     }
     return hash;
-  };
+  }
 
   protected strListHash(strList: string[]): number {
     let hash = 0;
@@ -90,7 +92,7 @@ export abstract class BiteLogic {
       }
     }
     return hash;
-  };
+  }
 
   public populateWithTitle(columnNames: string[], hxlTags: string[]): BiteLogic {
     hxlTags.forEach((v, idx) => this.tagToIndexMap[v] = idx);
