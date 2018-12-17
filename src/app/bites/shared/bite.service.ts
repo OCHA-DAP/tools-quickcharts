@@ -1,17 +1,17 @@
-import { HxlPreviewConfig } from './persist/hxl-preview-config';
 import { Injectable } from '@angular/core';
-import { Bite, ChartBite, ComparisonChartBite, TimeseriesChartBite,
-        BiteLogicFactory, ChartBiteLogic, BiteConfig } from 'hxl-preview-ng-lib';
-import { RecipeService } from './recipe.service';
+import { Bite, BiteConfig, BiteLogicFactory, ChartBite, ChartBiteLogic, ComparisonChartBite, CookbooksAndTags,
+  CookBookService, TimeseriesChartBite } from 'hxl-preview-ng-lib';
 import { NGXLogger as Logger } from 'ngx-logger';
-import { CookBookService, CookbooksAndTags } from 'hxl-preview-ng-lib';
-import { PersistService } from './persist.service';
+import { AsyncSubject, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { AppConfigService } from '../../shared/app-config.service';
 import { DomEventsService } from '../../shared/dom-events.service';
-import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
+import { PersistService } from './persist.service';
+import { HxlPreviewConfig } from './persist/hxl-preview-config';
 import { PersisUtil } from './persist/persist-util';
-import { Observable,  AsyncSubject, of } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { RecipeService } from './recipe.service';
 
 @Injectable()
 export class BiteService {
@@ -23,6 +23,15 @@ export class BiteService {
   private nextId = 0;
 
   private persistUtil: PersisUtil;
+
+  private readonly filterErrorMessagesFromSavedBites = map((hxlPreviewConfig: HxlPreviewConfig) => {
+    if (hxlPreviewConfig && hxlPreviewConfig.bites) {
+      hxlPreviewConfig.bites.forEach((bite: Bite) => {
+        bite.errorMsg = null;
+      });
+    }
+    return hxlPreviewConfig;
+  });
 
   private static findBiteInArray(bite: Bite, bites: Bite[]): number {
     let index = -1;
@@ -54,6 +63,12 @@ export class BiteService {
   }
 
   public loadSavedPreview(resetMode: boolean): Observable<HxlPreviewConfig> {
+    return this.retrieveSavedPreview(resetMode).pipe(
+      this.filterErrorMessagesFromSavedBites
+    )
+  }
+
+  private retrieveSavedPreview(resetMode: boolean): Observable<HxlPreviewConfig> {
     if (resetMode) {
       return of({
         configVersion: 0,
@@ -222,9 +237,7 @@ export class BiteService {
             // should we check if bite can render?
             if (replaceIndex === undefined) {
               // check if bite can render
-              if (chartBiteLogic.values == null ||
-                 ((chartBiteLogic.values[0] instanceof Array) && (chartBiteLogic.values[0].length < 2)) ||
-                 (!(chartBiteLogic.values[0] instanceof Array) && (chartBiteLogic.values.length < 3))) {
+              if (!chartBiteLogic.hasData()) {
                 observable.next(false);
                 observable.complete();
                 return;
