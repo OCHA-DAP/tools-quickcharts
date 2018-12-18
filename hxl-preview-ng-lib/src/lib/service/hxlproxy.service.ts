@@ -120,57 +120,50 @@ export class HxlproxyService {
   }
 
   populateBite(bite: Bite, hxlFileUrl: string): Observable<any> {
-    return this.fetchMetaRows(hxlFileUrl)
-        .pipe(
-            flatMap(
-                (metarows: string[][]) => {
-                    const biteLogic = BiteLogicFactory.createBiteLogic(bite);
-                    let transformer: AbstractHxlTransformer;
-                    switch (bite.ingredient.aggregateFunction) {
-                        case 'count':
-                            transformer = new CountChartTransformer(biteLogic);
-                            break;
-                        case 'sum':
-                            transformer = new SumChartTransformer(biteLogic);
-                            break;
-                        case 'distinct-count':
-                            transformer = new DistinctCountChartTransformer(biteLogic);
-                            break;
-                    }
-                    if (biteLogic.usesDateColumn()) {
-                        transformer = new TimeseriesChartTransformer(transformer, biteLogic.dateColumn);
-                    }
-                    // if (bite.filteredValues && bite.filteredValues.length > 0) {
-                    //   transformer = new FilterSettingTransformer(transformer, bite.ingredient.valueColumn, bite.filteredValues);
-                    // }
 
-                    return this.fetchFilterSpecialValues(bite.ingredient.filters)
-                        .pipe(
-                            flatMap( (specialFilterValues: SpecialFilterValues) => {
-                                if (biteLogic.hasFilters()) {
-                                    transformer = new FilterSettingTransformer(transformer, bite.ingredient.filters, specialFilterValues);
-                                }
+    const biteLogic = BiteLogicFactory.createBiteLogic(bite);
+    let transformer: AbstractHxlTransformer;
+    switch (bite.ingredient.aggregateFunction) {
+      case 'count':
+        transformer = new CountChartTransformer(biteLogic);
+        break;
+      case 'sum':
+        transformer = new SumChartTransformer(biteLogic);
+        break;
+      case 'distinct-count':
+        transformer = new DistinctCountChartTransformer(biteLogic);
+        break;
+    }
+    if (biteLogic.usesDateColumn()) {
+      transformer = new TimeseriesChartTransformer(transformer, biteLogic.dateColumn);
+    }
+    // if (bite.filteredValues && bite.filteredValues.length > 0) {
+    //   transformer = new FilterSettingTransformer(transformer, bite.ingredient.valueColumn, bite.filteredValues);
+    // }
 
-                                const recipesStr: string = transformer.generateJsonFromRecipes();
-                                // this.logger.log(recipesStr);
+    return this.fetchFilterSpecialValues(bite.ingredient.filters)
+      .pipe(
+        flatMap((specialFilterValues: SpecialFilterValues) => {
+          if (biteLogic.hasFilters()) {
+            transformer = new FilterSettingTransformer(transformer, bite.ingredient.filters, specialFilterValues);
+          }
 
-                                const responseToBiteMapping = (response: any) =>
-                                    biteLogic.populateWithHxlProxyInfo(response, this.tagToTitleMap).getBite();
+          const recipesStr: string = transformer.generateJsonFromRecipes();
+          // this.logger.log(recipesStr);
 
-                                const onErrorBiteProcessor = () => {
-                                    biteLogic.getBite().errorMsg = 'Error while retrieving data values';
-                                    return of(biteLogic.getBite());
-                                };
+          const responseToBiteMapping = (response: any) =>
+            biteLogic.populateWithHxlProxyInfo(response, this.tagToTitleMap).getBite();
 
-                                return this.makeCallToHxlProxy<Bite>(
-                                    [{key: 'recipe', value: recipesStr}], responseToBiteMapping, onErrorBiteProcessor
-                                );
-                            })
-                        );
-                }
-            )
-        );
+          const onErrorBiteProcessor = () => {
+            biteLogic.getBite().errorMsg = 'Error while retrieving data values';
+            return of(biteLogic.getBite());
+          };
 
+          return this.makeCallToHxlProxy<Bite>(
+            [{ key: 'recipe', value: recipesStr }], responseToBiteMapping, onErrorBiteProcessor
+          );
+        })
+      );
   }
 
   /**
