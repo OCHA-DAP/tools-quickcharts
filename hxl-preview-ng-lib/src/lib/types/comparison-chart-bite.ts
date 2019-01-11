@@ -31,6 +31,11 @@ export class ComparisonChartUIProperties extends ChartUIProperties {
   public comparisonDataTitle: string;
   public comparisonColor: string = null;
   public sortingByValue2: string = null;
+
+  constructor() {
+    super();
+    this.sortingByValue1 = null;
+  }
 }
 
 
