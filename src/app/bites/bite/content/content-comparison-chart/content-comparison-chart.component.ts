@@ -15,11 +15,6 @@ export class ContentComparisonChartComponent extends ContentChartComponent imple
   ngOnInit() {
   }
 
-  ngAfterViewInit(): void {
-    (this.bite.uiProperties as ChartUIProperties).sortingByValue1 = null; // No values sorting for comparison charts enabled
-    super.ngAfterViewInit();
-  }
-
   protected generateOptionsTooltip(config: C3ChartConfig) {
     const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
     const values = [
