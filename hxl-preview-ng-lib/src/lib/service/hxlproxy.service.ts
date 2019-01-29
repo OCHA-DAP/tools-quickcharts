@@ -65,7 +65,7 @@ export class HxlproxyService {
       key: string;
       recipes: string;
     }
-    let myObservable = new AsyncSubject<SpecialFilterValues>();
+    const myObservable = new AsyncSubject<SpecialFilterValues>();
     const inputs: HxlProxyInput[] = [];
     const availableSpecialValues = {
       '$MAX$': 'max',
@@ -135,17 +135,17 @@ export class HxlproxyService {
         break;
     }
     if (biteLogic.usesDateColumn()) {
-      transformer = new TimeseriesChartTransformer(transformer, biteLogic.dateColumn);
+      transformer = new TimeseriesChartTransformer(transformer, biteLogic);
     }
     // if (bite.filteredValues && bite.filteredValues.length > 0) {
     //   transformer = new FilterSettingTransformer(transformer, bite.ingredient.valueColumn, bite.filteredValues);
     // }
 
-    return this.fetchFilterSpecialValues(bite.ingredient.filters)
+    return this.fetchFilterSpecialValues(biteLogic.filters)
       .pipe(
         flatMap((specialFilterValues: SpecialFilterValues) => {
           if (biteLogic.hasFilters()) {
-            transformer = new FilterSettingTransformer(transformer, bite.ingredient.filters, specialFilterValues);
+            transformer = new FilterSettingTransformer(transformer, biteLogic.filters, specialFilterValues);
           }
 
           const recipesStr: string = transformer.generateJsonFromRecipes();

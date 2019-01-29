@@ -1,3 +1,4 @@
+import { BiteFilters } from './ingredient';
 import { Bite, UIProperties, ComputedProperties, DataProperties } from './bite';
 import { Pattern } from '../util/hxl/pattern';
 
@@ -135,9 +136,10 @@ export abstract class BiteLogic {
   }
 
   public hasFilters(): boolean {
-    if (this.bite.ingredient.filters) {
-      const filterWith = this.bite.ingredient.filters.filterWith;
-      const filterWithout = this.bite.ingredient.filters.filterWithout;
+    const filters = this.filters;
+    if (filters) {
+      const filterWith = filters.filterWith;
+      const filterWithout = filters.filterWithout;
       if (filterWith && filterWith.length > 0) {
         return true;
       } else if (filterWithout && filterWithout.length > 0 ) {
@@ -225,6 +227,10 @@ export abstract class BiteLogic {
   }
   public set tempShowSaveCancelButtons(tempShowSaveCancelButtons: boolean) {
     this.bite.tempShowSaveCancelButtons = tempShowSaveCancelButtons;
+  }
+
+  public get filters(): BiteFilters {
+    return BiteFilters.mergeBiteFilters(this.bite.computedProperties.filters, this.bite.ingredient.filters);
   }
 
   public abstract populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap: any): BiteLogic;

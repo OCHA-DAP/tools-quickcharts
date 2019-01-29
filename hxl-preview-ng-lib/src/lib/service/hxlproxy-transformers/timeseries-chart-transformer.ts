@@ -1,15 +1,15 @@
 import { AbstractHxlTransformer } from './abstract-hxl-transformer';
-import { BasicRecipe, CleanOperation, SortOperation } from './hxl-operations';
+import { BasicRecipe, CleanOperation, SortOperation, FilterOperation } from './hxl-operations';
+import { BiteLogic } from '../../types/bite-logic';
 
 export class TimeseriesChartTransformer extends AbstractHxlTransformer {
 
   protected dateTag: string;
-  protected innerTransformer: AbstractHxlTransformer;
 
-  constructor(transformer: AbstractHxlTransformer, dateColumn: string) {
+  constructor(private innerTransformer: AbstractHxlTransformer, biteLogic: BiteLogic) {
     super(null);
-    this.dateTag = dateColumn;
-    this.innerTransformer = transformer;
+    this.dateTag = biteLogic.dateColumn;
+    this.valueTags = biteLogic.valueColumns;
   }
 
   buildRecipes(): BasicRecipe[] {

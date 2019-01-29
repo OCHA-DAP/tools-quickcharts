@@ -1,8 +1,18 @@
-import { TimeseriesChartUIProperties } from './timeseries-chart-bite';
+import { TimeseriesChartUIProperties, TimeseriesChartBite } from './timeseries-chart-bite';
 import { ColorUsage } from './bite-logic';
 import { ChartBiteLogic } from './chart-bite-logic';
+import { BiteFilters } from './ingredient';
 
 export class TimeseriesChartBiteLogic extends ChartBiteLogic {
+
+  constructor(protected bite: TimeseriesChartBite) {
+    super(bite);
+    const filtersWith = [];
+    this.valueColumns.forEach(valueCol => {
+      filtersWith.push({[valueCol]: 'is not empty'});
+    });
+    this.computedProperties.filters = new BiteFilters(filtersWith, []);
+  }
 
   public initUIProperties(): TimeseriesChartUIProperties {
     return new TimeseriesChartUIProperties();

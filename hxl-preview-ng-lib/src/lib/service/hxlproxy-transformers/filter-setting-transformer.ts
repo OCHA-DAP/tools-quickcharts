@@ -21,7 +21,7 @@ export class FilterSettingTransformer extends AbstractHxlTransformer {
         recipes.push(new FilterOperation([filter], true, this.specialFilterValues).recipe);
       });
     }
-    if (this.filters.filterWithout) {
+    if (this.filters.filterWithout && this.filters.filterWithout.length > 0) {
       recipes.push(new FilterOperation(this.filters.filterWithout, false, this.specialFilterValues).recipe);
     }
 

@@ -149,17 +149,21 @@ export class FilterOperation extends  AbstractOperation {
    * @param isWithFilter true if the records matching the filter should be kept, false otherwise
    * @param specialFilterValues dictionary with values for min, max, etc
    */
-  constructor(filters: HxlFilter[], isWithFilter: boolean, specialFilterValues: SpecialFilterValues) {
+  constructor(filters: HxlFilter[], isWithFilter: boolean, specialFilterValues?: SpecialFilterValues) {
     const filterConditions: string[] = [];
     filters.forEach( pair => {
       const column = Object.keys(pair)[0];
       let value = pair[column];
       const key = `${column}-${value}`;
 
-      if (specialFilterValues[key]) {
+      if (specialFilterValues && specialFilterValues[key]) {
         value = specialFilterValues[key];
       }
-      filterConditions.push(`${column}=${value}`);
+      if (['is empty', 'is not empty'].includes(value)) {
+        filterConditions.push(`${column} ${value}`);
+      } else {
+        filterConditions.push(`${column}=${value}`);
+      }
     });
     if (isWithFilter) {
       super(new WithRowsRecipe(filterConditions));
