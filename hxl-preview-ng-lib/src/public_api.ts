@@ -23,3 +23,5 @@ export * from './lib/types/bite';
 export * from './lib/types/bite-config';
 export * from './lib/types/bite-logic-factory';
 export * from './lib/util/units-util';
+
+export * from './lib/util/hxl/pattern';
