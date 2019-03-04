@@ -135,6 +135,10 @@ export abstract class BiteLogic {
     return this;
   }
 
+  public populateDefaultFilters(): BiteLogic {
+    return this;
+  }
+
   public hasFilters(): boolean {
     const filters = this.filters;
     if (filters) {
@@ -161,6 +165,10 @@ export abstract class BiteLogic {
       this.uiProperties.internalColorPattern = internalColorPattern;
     }
 
+  }
+
+  public findComputedFilters(): BiteFilters {
+    return null;
   }
 
   public get sortingByValue1Label(): string {
@@ -230,7 +238,12 @@ export abstract class BiteLogic {
   }
 
   public get filters(): BiteFilters {
-    return BiteFilters.mergeBiteFilters(this.bite.computedProperties.filters, this.bite.ingredient.filters);
+    const computedFilters = Object.values(this.computedProperties.explainedFiltersMap);
+    const mergedComputedFilter = computedFilters.reduce(
+      (acc, current) => BiteFilters.mergeBiteFilters(acc, current),
+      new BiteFilters([], [])
+    );
+    return BiteFilters.mergeBiteFilters(mergedComputedFilter, this.bite.ingredient.filters);
   }
 
   public abstract populateWithHxlProxyInfo(hxlData: any[][], tagToTitleMap: any): BiteLogic;

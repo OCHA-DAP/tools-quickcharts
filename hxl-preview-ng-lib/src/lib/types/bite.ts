@@ -53,7 +53,7 @@ export abstract class Bite {
 export class ComputedProperties {
   title: string;
   dataTitle: string;
-  filters: BiteFilters;
+  explainedFiltersMap: { [s: string]: BiteFilters; } = {};
 }
 
 export class UIProperties {

@@ -5,14 +5,7 @@ import { BiteFilters } from './ingredient';
 
 export class TimeseriesChartBiteLogic extends ChartBiteLogic {
 
-  constructor(protected bite: TimeseriesChartBite) {
-    super(bite);
-    const filtersWith = [];
-    this.valueColumns.forEach(valueCol => {
-      filtersWith.push({[valueCol]: 'is not empty'});
-    });
-    this.computedProperties.filters = new BiteFilters(filtersWith, []);
-  }
+  static REMOVE_EMPTY_VALUED_ROWS_FILTER = 'remove empty valued rows';
 
   public initUIProperties(): TimeseriesChartUIProperties {
     return new TimeseriesChartUIProperties();
@@ -22,6 +15,19 @@ export class TimeseriesChartBiteLogic extends ChartBiteLogic {
     super.populateWithTitle(columnNames, hxlTags);
     const dateColumn = columnNames[this.tagToIndexMap[this.bite.ingredient.dateColumn]];
     this.bite.computedProperties.title += ` by ${dateColumn}`;
+    return this;
+  }
+
+  public populateDefaultFilters(): TimeseriesChartBiteLogic {
+    const filtersWith = [];
+    this.valueColumns.forEach(valueCol => {
+      filtersWith.push({[valueCol]: 'is not empty'});
+    });
+    if (!this.computedProperties.explainedFiltersMap) {
+      this.computedProperties.explainedFiltersMap = {};
+    }
+    this.computedProperties.explainedFiltersMap[TimeseriesChartBiteLogic.REMOVE_EMPTY_VALUED_ROWS_FILTER] =
+              new BiteFilters(filtersWith, []);
     return this;
   }
 

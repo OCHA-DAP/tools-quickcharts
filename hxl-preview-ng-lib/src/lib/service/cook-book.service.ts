@@ -15,7 +15,8 @@ import { AggregateFunctionOptions } from '../types/ingredients';
 import { TimeseriesChartBite } from '../types/timeseries-chart-bite';
 import { MyLogService } from './mylog.service';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, merge, mergeMap, publishLast, refCount, toArray } from 'rxjs/operators';
+import { catchError, map, mergeMap, publishLast, refCount, toArray } from 'rxjs/operators';
+import { merge } from 'rxjs';
 
 @Injectable()
 export class CookBookService {
@@ -81,7 +82,7 @@ export class CookBookService {
       if (!matches) {
         return false;
       }
-    };
+    }
     return true;
   }
 
@@ -188,14 +189,18 @@ export class CookBookService {
                   const general_ingredient = new Ingredient(null, val, aggFunction, dateColumn, null, null, currentFilters,
                                                     biteTitle, biteDescription);
                   const simple_bite = new TimeseriesChartBite(general_ingredient);
-                  BiteLogicFactory.createBiteLogic(simple_bite).populateHashCode()
+                  BiteLogicFactory.createBiteLogic(simple_bite)
+                    .populateHashCode()
+                    .populateDefaultFilters()
                     .populateWithTitle(columnNames, hxlTags);
                   observer.next(simple_bite);
                   avAggCols.forEach(agg => {
                     const ingredient = new Ingredient(agg, val, aggFunction, dateColumn, null, null, currentFilters,
                       biteTitle, biteDescription);
                     const multiple_data_bite = new TimeseriesChartBite(ingredient);
-                    BiteLogicFactory.createBiteLogic(multiple_data_bite).populateHashCode()
+                    BiteLogicFactory.createBiteLogic(multiple_data_bite)
+                      .populateHashCode()
+                      .populateDefaultFilters()
                       .populateWithTitle(columnNames, hxlTags);
                     observer.next(multiple_data_bite);
                   });
@@ -213,7 +218,10 @@ export class CookBookService {
                   const ingredient = new Ingredient(agg, info.valueCol, aggFunction, null, info.comparisonValueCol,
                                         info.operator, currentFilters, biteTitle, biteDescription);
                   const bite = new ComparisonChartBite(ingredient);
-                  BiteLogicFactory.createBiteLogic(bite).populateHashCode().populateWithTitle(columnNames, hxlTags);
+                  BiteLogicFactory.createBiteLogic(bite)
+                    .populateHashCode()
+                    .populateDefaultFilters()
+                    .populateWithTitle(columnNames, hxlTags);
                   observer.next(bite);
                 });
               });
@@ -229,7 +237,10 @@ export class CookBookService {
                   const ingredient = new Ingredient(agg, val, aggFunction, null, null, null, currentFilters,
                                                       biteTitle, biteDescription);
                   const bite = new ChartBite(ingredient);
-                  BiteLogicFactory.createBiteLogic(bite).populateHashCode().populateWithTitle(columnNames, hxlTags);
+                  BiteLogicFactory.createBiteLogic(bite)
+                    .populateHashCode()
+                    .populateDefaultFilters()
+                    .populateWithTitle(columnNames, hxlTags);
                   observer.next(bite);
                 });
               });
@@ -243,7 +254,10 @@ export class CookBookService {
                 const ingredient = new Ingredient(null, val, aggFunction, null, null, null, currentFilters,
                                           biteTitle, biteDescription);
                 const bite = new KeyFigureBite(ingredient);
-                BiteLogicFactory.createBiteLogic(bite).populateHashCode().populateWithTitle(columnNames, hxlTags);
+                BiteLogicFactory.createBiteLogic(bite)
+                  .populateHashCode()
+                  .populateDefaultFilters()
+                  .populateWithTitle(columnNames, hxlTags);
                 observer.next(bite);
               });
             });
@@ -259,10 +273,10 @@ export class CookBookService {
   load(url: string, recipeUrl: string, chosenCookbookName?: string):
           {biteObs: Observable<Bite>, cookbookAndTagsObs: Observable<CookbooksAndTags>} {
 
-    let cookbookUrls = [recipeUrl];
+    const cookbookUrls = [recipeUrl];
 
     const cookBooksObs: Array<Observable<any>> = cookbookUrls.map(book => this.httpClient.get(book));
-    const responseObs: Observable<any> = cookBooksObs.reduce((prev, current, idx) => prev.pipe(merge(current)));
+    const responseObs: Observable<any> = cookBooksObs.reduce((prev, current, idx) => merge(prev, current));
 
 
     const toListOfCookbooks = (res: any) => {
@@ -385,4 +399,4 @@ export interface CookbooksAndTags {
   chosenCookbook: Cookbook;
   hxlTags: string[];
   columnNames: string[];
-};
+}
