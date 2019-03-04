@@ -12,6 +12,29 @@ abstract class Patcher {
 
 }
 
+class From4To5Patcher extends Patcher {
+  static readonly NEW_CONFIG_VERSION = 5;
+
+  public patch(hxlPreviewConfig: HxlPreviewConfig) {
+    if (hxlPreviewConfig.bites) {
+      for (let i = 0; i < hxlPreviewConfig.bites.length; i++) {
+        const bite = hxlPreviewConfig.bites[i];
+        if (bite.computedProperties && !bite.computedProperties.explainedFiltersMap) {
+          BiteLogicFactory.createBiteLogic(bite).populateDefaultFilters();
+        }
+        if (bite.computedProperties.hasOwnProperty('filters')) {
+          delete bite.computedProperties['filters'];
+        }
+      }
+    }
+
+    hxlPreviewConfig.configVersion = this.newConfigVersion();
+  }
+  public newConfigVersion(): number {
+    return From4To5Patcher.NEW_CONFIG_VERSION;
+  }
+}
+
 class From3To4Patcher extends Patcher {
   static readonly NEW_CONFIG_VERSION = 4;
 
@@ -82,9 +105,9 @@ class From2To3Patcher extends Patcher {
 }
 export class PersisUtil {
 
-  static readonly patchers: Patcher[] = [new From2To3Patcher(), new From3To4Patcher()];
+  static readonly patchers: Patcher[] = [new From2To3Patcher(), new From3To4Patcher(), new From4To5Patcher()];
 
-  readonly CONFIG_VERSION = 4;
+  readonly CONFIG_VERSION = 5;
 
   constructor(private logger: Logger) {}
 
