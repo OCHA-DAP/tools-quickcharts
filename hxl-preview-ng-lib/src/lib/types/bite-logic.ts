@@ -238,7 +238,9 @@ export abstract class BiteLogic {
   }
 
   public get filters(): BiteFilters {
-    const computedFilters = Object.values(this.computedProperties.explainedFiltersMap);
+    const computedFilters = this.computedProperties.explainedFiltersMap ?
+          Object.values(this.computedProperties.explainedFiltersMap) : [];
+
     const mergedComputedFilter = computedFilters.reduce(
       (acc, current) => BiteFilters.mergeBiteFilters(acc, current),
       new BiteFilters([], [])
