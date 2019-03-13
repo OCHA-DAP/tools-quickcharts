@@ -55,6 +55,7 @@ export class BiteListComponent implements OnInit {
   iframeUrl: string;
 
   /* Used for when only one widget is embedded in a page */
+  hideMainHeader = false;
   singleWidgetMode: boolean;
   toolsMode: boolean;
   allowShare = true;
@@ -168,7 +169,11 @@ export class BiteListComponent implements OnInit {
       );
     }
 
+    this.hideMainHeader = this.appConfig.get('hideMainHeader') === 'true';
     this.singleWidgetMode = this.appConfig.get('singleWidgetMode') === 'true';
+    if (this.singleWidgetMode) {
+      this.hideMainHeader = true;
+    }
     this.toolsMode = this.appConfig.get('toolsMode') === 'true';
     const chartSettings = this.appConfig.get('chartSettings');
     this.allowSettings = chartSettings !== 'false';
