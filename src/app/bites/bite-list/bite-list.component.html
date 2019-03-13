@@ -1,5 +1,5 @@
 <div>
-  <div class="row list-header" *ngIf="!singleWidgetMode">
+  <div class="row list-header" *ngIf="!hideMainHeader">
     <div class="col-xs-10">
       <hxl-inline-edit id="list-header-title" class="list-header-title" [(ngModel)]="biteService.quickChartsTitle" [editMode]="toolsMode" [placeholder]="'...'" [showEditIcon]="true" [maxEditorWidth]="'80%'"></hxl-inline-edit>
       <!--<span class="list-header-title">Quick Charts</span>-->
