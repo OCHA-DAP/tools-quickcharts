@@ -7,7 +7,7 @@ WORKDIR /src
 
 COPY . .
 
-RUN npm install -g @angular/cli && \
+RUN npm install -g @angular/cli@7.0.6 && \
     npm install && \
     ng build --prod --aot --base-href $BASE_HREF/ && \
     cp -a docker/default.conf dist && \
