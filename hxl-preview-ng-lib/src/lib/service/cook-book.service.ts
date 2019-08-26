@@ -1,5 +1,5 @@
 
-import { throwError as observableThrowError, Observable, forkJoin } from 'rxjs';
+import { throwError as observableThrowError, Observable, forkJoin, of } from 'rxjs';
 import { Pattern } from '../util/hxl/pattern';
 import { Cookbook, CookbookLibrary, BiteConfig } from '../types/bite-config';
 import { BiteFilters, Ingredient } from '../types/ingredient';
@@ -14,7 +14,7 @@ import { BiteLogicFactory } from '../types/bite-logic-factory';
 import { AggregateFunctionOptions } from '../types/ingredients';
 import { TimeseriesChartBite } from '../types/timeseries-chart-bite';
 import { MyLogService } from './mylog.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, mergeMap, publishLast, refCount, toArray } from 'rxjs/operators';
 import { merge } from 'rxjs';
 
@@ -275,7 +275,19 @@ export class CookBookService {
 
     const cookbookUrls = [recipeUrl];
 
-    const cookBooksObs: Array<Observable<any>> = cookbookUrls.map(book => this.httpClient.get(book));
+    const cookBooksObs: Array<Observable<any>> = cookbookUrls.map(
+      book => this.httpClient.get(book)
+        .pipe(
+          catchError((err: HttpErrorResponse) => {
+            let errorMessage = err.message;
+            try {
+              errorMessage += ' More details: ' + err.error.error.message;
+            } catch (e) {}
+            this.logger.error(errorMessage);
+            return of(<Cookbook>{});
+          })
+        )
+    );
     const responseObs: Observable<any> = cookBooksObs.reduce((prev, current, idx) => merge(prev, current));
 
 
@@ -296,6 +308,9 @@ export class CookBookService {
       } else if (configJson.type && configJson.type === 'cookbook-library') {
         const cookbookLibrary = <CookbookLibrary>configJson;
         cookbooks = cookbookLibrary.cookbooks;
+      } else {
+        this.logger.error('List of cookbooks will be empty (because of a previous error). No bites will be generated');
+        return [];
       }
       return cookbooks;
     };
