@@ -1,6 +1,7 @@
 import { BiteFilters } from './ingredient';
 import { Bite, UIProperties, ComputedProperties, DataProperties } from './bite';
 import { Pattern } from '../util/hxl/pattern';
+import { RecipeOptions } from './ingredients';
 
 export abstract class BiteLogic {
 
@@ -189,6 +190,10 @@ export abstract class BiteLogic {
 
   public get uiProperties(): UIProperties {
     return this.bite.uiProperties;
+  }
+
+  public get recipeOptions(): RecipeOptions {
+    return this.bite.recipeOptions;
   }
 
   public get computedProperties(): ComputedProperties {

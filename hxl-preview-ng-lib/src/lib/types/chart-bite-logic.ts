@@ -1,3 +1,4 @@
+import { ChartType } from './ingredients';
 import { BiteLogic, ColorUsage } from './bite-logic';
 import { ChartBite, ChartDataProperties, ChartUIProperties, ChartComputedProperties } from './chart-bite';
 
@@ -86,7 +87,18 @@ export class ChartBiteLogic extends BiteLogic {
   }
 
   public get pieChart(): boolean {
-    return this.computedProperties.pieChart;
+    const computedProperties = this.computedProperties;
+    const pieChart = this.forcedChartType ?
+                    this.forcedChartType === 'pie' : computedProperties.pieChart;
+
+    return pieChart;
+  }
+
+  public get forcedChartType(): ChartType {
+    if (this.recipeOptions) {
+      return this.recipeOptions.forcedChartType;
+    }
+    return undefined;
   }
 
   public get swapAxis(): boolean {

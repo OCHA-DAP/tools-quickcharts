@@ -1,6 +1,6 @@
 import { Bite, UIProperties, ComputedProperties, DataProperties } from './bite';
-import { Ingredient, BiteFilters } from './ingredient';
-import { AggregateFunctionOptions } from './ingredients';
+import { Ingredient } from './ingredient';
+import { RecipeOptions } from './ingredients';
 
 export class ChartBite extends Bite {
   static colorPattern = ['#1ebfb3', '#0077ce', '#f2645a', '#9C27B0'];
@@ -11,8 +11,8 @@ export class ChartBite extends Bite {
     return 'chart';
   }
 
-  constructor(ingredient: Ingredient) {
-    super(ingredient);
+  constructor(ingredient: Ingredient, recipeOptions?: RecipeOptions) {
+    super(ingredient, recipeOptions);
     this.computedProperties = new ChartComputedProperties();
     this.uiProperties = new ChartUIProperties();
     this.dataProperties = new ChartDataProperties();

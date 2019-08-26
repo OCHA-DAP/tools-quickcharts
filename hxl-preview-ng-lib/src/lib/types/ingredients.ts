@@ -15,3 +15,9 @@ export interface Ingredients {
   filtersWith: HxlFilter[];
   filtersWithout: HxlFilter[];
 }
+
+export type ChartType = 'pie' | 'bar';
+
+export interface RecipeOptions {
+  forcedChartType?: ChartType;
+}

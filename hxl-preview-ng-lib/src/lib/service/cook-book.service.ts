@@ -236,7 +236,7 @@ export class CookBookService {
                 modifiedValueColumns.forEach(val => {
                   const ingredient = new Ingredient(agg, val, aggFunction, null, null, null, currentFilters,
                                                       biteTitle, biteDescription);
-                  const bite = new ChartBite(ingredient);
+                  const bite = new ChartBite(ingredient, biteConfig.options);
                   BiteLogicFactory.createBiteLogic(bite)
                     .populateHashCode()
                     .populateDefaultFilters()

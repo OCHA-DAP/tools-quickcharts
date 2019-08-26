@@ -1,5 +1,5 @@
 import { Cookbook } from './bite-config';
-import { Ingredients } from './ingredients';
+import { Ingredients, RecipeOptions } from './ingredients';
 
 /**
  * Represents 1 loaded HXL Recipe
@@ -13,6 +13,7 @@ import { Ingredients } from './ingredients';
   description: string;
   type: string;
   ingredients: Ingredients;
+  options?: RecipeOptions;
 }
 
 export interface Cookbook {
