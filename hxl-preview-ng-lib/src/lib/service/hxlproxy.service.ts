@@ -7,7 +7,6 @@ import { CountRecipe, SpecialFilterValues } from './hxlproxy-transformers/hxl-op
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { SumChartTransformer } from './hxlproxy-transformers/sum-chart-transformer';
 import { Bite } from '../types/bite';
 import { AbstractHxlTransformer } from './hxlproxy-transformers/abstract-hxl-transformer';
 import { BiteLogicFactory } from '../types/bite-logic-factory';
@@ -125,10 +124,9 @@ export class HxlproxyService {
     let transformer: AbstractHxlTransformer;
     switch (bite.ingredient.aggregateFunction) {
       case 'count':
-        transformer = new CountChartTransformer(biteLogic);
-        break;
+      case 'average':
       case 'sum':
-        transformer = new SumChartTransformer(biteLogic);
+        transformer = new CountChartTransformer(biteLogic);
         break;
       case 'distinct-count':
         transformer = new DistinctCountChartTransformer(biteLogic);

@@ -1,4 +1,4 @@
-export type AggregateFunctionOptions = 'sum' | 'count' | 'distinct-count';
+export type AggregateFunctionOptions = 'sum' | 'count' | 'average' | 'distinct-count';
 
 /**
  * List of key-value pairs like {"columnName": "valueToFilter"}
