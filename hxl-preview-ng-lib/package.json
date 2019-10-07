@@ -1,6 +1,6 @@
 {
   "name": "hxl-preview-ng-lib",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "peerDependencies": {
     "@angular/common": "^7.0.0",
     "@angular/core": "^7.0.0",

@@ -115,6 +115,9 @@ export abstract class BiteLogic {
         case 'sum':
           aggFunction = 'Sum of';
           break;
+        case 'average':
+          aggFunction = 'Average of';
+          break;
         default:
           aggFunction = 'Sum of';
           break;
