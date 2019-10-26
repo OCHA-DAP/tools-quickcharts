@@ -16,9 +16,13 @@ export class TimeseriesChartBite extends ChartBite {
   }
 }
 
+export const DEFAULT_DATE_FORMAT = '%d %b %Y';
+
 export class TimeseriesChartUIProperties extends ChartUIProperties {
 
   public showPoints = false;
+  public showAllDates = false;
+  public dateFormat = DEFAULT_DATE_FORMAT;
 
   constructor() {
     super();

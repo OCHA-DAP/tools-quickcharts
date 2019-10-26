@@ -1,7 +1,7 @@
-import { TimeseriesChartUIProperties, TimeseriesChartBite } from './timeseries-chart-bite';
-import { ColorUsage } from './bite-logic';
-import { ChartBiteLogic } from './chart-bite-logic';
-import { BiteFilters } from './ingredient';
+import {DEFAULT_DATE_FORMAT, TimeseriesChartUIProperties} from './timeseries-chart-bite';
+import {ColorUsage} from './bite-logic';
+import {ChartBiteLogic} from './chart-bite-logic';
+import {BiteFilters} from './ingredient';
 
 export class TimeseriesChartBiteLogic extends ChartBiteLogic {
 
@@ -164,6 +164,22 @@ export class TimeseriesChartBiteLogic extends ChartBiteLogic {
 
   public set showPoints(showPoints: boolean) {
     this.uiProperties.showPoints = showPoints;
+  }
+
+  public get showAllDates(): boolean {
+    return this.uiProperties.showAllDates;
+  }
+
+  public set showAllDates(showPoints: boolean) {
+    this.uiProperties.showAllDates = showPoints;
+  }
+
+  public get dateFormat(): string {
+    return this.uiProperties.dateFormat || DEFAULT_DATE_FORMAT;
+  }
+
+  public set dateFormat(showPoints: string) {
+    this.uiProperties.dateFormat = showPoints;
   }
 
   public get sortingByValue1Label(): string {
