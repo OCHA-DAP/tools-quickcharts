@@ -39,12 +39,7 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
       x: {
         type: 'timeseries',
         tick: {
-          count: 7,
           rotate: 15,
-          format: '%d %b %Y'
-          // culling: {
-          //   max: 4
-          // }
         }
         // categories: this.bite.categories
       },
@@ -55,6 +50,16 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
         }
       }
     };
+
+    const tsBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
+    if (tsBiteLogic.showAllDates) {
+      config.axis.x.tick.culling = {
+        max: 12
+      };
+    } else {
+      config.axis.x.tick.count = 7;
+    }
+    config.axis.x.tick.format = tsBiteLogic.dateFormat;
   }
 
   protected generateOptions(): C3ChartConfig {

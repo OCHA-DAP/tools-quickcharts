@@ -355,6 +355,26 @@ class SettingsModel {
     timeseriesChartBiteLogic.uiProperties.showPoints = value;
   }
 
+  get showAllDates(): boolean {
+    const timeseriesChartBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
+    return timeseriesChartBiteLogic.showAllDates;
+  }
+
+  set showAllDates(value: boolean) {
+    const timeseriesChartBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
+    timeseriesChartBiteLogic.uiProperties.showAllDates = value;
+  }
+
+  get dateFormat(): string {
+    const timeseriesChartBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
+    return timeseriesChartBiteLogic.dateFormat;
+  }
+
+  set dateFormat(value: string) {
+    const timeseriesChartBiteLogic = this.biteLogic as TimeseriesChartBiteLogic;
+    timeseriesChartBiteLogic.uiProperties.dateFormat = value;
+  }
+
   // get filterZero(): boolean {
   //   return this.bite.filteredValues.indexOf(0) >= 0;
   // }

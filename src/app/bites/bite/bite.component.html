@@ -95,6 +95,10 @@
                                  name="show-points" [uuid]="uuid" title="Show Points"
                                  [initiallyChecked]="settingsModel.showPoints">
             </hxl-checkbox-slider>
+            <hxl-checkbox-slider *ngIf="bite.type == classTypes.TimeseriesChartBite" (checked)="settingsModel.showAllDates=$event; renderContent();"
+                                 name="show-all-dates" [uuid]="uuid" title="Show all dates"
+                                 [initiallyChecked]="settingsModel.showAllDates">
+            </hxl-checkbox-slider>
             <hr/>
           </div>
           <div class="section" *ngIf="bite.type == classTypes.ToplineBite">
@@ -251,6 +255,19 @@
               </label>
               <input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">
             </div>
+
+            <div class="element-group" *ngIf="bite.type == classTypes.TimeseriesChartBite">
+              <label for="date-format-{{uuid}}">
+                  Date format
+              </label>
+              <select id="date-format-{{uuid}}" [(ngModel)]="settingsModel.dateFormat" name="dateFormat"
+                      (change)="renderContent();">
+                  <option value="%d %b %Y">21 January 1999</option>
+                  <option value="%b %Y">January 1999</option>
+                  <option value="%Y">1999</option>
+              </select>
+            </div>
+
             <div class="element-group">
               <label>
                 Description
