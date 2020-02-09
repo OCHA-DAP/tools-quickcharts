@@ -1,7 +1,4 @@
-import {
-  Component, OnInit, forwardRef, ViewChild, EventEmitter, Output, Renderer,
-  ElementRef, Input
-} from '@angular/core';
+import { Component, OnInit, forwardRef, ViewChild, EventEmitter, Output, ElementRef, Input, Renderer2 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 const INLINE_EDIT_CONTROL_VALUE_ACCESSOR: any = {
@@ -40,7 +37,7 @@ export class InlineEditComponent implements OnInit, ControlValueAccessor {
   public onChange: any = Function.prototype;
   public onTouched: any = Function.prototype;
 
-  constructor(element: ElementRef, private renderer: Renderer) { }
+  constructor(element: ElementRef, private renderer: Renderer2) { }
 
   ngOnInit() {
   }
@@ -72,7 +69,7 @@ export class InlineEditComponent implements OnInit, ControlValueAccessor {
     this.preValue = value;
     this.editing = true;
     // automatically set focus
-    setTimeout( _ => this.renderer.invokeElementMethod(this.editControl.nativeElement, 'focus', []));
+    setTimeout( _ => this.editControl.nativeElement.focus());
   }
 
   save(value) {

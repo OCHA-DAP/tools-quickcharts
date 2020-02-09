@@ -1,8 +1,7 @@
 import { Pattern } from './../../util/hxl/pattern';
-import { SpecialFilterValues } from './hxl-operations';
 import { HxlFilter } from '../../types/ingredients';
 
-export type SpecialFilterValues = { [s: string]: string; };
+export interface SpecialFilterValues { [s: string]: string; }
 
 export abstract class BasicRecipe {
   constructor(public filter: string) {}

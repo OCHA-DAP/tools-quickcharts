@@ -1,4 +1,3 @@
-import { Cookbook } from './bite-config';
 import { Ingredients, RecipeOptions } from './ingredients';
 
 /**

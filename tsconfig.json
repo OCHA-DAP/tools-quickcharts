@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
-    "baseUrl": ".",
+    "baseUrl": "src",
     "downlevelIteration": true,
     "importHelpers": true,
     "module": "esnext",
@@ -19,15 +19,7 @@
     "lib": [
       "es2018",
       "dom"
-    ],
-    "paths": {
-      "hxl-preview-ng-lib": [
-        "dist/hxl-preview-ng-lib"
-      ],
-      "hxl-preview-ng-lib/*": [
-        "dist/hxl-preview-ng-lib/*"
-      ]
-    }
+    ]
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true
