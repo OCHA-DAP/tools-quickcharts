@@ -19,7 +19,13 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "hxl-preview-ng-lib": [
+        "dist/hxl-preview-ng-lib/hxl-preview-ng-lib",
+        "dist/hxl-preview-ng-lib"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true

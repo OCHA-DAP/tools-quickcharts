@@ -8,7 +8,10 @@
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test debug",
     "pree2e": "webndriver-manager update",
-    "e2e": "protractor"
+    "e2e": "protractor",
+    "build_lib": "ng build hxl-preview-ng-lib",
+    "pack_lib": "cd dist/hxl-preview-ng-lib && npm pack",
+    "package": "npm run build_lib && npm run pack_lib && mv dist/hxl-preview-ng-lib/hxl-preview-ng-lib-*.tgz build/"
   },
   "private": true,
   "dependencies": {

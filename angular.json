@@ -171,7 +171,7 @@
               "tsConfig": "projects/hxl-preview-ng-lib/tsconfig.lib.prod.json"
             }
           }
-},
+        },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {

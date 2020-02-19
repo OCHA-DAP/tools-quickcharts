@@ -2,8 +2,6 @@
  * Public API Surface of hxl-preview-ng-lib
  */
 
-export * from './lib/simple.module';
-
 export * from './lib/component/simple-modal.component'
 
 export * from './lib/service/cook-book.service';
@@ -25,3 +23,5 @@ export * from './lib/types/bite-logic-factory';
 export * from './lib/util/units-util';
 
 export * from './lib/util/hxl/pattern';
+
+export * from './lib/hxl-preview-lib.module';

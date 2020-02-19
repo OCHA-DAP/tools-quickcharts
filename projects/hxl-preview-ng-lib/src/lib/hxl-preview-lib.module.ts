@@ -22,4 +22,4 @@ import {ComponentLoaderFactory, PositioningService} from 'ngx-bootstrap';
     SimpleModalComponent
   ]
 })
-export class SimpleModule {}
+export class HxlPreviewLibModule {}
