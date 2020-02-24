@@ -13,7 +13,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 // Import the module and model classes.
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from '../environments/environment';
-import { HxlproxyService, SimpleModule } from 'hxl-preview-ng-lib';
+import { HxlproxyService, HxlPreviewLibModule } from 'hxl-preview-ng-lib';
 import { RecipeService } from './bites/shared/recipe.service';
 import { HttpEventsService } from './shared/http-events.service';
 
@@ -34,7 +34,7 @@ export const HTTP_SERVICE_PROVIDERS: any = {
     BitesModule,
     HxlBitesRoutingModule,
     LoggerModule.forRoot({level: environment.production ? NgxLoggerLevel.WARN : NgxLoggerLevel.LOG}),
-    SimpleModule
+    HxlPreviewLibModule
   ],
   providers: [
     HttpEventsService,
