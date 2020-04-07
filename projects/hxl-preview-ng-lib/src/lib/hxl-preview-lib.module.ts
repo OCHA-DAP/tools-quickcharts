@@ -6,7 +6,8 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import {BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import { SimpleModalComponent } from './component/simple-modal.component';
 import {HttpClientModule} from '@angular/common/http';
-import {ComponentLoaderFactory, PositioningService} from 'ngx-bootstrap';
+import { ComponentLoaderFactory } from 'ngx-bootstrap/component-loader';
+import { PositioningService } from 'ngx-bootstrap/positioning';
 
 @NgModule({
   imports: [
