@@ -10,7 +10,7 @@
   position: relative;
 
   //propagate chart style into child components
-  /deep/ .c3 > svg {
+  ::ng-deep .c3 > svg {
     .c3-axis {
       fill: @darkGrayColor;
       > .tick {
@@ -25,7 +25,7 @@
       }
     }
   }
-  /deep/ .c3-hxl-bites-tooltip {
+  ::ng-deep .c3-hxl-bites-tooltip {
     background-color: rgba(255,255,255, 0.7);
     border: 1px dashed @grayColor;
     .name {
@@ -296,7 +296,7 @@
       margin-bottom: @settingsMenuElementMargin;
     }
 
-    /deep/ .element-group {
+    ::ng-deep .element-group {
       margin: @settingsMenuElementMargin 0;
       position: relative;
     }
@@ -309,12 +309,12 @@
       width: 49%;
     }
 
-    /deep/ label {
+    ::ng-deep label {
       .sourceSansProFont(400, 12px);
       color: @darkGrayColor;
       margin-bottom: 0;
     }
-    /deep/ input, textarea, select {
+    ::ng-deep input, textarea, select {
       @inputInnerTextPadding: 5px;
 
       background-color: @whiteColor;

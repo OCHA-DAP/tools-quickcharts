@@ -18,18 +18,20 @@ import { FormsModule } from '@angular/forms';
 import { PersistService } from './shared/persist.service';
 import { HdxPersistService } from './shared/persist/hdx-persist.service';
 import { CommonModule as MyCommonModule } from '../common/common.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
-import { SimpleModule } from 'hxl-preview-ng-lib';
+import { HxlPreviewLibModule } from 'hxl-preview-ng-lib';
 import { ColorPickerComponent } from './shared/color-picker/color-picker.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   imports: [
+    BrowserAnimationsModule,
     CommonModule,
     BitesRoutingModule,
     FormsModule,
     MyCommonModule,
-    SimpleModule,
+    HxlPreviewLibModule,
     BsDropdownModule.forRoot(),
     ModalModule.forRoot(),
     TooltipModule.forRoot()
