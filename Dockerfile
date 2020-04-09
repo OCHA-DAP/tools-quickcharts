@@ -16,7 +16,7 @@ RUN npm install -g @angular/cli@9.1 && \
 
 FROM unocha/nginx:1.14
 
-COPY --from=builder /src/dist /var/www
+COPY --from=builder /src/dist/hdx-hxl-preview /var/www
 
 RUN mv /var/www/default.conf /etc/nginx/conf.d/
 
