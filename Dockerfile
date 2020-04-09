@@ -11,8 +11,8 @@ RUN npm install -g @angular/cli@9.1 && \
     npm install && \
     npm run build_lib && \
     ng build --prod --aot --base-href /$BASE_HREF/ && \
-    cp -a docker/default.conf dist && \
-    sed -i "s%{{BASE_HREF}}%${BASE_HREF}%" dist/default.conf
+    cp -a docker/default.conf dist/hdx-hxl-preview && \
+    sed -i "s%{{BASE_HREF}}%${BASE_HREF}%" dist/hdx-hxl-preview/default.conf
 
 FROM unocha/nginx:1.14
 
