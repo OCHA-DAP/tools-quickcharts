@@ -14,7 +14,7 @@ RUN npm install -g @angular/cli@9.1 && \
     cp -a docker/default.conf dist/hdx-hxl-preview && \
     sed -i "s%{{BASE_HREF}}%${BASE_HREF}%" dist/hdx-hxl-preview/default.conf
 
-FROM unocha/nginx:1.14
+FROM unocha/nginx:1.16
 
 COPY --from=builder /src/dist/hdx-hxl-preview /var/www
 
