@@ -1,15 +1,14 @@
 import { SimpleDropdownPayload } from './../../common/component/simple-dropdown/simple-dropdown.component';
-import { Bite, ChartBite, KeyFigureBite, TimeseriesChartBite, ComparisonChartBite, CookbooksAndTags } from 'hxl-preview-ng-lib';
+import { Bite, ChartBite, KeyFigureBite, TimeseriesChartBite, ComparisonChartBite, CookbooksAndTags, SimpleModalComponent } from 'hxl-preview-ng-lib';
 import { Component, ElementRef, HostListener, Inject, NgZone, OnInit, ViewChild } from '@angular/core';
 import {BiteService} from '../shared/bite.service';
 import { NGXLogger as Logger } from 'ngx-logger';
 import {AppConfigService} from '../../shared/app-config.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
-import { SimpleModalComponent } from 'hxl-preview-ng-lib';
 import { Observable, Subscription } from 'rxjs';
 import { HttpService } from '../../shared/http.service';
 import { AnalyticsService } from '../shared/analytics.service';
-import { DOCUMENT } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 import { debounce, distinctUntilChanged, tap } from 'rxjs/operators';
 import { timer } from 'rxjs/internal/observable/timer';
 import { HttpEventsService } from '../../shared/http-events.service';

@@ -5,18 +5,26 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es5",
+    "target": "es2015",
     "lib": [
       "es2016",
       "dom"
     ],
     "outDir": "../out-tsc/app",
-    "module": "es2015",
+    "module": "esnext",
     "baseUrl": "",
-    "types": []
+    "types": [],
+    "paths": {
+      "hxl-preview-ng-lib": [
+        "../dist/hxl-preview-ng-lib"
+      ],
+      "hxl-preview-ng-lib/*": [
+        "../dist/hxl-preview-ng-lib/*"
+      ]
+    }
   },
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts"
+  "files": [
+    "main.ts",
+    "polyfills.ts"
   ]
 }

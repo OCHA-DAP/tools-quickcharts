@@ -1,12 +1,11 @@
-@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
-
 //Fonts
 @gothamBoldFont: 'Gotham-Bold', sans-serif;
 @gothamBookFont: 'Gotham-Book', sans-serif;
 @gothamBlackFont: 'Gotham-Black', sans-serif;
 @gothamLightFont: 'Gotham-Light', sans-serif;
 @gothamMediumFont: 'Gotham-Medium', sans-serif;
-@sourceSansProFont: 'Source Sans Pro', sans-serif;
+@fontNameSourceSansPro: 'Source Sans Pro';
+@sourceSansProFont: @fontNameSourceSansPro, sans-serif;
 
 //Font Faces
 .font-face(@family, @src){
@@ -15,6 +14,19 @@
     src: url(@src);
   }
 }
+.font-face-weight(@family, @src, @weight){
+  @font-face {
+    font-family: @family;
+    src: url(@src);
+    font-weight: @weight;
+  }
+}
+
+
+.source-sans-pro-face(@type, @weight) {
+  .font-face-weight('Source Sans Pro', './assets/fonts/Source_Sans_Pro/SourceSansPro-@{type}.ttf', @weight);
+}
+
 .gotham-face(@type){
   .font-face('Gotham-@{type}', './assets/fonts/Gotham_OTF/Gotham-@{type}.otf');
 }
@@ -60,3 +72,9 @@
 .gotham-face('Thin');
 .gotham-face('Black');
 .gotham-face('Medium');
+
+.source-sans-pro-face('ExtraLight', 200);
+.source-sans-pro-face('Light', 300);
+.source-sans-pro-face('Regular', 400);
+.source-sans-pro-face('SemiBold', 600);
+.source-sans-pro-face('Bold', 700);
