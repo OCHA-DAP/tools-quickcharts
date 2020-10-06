@@ -8,6 +8,7 @@ services:
     ports:
       - "4201:4202"
     volumes:
-      - "/home/alex/WebstormProjects/hdx-hxl-preview:/srv/hxlpreview"
+    # adapt to point to the app folder on the host
+      - "/home/USER/PROJECTS/hdx-hxl-preview:/srv/hxlpreview"
 
     entrypoint: "tail -f /dev/null"
