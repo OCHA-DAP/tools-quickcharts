@@ -1,0 +1,13 @@
+version: "2.1"
+
+services:
+
+  hxlpreview:
+    build: ./hxlpreview-dev/
+    hostname: hxlpreview
+    ports:
+      - "4201:4202"
+    volumes:
+      - "/home/alex/WebstormProjects/hdx-hxl-preview:/srv/hxlpreview"
+
+    entrypoint: "tail -f /dev/null"
