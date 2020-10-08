@@ -9,6 +9,6 @@ services:
       - "4201:4202"
     volumes:
     # adapt to point to the app folder on the host
-      - "/home/USER/PROJECTS/hdx-hxl-preview:/srv/hxlpreview"
+      - "../.:/srv/hxlpreview"
 
     entrypoint: "tail -f /dev/null"
