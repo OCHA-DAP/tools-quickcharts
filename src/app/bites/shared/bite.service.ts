@@ -141,7 +141,7 @@ export class BiteService {
     const embeddedSource = encodeURIComponent(this.appConfigService.get('embeddedSource'));
     const embeddedUrl = encodeURIComponent(this.appConfigService.get('embeddedUrl'));
     const embeddedDate = encodeURIComponent(this.appConfigService.get('embeddedDate'));
-    const embeddedTitle = this.quickChartsTitle;
+    const embeddedTitle = encodeURIComponent(this.quickChartsTitle);
 
     const httpRecipeUrl = this.appConfigService.get('recipeUrl');
     const recipeUrlParam = httpRecipeUrl ? `;recipeUrl=${encodeURIComponent(httpRecipeUrl)}` : '';
@@ -161,13 +161,13 @@ export class BiteService {
       ';externalColorPattern=' + encodeURIComponent(this.appConfigService.get('externalColorPattern')) : '';
 
     const allowCustomColor = this.appConfigService.get('allowCustomColor') ?
-      ';allowCustomColor=' + this.appConfigService.get('allowCustomColor') : '';
+      ';allowCustomColor=' + encodeURIComponent(this.appConfigService.get('allowCustomColor')) : '';
 
     const externalCss = this.appConfigService.get('externalCss') ?
           ';externalCss=' + encodeURIComponent(this.appConfigService.get('externalCss')) : '';
 
     const maxNumberOfValues = this.appConfigService.get('maxNumberOfValues') ?
-    ';maxNumberOfValues=' + this.appConfigService.get('maxNumberOfValues') : '';
+    ';maxNumberOfValues=' + encodeURIComponent(this.appConfigService.get('maxNumberOfValues')) : '';
 
     return `${protocol}//${hostname}${port}${pathWithoutParams};` +
            `url=${url};embeddedSource=${embeddedSource};embeddedUrl=${embeddedUrl};embeddedDate=${embeddedDate};` +
