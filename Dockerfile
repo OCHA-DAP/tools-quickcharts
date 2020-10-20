@@ -10,17 +10,22 @@ COPY . .
 RUN npm install -g @angular/cli@9.1 && \
     npm install && \
     npm run build_lib && \
-    ng build --prod --aot --base-href $BASE_HREF/ && \
-    cp -a docker/default.conf dist/hdx-hxl-preview && \
-    sed -i "s%{{BASE_HREF}}%${BASE_HREF}%" dist/hdx-hxl-preview/default.conf
+    ng build --prod --aot --base-href $BASE_HREF/
 
-FROM unocha/nginx:1.16
+
+FROM unocha/nginx:1.18
 
 COPY --from=builder /src/dist/hdx-hxl-preview /var/www
 
-RUN mv /var/www/default.conf /etc/nginx/conf.d/
+COPY docker/* /srv/
+
+RUN apk add -U gettext
 
 VOLUME /var/log/nginx
+
+ENTRYPOINT ["/srv/entrypoint.sh"]
+
+CMD ["nginx", "-g", "daemon off;"]
 
 # Volumes
 # - Conf: /etc/nginx/conf.d (default.conf)
