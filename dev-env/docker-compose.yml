@@ -1,0 +1,14 @@
+version: "2.1"
+
+services:
+
+  hxlpreview:
+    build: ./hxlpreview-dev/
+    hostname: hxlpreview
+    ports:
+      - "4201:4202"
+    volumes:
+    # adapt to point to the app folder on the host
+      - "../.:/srv/hxlpreview"
+
+    entrypoint: "tail -f /dev/null"

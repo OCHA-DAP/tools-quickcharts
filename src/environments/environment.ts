@@ -5,12 +5,13 @@
 
 export const environment = {
   production: false,
-  hxlProxy: '/hxlproxy/data.json',
-  maxBites: 6,
-  snapService: '/snap',
-  googleAnalyticsKey: 'UA-48221887-3',
-  prodMixpanelKey: '99035923ee0a67880e6c05ab92b6cbc0', // actually hdx-server project not prod
-  testMixpanelKey: '875bfe50f9cb981f4e2817832c83c165',
-  prodHostnames: ['data.humdata.org', 'tools.humdata.org'], // used by analytics code to decide which key to use
-  recipeUrl: 'https://raw.githubusercontent.com/OCHA-DAP/hxl-recipes/1.0.11/cookbook-library.json'
+  hxlProxy: window['env']['hxlProxy'] || 'https://dev.tools-humdata-org.ahconu.org/hxlproxy/data.json',
+  maxBites: window['env']['maxBites'] || 6,
+  snapService: window['env']['snapService'] || 'https://dev.tools-humdata-org.ahconu.org/snap',
+  googleAnalyticsKey: window['env']['googleAnalyticsKey'] || 'UA-48221887-3',
+  prodMixpanelKey: window['env']['prodMixpanelKey'] || '99035923ee0a67880e6c05ab92b6cbc0', // actually hdx-server project not prod
+  testMixpanelKey: window['env']['testMixpanelKey'] || '875bfe50f9cb981f4e2817832c83c165',
+  // used by analytics code to decide which key to use
+  prodHostnames: window['env']['prodHostnames'] || ['data.humdata.org', 'tools.humdata.org'],
+  recipeUrl: window['env']['recipeUrl'] || 'https://raw.githubusercontent.com/OCHA-DAP/hxl-recipes/1.0.11/cookbook-library.json'
 };
