@@ -108,7 +108,7 @@ export class BiteService {
     url += BiteService.CHART_SETTINGS_PARAM + false + BiteService.CHART_SHARE_PARAM + false;
     const urlEncoded = encodeURIComponent(url);
     const viewPortWidth = isSingleWidgetMode ? 500 : 1280;
-    const pngDownloadUrl = `${snapService}?output=png&width=${viewPortWidth}&height=1&url=${urlEncoded}`;
+    const pngDownloadUrl = `${snapService}?delay=5000&output=png&width=${viewPortWidth}&height=1&url=${urlEncoded}`;
 
     setTimeout(() => {
       window.open(pngDownloadUrl, '_blank');
