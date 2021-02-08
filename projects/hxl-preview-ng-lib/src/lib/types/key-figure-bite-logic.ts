@@ -41,6 +41,10 @@ export class KeyFigureBiteLogic extends BiteLogic {
     return ColorUsage.NONE;
   }
 
+  public hasData(): boolean {
+    return typeof this.dataProperties.value === 'number';
+  }
+
   public get dataProperties(): KeyFigureDataProperties {
     return this.bite.dataProperties as KeyFigureDataProperties;
   }

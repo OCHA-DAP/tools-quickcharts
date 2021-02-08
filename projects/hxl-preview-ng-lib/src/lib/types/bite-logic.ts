@@ -260,6 +260,8 @@ export abstract class BiteLogic {
 
   public abstract colorUsage(): ColorUsage;
 
+  public abstract hasData(): boolean;
+
 }
 
 export enum ColorUsage {

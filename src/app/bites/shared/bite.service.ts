@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Bite, BiteConfig, BiteLogicFactory, ChartBite, ChartBiteLogic, ComparisonChartBite, CookbooksAndTags,
-  CookBookService, TimeseriesChartBite } from 'hxl-preview-ng-lib';
+import { Bite, BiteConfig, BiteLogicFactory, CookbooksAndTags, CookBookService } from 'hxl-preview-ng-lib';
 import { NGXLogger as Logger } from 'ngx-logger';
 import { AsyncSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -231,17 +230,14 @@ export class BiteService {
     this.initBite(clonedBite)
       .subscribe(
         b => {
-          if (b.type === ChartBite.type() || b.type === ComparisonChartBite.type() ||
-                  b.type === TimeseriesChartBite.type()) {
-            const chartBiteLogic = BiteLogicFactory.createBiteLogic(b) as ChartBiteLogic;
-            // should we check if bite can render?
-            if (replaceIndex === undefined) {
-              // check if bite can render
-              if (!chartBiteLogic.hasData()) {
-                observable.next(false);
-                observable.complete();
-                return;
-              }
+          const biteLogic = BiteLogicFactory.createBiteLogic(b);
+          // should we check if bite can render?
+          if (replaceIndex === undefined) {
+            // check if bite can render
+            if (!biteLogic.hasData()) {
+              observable.next(false);
+              observable.complete();
+              return;
             }
           }
 

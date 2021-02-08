@@ -1,20 +1,21 @@
 
-import { throwError as observableThrowError,  Observable ,  AsyncSubject, forkJoin, of } from 'rxjs';
-import { catchError, flatMap, map } from 'rxjs/operators';
-import { HxlFilter } from '../types/ingredients';
-import { BiteFilters } from '../types/ingredient';
-import { CountRecipe, SpecialFilterValues } from './hxlproxy-transformers/hxl-operations';
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
+import { Injectable } from '@angular/core';
+import { AsyncSubject, forkJoin, Observable, of, throwError as observableThrowError } from 'rxjs';
+import { catchError, flatMap, map } from 'rxjs/operators';
 import { Bite } from '../types/bite';
-import { AbstractHxlTransformer } from './hxlproxy-transformers/abstract-hxl-transformer';
 import { BiteLogicFactory } from '../types/bite-logic-factory';
+import { BiteFilters } from '../types/ingredient';
+import { HxlFilter } from '../types/ingredients';
+import { HxlProxyResponseValidator, NoDataBodyInHxlResponseError } from '../util/validators/hxl-proxy-response-validator';
+import { AbstractHxlTransformer } from './hxlproxy-transformers/abstract-hxl-transformer';
 import { CountChartTransformer } from './hxlproxy-transformers/count-chart-transformer';
 import { DistinctCountChartTransformer } from './hxlproxy-transformers/distinct-count-chart-transformer';
-import { TimeseriesChartTransformer } from './hxlproxy-transformers/timeseries-chart-transformer';
 import { FilterSettingTransformer } from './hxlproxy-transformers/filter-setting-transformer';
+import { CountRecipe, SpecialFilterValues } from './hxlproxy-transformers/hxl-operations';
+import { TimeseriesChartTransformer } from './hxlproxy-transformers/timeseries-chart-transformer';
 import { MyLogService } from './mylog.service';
+
 
 @Injectable()
 export class HxlproxyService {
@@ -149,11 +150,14 @@ export class HxlproxyService {
           const recipesStr: string = transformer.generateJsonFromRecipes();
           // this.logger.log(recipesStr);
 
-          const responseToBiteMapping = (response: any) =>
-            biteLogic.populateWithHxlProxyInfo(response, this.tagToTitleMap).getBite();
+          const responseToBiteMapping = (response: any) => {
+            new HxlProxyResponseValidator(response).check();
+            return biteLogic.populateWithHxlProxyInfo(response, this.tagToTitleMap).getBite();
+          }
 
-          const onErrorBiteProcessor = () => {
-            biteLogic.getBite().errorMsg = 'Error while retrieving data values';
+          const onErrorBiteProcessor = (customErrorMessage?: string) => {
+            biteLogic.getBite().errorMsg = customErrorMessage ?
+                customErrorMessage : 'Error while retrieving data values';
             return of(biteLogic.getBite());
           };
 
@@ -172,7 +176,7 @@ export class HxlproxyService {
    */
   private makeCallToHxlProxy<T>(params: {key: string, value: string}[],
                              mapFunction: (response: Response) => T,
-                             errorHandler?: () => Observable<T>): Observable<T> {
+                             errorHandler?: (customErrorMessage?: string) => Observable<T>): Observable<T> {
 
     // let myMapFunction: (response: Response) => T;
     // if (mapFunction) {
@@ -217,7 +221,7 @@ export class HxlproxyService {
   //   this.logger.log('Test response is: ' + result);
   // }
 
-  private handleError (error: any, errorHandler?: () => Observable<any>) {
+  private handleError (error: any, errorHandler?: (customErrorMessage?: string) => Observable<any>) {
     let errMsg: string;
     // TODO: Response logic might need refactoring after switching to HttpClient in Angular 6
     if (error instanceof Response) {
@@ -232,7 +236,13 @@ export class HxlproxyService {
       errMsg = error.message ? error.message : error.toString();
     }
     console.error('ERR! ' + errMsg);
-    const retValue = errorHandler ? errorHandler() : observableThrowError(errMsg);
+
+    let customErrorMessage = null;
+    if (error instanceof NoDataBodyInHxlResponseError) {
+      customErrorMessage = error.message;
+    }
+
+    const retValue = errorHandler ? errorHandler(customErrorMessage) : observableThrowError(errMsg);
     return retValue;
   }
 }
