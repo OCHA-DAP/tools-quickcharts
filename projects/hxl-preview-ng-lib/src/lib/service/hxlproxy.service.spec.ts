@@ -1,6 +1,6 @@
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { HxlproxyService } from './hxlproxy.service';
 import {HttpClientModule, HttpRequest} from '@angular/common/http';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
