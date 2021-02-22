@@ -114,7 +114,7 @@
   }
   .footer {
     height: @footerHeight;
-    padding: @headerFooterPadding/2;
+    padding: calc(@headerFooterPadding/2);
     background-color: @extraLighterGrayColor;
     color: @grayColor;
     .sourceSansProFont(400, 12px);
@@ -236,7 +236,7 @@
       padding: 0;
       position: relative;
       z-index: @shadowZIndex - 1;
-      margin: -@headerFooterPadding/2;
+      margin: calc(-@headerFooterPadding/2);
       &.over-shadow {
         z-index: @shadowZIndex + 2;
       }

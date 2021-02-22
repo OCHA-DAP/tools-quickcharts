@@ -5,12 +5,11 @@ import {BiteService} from '../shared/bite.service';
 import { NGXLogger as Logger } from 'ngx-logger';
 import {AppConfigService} from '../../shared/app-config.service';
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription ,  timer } from 'rxjs';
 import { HttpService } from '../../shared/http.service';
 import { AnalyticsService } from '../shared/analytics.service';
 import { DOCUMENT } from '@angular/common';
 import { debounce, distinctUntilChanged, tap } from 'rxjs/operators';
-import { timer } from 'rxjs/internal/observable/timer';
 import { HttpEventsService } from '../../shared/http-events.service';
 
 @Component({
