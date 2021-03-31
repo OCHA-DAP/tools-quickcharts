@@ -5,7 +5,7 @@
     "baseUrl": "src",
     "downlevelIteration": true,
     "importHelpers": true,
-    "module": "esnext",
+    "module": "es2020",
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",

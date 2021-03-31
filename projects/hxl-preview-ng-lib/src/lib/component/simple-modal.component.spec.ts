@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SimpleModalComponent } from './simple-modal.component';
 import { ModalModule } from 'ngx-bootstrap';
@@ -8,7 +8,7 @@ describe('SimpleModalComponent', () => {
   let component: SimpleModalComponent;
   let fixture: ComponentFixture<SimpleModalComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SimpleModalComponent ],
       imports: [ModalModule.forRoot()]

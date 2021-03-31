@@ -1,5 +1,4 @@
-
-import {throwError as observableThrowError,  Observable } from 'rxjs';
+import {throwError as observableThrowError,  Observable ,  of } from 'rxjs';
 import { HxlPreviewConfig } from './hxl-preview-config';
 import { Injectable } from '@angular/core';
 import { NGXLogger as Logger } from 'ngx-logger';
@@ -10,7 +9,6 @@ import { AnalyticsService } from '../analytics.service';
 import { PersisUtil } from './persist-util';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
-import { of } from 'rxjs/internal/observable/of';
 
 /**
  * This persister assumes we have the following configurations available:
