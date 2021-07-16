@@ -13,7 +13,7 @@ RUN npm install -g @angular/cli@9.1 && \
     ng build --prod --aot --base-href $BASE_HREF/
 
 
-FROM unocha/nginx:1.18
+FROM unocha/nginx:1.20
 
 COPY --from=builder /src/dist/hdx-hxl-preview /var/www
 
