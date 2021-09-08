@@ -37,6 +37,11 @@ export class UnitsUtil {
       return Math.round(newValue * 10.0) / 10.0;
     }
 
+    if (value % 1 !== 0) {
+      // number has decimals
+      return Math.round(value * 10.0) / 10.0;
+    }
+
     return value;
   }
 }
