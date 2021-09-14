@@ -1,4 +1,4 @@
-FROM unocha/nodejs-builder:12 AS builder
+FROM unocha/nodejs-builder:12-alpine AS builder
 
 ARG BASE_HREF=/hxlpreview
 ARG BUILD_ENV=production
