@@ -21,12 +21,6 @@ jobs:
           fetch-depth: 0
           submodules: true
 
-      - name: Repo Info
-        id: repo_info
-        run: |
-          export REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          echo ::set-output name=REPO_NAME::${REPO_NAME}
-
       - name: Tag Info
         id: tag_info
         run: |
@@ -68,4 +62,4 @@ jobs:
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
-          tags: public.ecr.aws/unocha/${{ steps.repo_info.outputs.REPO_NAME }}:${{ steps.tag_info.outputs.IMAGE_TAG }}
+          tags: public.ecr.aws/unocha/hdx-hxl-preview:${{ steps.tag_info.outputs.IMAGE_TAG }}
