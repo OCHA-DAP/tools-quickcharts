@@ -1,6 +1,6 @@
 FROM public.ecr.aws/unocha/nodejs-builder:12-alpine AS builder
 
-ARG BASE_HREF=/hxlpreview
+ARG BASE_HREF=/tools/quickcharts
 ARG BUILD_ENV=production
 
 WORKDIR /src

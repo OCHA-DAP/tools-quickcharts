@@ -1,6 +1,6 @@
 FROM node:12-alpine
 
-RUN mkdir -p /srv/hxlpreview && \
+RUN mkdir -p /srv/quickcharts && \
     apk add --update-cache \
         mc \
         gettext \
@@ -11,7 +11,7 @@ RUN mkdir -p /srv/hxlpreview && \
         g++ \
         make \
         linux-headers && \
-    cd /srv/hxlpreview && \
+    cd /srv/quickcharts && \
     npm install -g @angular/cli@9.1.0
 
-WORKDIR /srv/hxlpreview
+WORKDIR /srv/quickcharts
