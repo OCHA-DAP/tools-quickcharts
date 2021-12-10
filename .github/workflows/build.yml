@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - dev
-      - main
-      - prod
+      - ops-*
+      - hdx-*
   release:
     types: [published]
 
@@ -62,4 +62,4 @@ jobs:
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
-          tags: public.ecr.aws/unocha/hdx-hxl-preview:${{ steps.tag_info.outputs.IMAGE_TAG }}
+          tags: public.ecr.aws/unocha/hdx-tools-quickcharts:${{ steps.tag_info.outputs.IMAGE_TAG }}

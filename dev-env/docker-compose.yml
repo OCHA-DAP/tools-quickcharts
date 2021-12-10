@@ -2,13 +2,13 @@ version: "2.1"
 
 services:
 
-  hxlpreview:
-    build: ./hxlpreview-dev/
-    hostname: hxlpreview
+  quickcharts:
+    build: ./quickcharts-dev/
+    hostname: quickcharts
     ports:
       - "4201:4202"
     volumes:
     # adapt to point to the app folder on the host
-      - "../.:/srv/hxlpreview"
+      - "../.:/srv/quickcharts"
 
     entrypoint: "tail -f /dev/null"
