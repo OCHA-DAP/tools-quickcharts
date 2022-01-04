@@ -40,7 +40,7 @@
       <div class="settings-menu-shadow" [class.open]="settingsDisplay" (click)="toggleSettings();"></div>
       <div class="pull-right cancel-save-wrapper" [class.over-shadow]="settingsDisplay">
         <span class="powered-by" [class.display]="poweredByDisplay" *ngIf="poweredByDisplay">
-          <a href="https://tools.humdata.org/quickcharts/" target="_blank">
+          <a href="https://data.humdata.org/" target="_blank">
             <div *ngIf="poweredBySource != 'undefined' || poweredByUrl != 'undefined' || poweredByDate != 'undefined'" class="settings-menu powered-by-menu dropdown-menu">
               <div *ngIf="poweredBySource != 'undefined'">
                 Source:
