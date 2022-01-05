@@ -1,11 +1,12 @@
 import { HxlproxyService } from 'hxl-preview-ng-lib';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Router, RouterState, ActivatedRoute, Params } from '@angular/router';
 import { NGXLogger as Logger } from 'ngx-logger';
 import { BiteService } from './shared/bite.service';
 import { AppConfigService } from '../shared/app-config.service';
 import { AnalyticsService } from './shared/analytics.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'hxl-bites',
@@ -25,11 +26,10 @@ export class BitesComponent implements OnInit {
   onlyViewMode: boolean;
   recipeUrl: string;
   private state: RouterState;
-  externalCss: string;
 
   constructor(router: Router, private logger: Logger, public sanitizer: DomSanitizer, private biteService: BiteService,
               private appConfigService: AppConfigService, private analyticsService: AnalyticsService,
-              private hxlProxyService: HxlproxyService) {
+              private hxlProxyService: HxlproxyService, @Inject(DOCUMENT) private dom: Document) {
     this.onlyViewMode = false;
     this.state = router.routerState;
     this.recipeUrl = 'undefined';
@@ -51,7 +51,7 @@ export class BitesComponent implements OnInit {
         }
         const externalCss = this.appConfigService.get('externalCss');
         if (this.parseUrlString(externalCss)) {
-          this.externalCss = externalCss;
+          this.injectExternalCssInHead(externalCss);
         }
         this.biteService.init();
       }
@@ -60,7 +60,7 @@ export class BitesComponent implements OnInit {
 
   private parseUrlString(url: string): boolean {
     if (url && url.indexOf('://')) {
-      const restOfUrl = url.substr(url.indexOf('://') + 3);
+      const restOfUrl = url.substring(url.indexOf('://') + 3);
       const hostname = restOfUrl.split('/')[0];
       for (const allowedDomains of BitesComponent.ALLOWED_DOMAINS_FOR_EXTERNAL_CSS) {
         if (hostname.endsWith(allowedDomains)) {
@@ -68,6 +68,19 @@ export class BitesComponent implements OnInit {
         }
       }
     }
+    return false;
+  }
+
+  private injectExternalCssInHead(cssUrl: string): boolean {
+    const headEl = this.dom.getElementsByTagName('head')[0];
+    const cssEl = this.dom.createElement('link');
+    cssEl.rel = 'stylesheet';
+    cssEl.href = cssUrl;
+    cssEl.id = 'unique-external-css';
+
+    headEl.appendChild(cssEl);
+    this.logger.error('BLABLA ASDASD');
+    console.log('BLABLA ASD ASD 2')
     return false;
   }
 
