@@ -62,6 +62,13 @@ export class ContentTimeseriesChartComponent extends ContentChartComponent imple
     config.axis.x.tick.format = tsBiteLogic.dateFormat;
   }
 
+  protected generateOptionsPadding(config: C3ChartConfig): void {
+      if (!config.padding) {
+        config.padding = {};
+      }
+      config.padding.right = 20;
+  }
+
   protected generateOptions(): C3ChartConfig {
     this.overwriteXAxisLabel();
     const config = super.generateOptions();

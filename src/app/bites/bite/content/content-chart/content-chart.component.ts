@@ -186,6 +186,10 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
+  protected generateOptionsPadding(config: C3ChartConfig) {
+    ;
+  }
+
   protected generateOptions(): C3ChartConfig {
     this.overwriteXAxisLabel();
 
@@ -215,6 +219,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
      */
     this.generateOptionsAxis(config);
     this.generateOptionsTooltip(config);
+    this.generateOptionsPadding(config);
 
     // if (this.bite.pieChart) {
     //   config.axis.rotated = false; // we don't allow it for pie
