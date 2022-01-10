@@ -319,8 +319,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
       if (leftMargin < 0) {
         leftMargin = 0;
       }
-      if (leftMargin + this.maxNumberOfValues > this.biteLogic.values.length) {
-        leftMargin = this.biteLogic.values.length - this.maxNumberOfValues;
+      if (leftMargin + this.maxNumberOfValues > this.biteLogic.actualNumOfUsedValues) {
+        leftMargin = this.biteLogic.actualNumOfUsedValues - this.maxNumberOfValues;
       }
       c3_chart.internal.brush.leftMargin = leftMargin;
       c3_chart.internal.brush.extent([leftMargin, leftMargin + this.maxNumberOfValues]);
@@ -338,7 +338,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
       }
     };
 
-    if (this.biteLogic.values.length > this.maxNumberOfValues) {
+    if (this.biteLogic.actualNumOfUsedValues > this.maxNumberOfValues) {
       c3_chart.internal.brush.leftMargin = 0;
       c3_chart.internal.brush.extent([0, this.maxNumberOfValues]).update();
       c3_chart.internal.redrawForBrush();
