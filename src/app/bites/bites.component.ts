@@ -79,8 +79,6 @@ export class BitesComponent implements OnInit {
     cssEl.id = 'unique-external-css';
 
     headEl.appendChild(cssEl);
-    this.logger.error('BLABLA ASDASD');
-    console.log('BLABLA ASD ASD 2')
     return false;
   }
 

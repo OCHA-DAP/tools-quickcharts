@@ -104,13 +104,13 @@ export class BiteListComponent implements OnInit {
     this.spinnerActive = httpEventsService.loadingChange.getValue();
     this.httpEventsService.loadingChange
       .pipe(
-        tap((val) => { console.log('Value: ' + val); }),
+        tap((val) => { ; }),
         distinctUntilChanged(),
         debounce(val => timer(val ? 100 : 800)),
       )
       .subscribe((value) => {
         this.spinnerActive = value;
-        console.log('SPINNER ACTIVE CHANGE;');
+        // console.log('SPINNER ACTIVE CHANGE;');
       });
 
     this.shareChartsMenu = [
