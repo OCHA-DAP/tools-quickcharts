@@ -191,7 +191,7 @@ export class HxlproxyService {
         url += '&' + params[i].key + '=' + encodeURIComponent(params[i].value);
       }
     }
-    this.logger.log('The call will be made to: ' + url);
+    // this.logger.log('The call will be made to: ' + url);
     return this.httpClient.get(url).pipe(
         map(mapFunction.bind(this)),
         catchError(err => this.handleError(err, errorHandler))
