@@ -10,7 +10,7 @@ export class HttpEventsService {
 
   constructor() {
     // console.error('New httpInterceptor!');
-    this.loadingChange.subscribe((value) => { console.warn('Interceptor:' + value); })
+    this.loadingChange.subscribe((value) => { /*console.warn('Interceptor:' + value)*/; })
   }
 
 }

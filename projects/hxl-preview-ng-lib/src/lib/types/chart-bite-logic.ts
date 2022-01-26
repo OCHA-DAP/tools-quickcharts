@@ -142,6 +142,14 @@ export class ChartBiteLogic extends BiteLogic {
       return this.uiProperties.limit;
   }
 
+  public get actualNumOfUsedValues(): number {
+    if (this.limit && this.limit < this.values.length) {
+      return this.limit;
+    } 
+    return this.values.length;
+    
+  }
+
   public get categories(): string[] {
     return this.dataProperties.categories;
   }
