@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NGXLogger as Logger } from 'ngx-logger';
-import { AnalyticsService as GenericAnalyticsService, Bite, GA_PAGEVIEW, GaExtras, MapOfStrings } from 'hxl-preview-ng-lib';
+import { AnalyticsService as GenericAnalyticsService, Bite, GA_PAGEVIEW, MapOfStrings } from 'hxl-preview-ng-lib';
 import { AppConfigService } from '../../shared/app-config.service';
 
 declare const ga: any;
@@ -30,11 +30,11 @@ export class AnalyticsService {
   }
 
   public init() {
-    this.gaToken = this.appConfig.get('googleAnalyticsKey');
+    // this.gaToken = this.appConfig.get('googleAnalyticsKey');
     this.mpToken = this.appConfig.thisIsProd() ?
         this.appConfig.get('prodMixpanelKey') : this.appConfig.get('testMixpanelKey');
 
-    this.genericAnalyticsService.init(this.gaToken, this.mpToken);
+    this.genericAnalyticsService.init(this.mpToken);
   }
 
   /**
@@ -69,16 +69,16 @@ export class AnalyticsService {
       mpData['sample'] = false;
     }
 
-    this.genericAnalyticsService.trackEventCategory('hxl preview', {'type': GA_PAGEVIEW}, mpData);
+    this.genericAnalyticsService.trackEventCategory('hxl preview', {}, mpData);
   }
 
   public trackSave() {
     this.genericAnalyticsService.trackEventCategory('hxl preview edit');
   }
 
-  private generateGATypeDimensionText(singleWidget: boolean): string {
-    return singleWidget ? SINGLE_WIDGET_TEXT : ALL_WIDGETS_TEXT;
-  }
+  // private generateGATypeDimensionText(singleWidget: boolean): string {
+  //   return singleWidget ? SINGLE_WIDGET_TEXT : ALL_WIDGETS_TEXT;
+  // }
 
   private generateMPFormatText(isImage: boolean, singleWidget: boolean): string {
     let text = singleWidget ? SINGLE_WIDGET_TEXT : ALL_WIDGETS_TEXT;
@@ -88,17 +88,25 @@ export class AnalyticsService {
 
   public trackEmbed(embedUrl: string, singleWidget: boolean) {
     this.trackAction('action-embed');
-    const gaData: GaExtras = {
-      category: 'quickcharts',
-      action: 'share',
-      label: embedUrl,
-      dimensionInfo: {
-        'dimension2': this.generateGATypeDimensionText(singleWidget)
-      }
+    // const gaData: GaExtras = {
+    //   category: 'quickcharts',
+    //   action: 'share',
+    //   label: embedUrl,
+    //   dimensionInfo: {
+    //     'dimension2': this.generateGATypeDimensionText(singleWidget)
+    //   }
+    // };
+
+    const formatValue = this.generateMPFormatText(false, singleWidget);
+
+    const gaData: MapOfStrings = {
+      'format': formatValue,
+      'type': 'quickchart',
+      'url': embedUrl,
     };
 
     const mpData = {
-      'share format': this.generateMPFormatText(false, singleWidget),
+      'share format': formatValue,
       'shared item': 'quickchart',
       'shared url': embedUrl
     };
@@ -108,18 +116,23 @@ export class AnalyticsService {
   public trackSaveImage( singleWidget: boolean) {
     this.trackAction('action-save-image');
 
-    const gaData: GaExtras = {
-      category: 'quickcharts',
-      action: 'share',
-      label: 'image',
-      dimensionInfo: {
-        'dimension2': this.generateGATypeDimensionText(singleWidget)
-      }
+    // const gaData: GaExtras = {
+    //   category: 'quickcharts',
+    //   action: 'share',
+    //   label: 'image',
+    //   dimensionInfo: {
+    //     'dimension2': this.generateGATypeDimensionText(singleWidget)
+    //   }
 
+    // };
+    const formatValue = this.generateMPFormatText(true, singleWidget);
+    const gaData: MapOfStrings = {
+      'format': formatValue,
+      'type': 'quickchart',
     };
 
     const mpData = {
-      'share format': this.generateMPFormatText(true, singleWidget),
+      'share format': formatValue,
       'shared item': 'quickchart',
     };
     this.genericAnalyticsService.trackEventCategory('share', gaData, mpData);
@@ -127,44 +140,50 @@ export class AnalyticsService {
   public trackSwitchBite(oldBite: Bite, newBite: Bite) {
     this.trackBiteSwitch(oldBite, newBite);
     this.trackAction('action-switch-bite');
-    const data = {
+    const mpData = {
       action: 'switch bite'
     };
-    this.trackVizInteraction('viz interaction', data, data);
+    this.trackVizInteraction(mpData);
   }
   public trackSettingsMenuOpen(bite: Bite) {
     if (this.trackEventAllowed(bite, AnalyticsService.TRACK_EVENT_SETTINGS_OPEN)) {
       this.trackAction('action-settings-menu');
-      const data = {
+      const mpData = {
         action: 'open settings menu'
       };
-      this.trackVizInteraction('viz interaction', data, data);
+      this.trackVizInteraction(mpData);
     }
   }
   public trackSettingsChanged(bite: Bite) {
     if (this.trackEventAllowed(bite, AnalyticsService.TRACK_EVENT_SETTINGS_CHANGE)) {
       this.trackAction('action-settings-changed');
-      const data = {
+      const mpData = {
         action: 'settings edit'
       };
-      this.trackVizInteraction('viz interaction', data, data);
+      this.trackVizInteraction(mpData);
     }
   }
   public trackChartScroll(bite: Bite) {
     if (this.trackEventAllowed(bite, AnalyticsService.TRACK_EVENT_CHART_SCROLL)) {
       this.trackAction('action-chart-scroll');
-      const data = {
+      const mpData = {
         action: 'viz scroll'
       };
-      this.trackVizInteraction('viz interaction', data, data);
+      this.trackVizInteraction(mpData);
     }
   }
 
-  private trackVizInteraction(category: string, additionalGaData?: GaExtras, additionalMpData?: MapOfStrings) {
-    additionalMpData = Object.assign({
+  private trackVizInteraction(additionalMpData?: MapOfStrings) {
+    const gaData = {
+      'type': 'quickchart',
+      'label': additionalMpData.action,
+    };
+
+    const mpData = Object.assign({
       'viz type': 'quickchart'
     }, additionalMpData);
-    this.genericAnalyticsService.trackEventCategory(category, additionalGaData, additionalMpData);
+
+    this.genericAnalyticsService.trackEventCategory('viz interaction', gaData, mpData);
   }
 
   private trackAction(actionName: string) {
