@@ -1,21 +1,22 @@
 import { Injectable } from '@angular/core';
 import { MyLogService } from './mylog.service';
 
-declare const ga: any;
+// declare const ga: any;
+declare const dataLayer: any;
 declare const mixpanel: any;
 
 export const GA_PAGEVIEW = 'pageview';
 export const GA_EVENT = 'event';
 
 export type MapOfStrings = { [s: string]: string|boolean|number|string[]; };
-export type GaExtras = {
-  'type'?: 'pageview' | 'event',
-  'label'?: string,
-  'action'?: string,
-  'category'?: string,
-  'value'?: number,
-  'dimensionInfo'?: MapOfStrings
-};
+// export type GaExtras = {
+//   'type'?: 'pageview' | 'event',
+//   'label'?: string,
+//   'action'?: string,
+//   'category'?: string,
+//   'value'?: number,
+//   'dimensionInfo'?: MapOfStrings
+// };
 
 /**
  * Service that will try to abstract sending the analytics events
@@ -27,16 +28,16 @@ export class AnalyticsService {
   private gaInitialised = false;
   private mpInitialised = false;
 
-  public gaToken: string;
+  // public gaToken: string;
   public mpToken: string;
 
   constructor(private logger: MyLogService) { }
 
-  public init(gaKey: string, mpKey: string) {
+  public init(mpKey: string) {
     try {
-      this.gaToken = gaKey;
-      if (this.gaToken) {
-        ga('create', this.gaToken, 'auto');
+      // this.gaToken = gaKey;
+      if (dataLayer) {
+        // ga('create', this.gaToken, 'auto');
         this.gaInitialised = true;
       }
     } catch (err) {
@@ -98,18 +99,24 @@ export class AnalyticsService {
   //   this.trackEventCategory('hxl preview edit');
   // }
 
-  public trackEventCategory(category: string, additionalGaData?: GaExtras, additionalMpData?: MapOfStrings) {
+  public trackEventCategory(category: string, additionalGaData?: MapOfStrings, additionalMpData?: MapOfStrings) {
     const {url, pageTitle} = this.extractPageInfo();
-    additionalGaData = additionalGaData ? additionalGaData : {};
+    // additionalGaData = additionalGaData ? additionalGaData : {};
 
+    // const gaData = {
+    //   type: additionalGaData.type || GA_EVENT,
+    //   category: additionalGaData.category || category,
+    //   action: additionalGaData.action || null,
+    //   label: additionalGaData.label || pageTitle || null,
+    //   value: additionalGaData.value || null,
+    //   dimensionInfo: additionalGaData.dimensionInfo
+    // };
     const gaData = {
-      type: additionalGaData.type || GA_EVENT,
-      category: additionalGaData.category || category,
-      action: additionalGaData.action || null,
-      label: additionalGaData.label || pageTitle || null,
-      value: additionalGaData.value || null,
-      dimensionInfo: additionalGaData.dimensionInfo
-    };
+      'event': category + ' hdx',
+    }
+    if (additionalGaData) {
+      Object.assign(gaData, additionalGaData);
+    }
 
     const mpData = {
       category: category,
@@ -135,18 +142,33 @@ export class AnalyticsService {
     if (this.gaInitialised) {
       // this.logger.info('    Google Analytics - ok');
       if (GA_PAGEVIEW === gaData.type) {
-        ga('send', 'pageview');
+        dataLayer.push({
+          'label': undefined,
+          'dataset_name': undefined,
+          'url': undefined,
+          'type': undefined,
+          'format': undefined,
+        });
+        dataLayer.push('pageview')
       } else {
         // ga('send', gaData.type, gaData.category, gaData.action, gaData.label, gaData.value, gaDimensionInfo);
-        const sendData = Object.assign({
-          'hitType': gaData.type,
-          'eventCategory': gaData.category,
-          'eventAction': gaData.action,
-          'eventLabel': gaData.label,
-          'eventValue': gaData.value
-        }, gaDimensionInfo);
+        // const sendData = Object.assign({
+        //   'hitType': gaData.type,
+        //   'eventCategory': gaData.category,
+        //   'eventAction': gaData.action,
+        //   'eventLabel': gaData.label,
+        //   'eventValue': gaData.value
+        // }, gaDimensionInfo);
 
-        ga('send', sendData);
+        // ga('send', sendData);
+        dataLayer.push({
+          'label': undefined,
+          'dataset_name': undefined,
+          'url': undefined,
+          'type': undefined,
+          'format': undefined,
+        });
+        dataLayer.push(gaData);
       }
     }
 
