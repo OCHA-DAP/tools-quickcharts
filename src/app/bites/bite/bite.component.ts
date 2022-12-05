@@ -25,6 +25,7 @@ import { ContentTimeseriesChartComponent } from './content/content-timeseries-ch
 import { SimpleDropdownItem } from '../../common/component/simple-dropdown/simple-dropdown.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AnalyticsService } from '../shared/analytics.service';
+import { MAX_LIMIT_VALUE } from 'hxl-preview-ng-lib';
 
 @Component({
   selector: 'hxl-bite',
@@ -311,6 +312,9 @@ class SettingsModel {
 
   set limit(label: number) {
     const uiProperties = this.bite.uiProperties as ChartUIProperties;
+    if (label > MAX_LIMIT_VALUE) {
+      label = MAX_LIMIT_VALUE;
+    }
     uiProperties.limit = label;
     this.biteComponent.renderContent();
   }

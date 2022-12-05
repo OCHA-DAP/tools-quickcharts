@@ -242,10 +242,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
 
   render(): void {
     this.maxNumberOfValues = this.originalMaxNumberOfValues;
-    let numOfValues = this.biteLogic.values.length;
-    if ( this.biteLogic.limit && this.biteLogic.limit < numOfValues ) {
-      numOfValues = this.biteLogic.limit;
-    }
+    const numOfValues = this.biteLogic.actualNumOfUsedValues;
+
     if (numOfValues < 2.5) {
       this.maxNumberOfValues = 2.5;
     } else if (numOfValues < this.originalMaxNumberOfValues) {
