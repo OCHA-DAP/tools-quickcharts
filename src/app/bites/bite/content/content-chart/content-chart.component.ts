@@ -242,10 +242,8 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
 
   render(): void {
     this.maxNumberOfValues = this.originalMaxNumberOfValues;
-    let numOfValues = this.biteLogic.values.length;
-    if ( this.biteLogic.limit && this.biteLogic.limit < numOfValues ) {
-      numOfValues = this.biteLogic.limit;
-    }
+    const numOfValues = this.biteLogic.actualNumOfUsedValues;
+
     if (numOfValues < 2.5) {
       this.maxNumberOfValues = 2.5;
     } else if (numOfValues < this.originalMaxNumberOfValues) {
@@ -404,15 +402,12 @@ export class ChartDataSorter {
     if (this.biteLogic.sortingByValue1 !== null || this.biteLogic.limit !== null ||
           this.biteLogic.sortingByCategory1) {
 
-      const reverseByCategory = this.sort();
-      this.limit(!reverseByCategory);
+      this.sort();
+      this.limit();
     }
   }
 
-  /**
-   * @returns true if the sorting was done by reversed category, otherwise false
-   */
-  protected sort(): boolean {
+  protected sort() {
     const ascSort = function(a, b) {
       return a.value - b.value;
     };
@@ -420,7 +415,6 @@ export class ChartDataSorter {
       return b.value - a.value;
     };
 
-    let reverseByCategory = false;
     this.createCategValuesArray();
     this.valuesLabel = this.biteLogic.values[0];
     if (this.biteLogic.sortingByValue1 !== null) {
@@ -432,20 +426,14 @@ export class ChartDataSorter {
     }
     if (this.biteLogic.sortingByCategory1 === ChartBite.SORT_ASC) {
       this.categAndValues.reverse();
-      reverseByCategory = true;
     }
-    return reverseByCategory;
   }
 
-  protected limit(fromStart = true) {
+  protected limit() {
     const limit = this.biteLogic.limit;
     const length = this.categAndValues.length;
     if (limit && limit > 0 && limit < length) {
-      if (fromStart) {
-        this.categAndValues = this.categAndValues.slice(0, limit);
-      } else {
-        this.categAndValues = this.categAndValues.slice(length - limit, length);
-      }
+      this.categAndValues = this.categAndValues.slice(0, limit);
     }
   }
 }

@@ -139,15 +139,20 @@ export class ChartBiteLogic extends BiteLogic {
   }
 
   public get limit(): number {
-      return this.uiProperties.limit;
+    return this.uiProperties.limit;
   }
 
   public get actualNumOfUsedValues(): number {
+    if (this.values.length > MAX_LIMIT_VALUE && (!this.limit || this.limit > MAX_LIMIT_VALUE)) {
+      this.uiProperties.limit = MAX_LIMIT_VALUE;
+      return MAX_LIMIT_VALUE;
+    }
+
     if (this.limit && this.limit < this.values.length) {
       return this.limit;
-    } 
+    }
+
     return this.values.length;
-    
   }
 
   public get categories(): string[] {
@@ -171,3 +176,5 @@ export class ChartBiteLogic extends BiteLogic {
   }
 
 }
+
+export const MAX_LIMIT_VALUE = 100;
