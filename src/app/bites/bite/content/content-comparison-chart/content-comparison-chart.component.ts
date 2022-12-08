@@ -149,7 +149,7 @@ export class ComparisonChartDataSorter extends ChartDataSorter {
     return this.computeComparisonValues();
   }
 
-  protected sort(): boolean {
+  protected sort() {
     const ascSort = function(a, b) {
       return a.cmpValue - b.cmpValue;
     };
@@ -158,7 +158,7 @@ export class ComparisonChartDataSorter extends ChartDataSorter {
     };
     const cmpBiteLogic = this.biteLogic as ComparisonChartBiteLogic;
 
-    const reverseByCategory = super.sort();
+    super.sort();
     if (cmpBiteLogic.sortingByValue2 !== null) {
       if (cmpBiteLogic.sortingByValue2 === ChartBite.SORT_ASC) {
         this.categAndValues.sort(ascSort);
@@ -166,7 +166,5 @@ export class ComparisonChartDataSorter extends ChartDataSorter {
         this.categAndValues.sort(descSort);
       }
     }
-
-    return reverseByCategory;
   }
 }
