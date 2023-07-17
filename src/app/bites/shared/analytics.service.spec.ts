@@ -8,8 +8,9 @@ import { AppConfigService } from '../../shared/app-config.service';
 describe('Service: Analytics', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AnalyticsService, Logger, AppConfigService]
-    });
+    providers: [AnalyticsService, Logger, AppConfigService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should ...', inject([AnalyticsService], (service: AnalyticsService) => {

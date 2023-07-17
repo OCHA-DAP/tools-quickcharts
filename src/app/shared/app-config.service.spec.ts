@@ -7,8 +7,9 @@ import { Params } from '@angular/router';
 describe('Service: AppConfig', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [AppConfigService]
-    });
+    providers: [AppConfigService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should ...', inject([AppConfigService], (service: AppConfigService) => {

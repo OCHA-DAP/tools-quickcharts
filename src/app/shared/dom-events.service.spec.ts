@@ -6,8 +6,9 @@ import { DomEventsService } from './dom-events.service';
 describe('Service: DomEvents', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [DomEventsService]
-    });
+    providers: [DomEventsService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should ...', inject([DomEventsService], (service: DomEventsService) => {

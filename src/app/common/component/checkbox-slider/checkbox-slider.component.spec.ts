@@ -8,8 +8,9 @@ describe('CheckboxSliderComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CheckboxSliderComponent ]
-    })
+    declarations: [CheckboxSliderComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

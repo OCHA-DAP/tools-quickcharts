@@ -8,8 +8,9 @@ describe('ContentComparisonChartComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContentComparisonChartComponent ]
-    })
+    declarations: [ContentComparisonChartComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 
