@@ -77,14 +77,14 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
-            }
+            },
+            "development": {}
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "hxl-bites:build",
             "port": 4202,
             "host": "0.0.0.0"
           },
@@ -94,8 +94,12 @@
             },
             "production": {
               "browserTarget": "hxl-bites:build:production"
+            },
+            "development": {
+              "browserTarget": "hxl-bites:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -144,7 +148,8 @@
           "options": {
             "protractorConfig": "./protractor.conf.js",
             "devServerTarget": "hxl-bites:serve"
-          }
+          },
+          "configurations": {}
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
@@ -172,8 +177,10 @@
           "configurations": {
             "production": {
               "tsConfig": "projects/hxl-preview-ng-lib/tsconfig.lib.prod.json"
-            }
-          }
+            },
+            "development": {}
+          },
+          "defaultConfiguration": "production"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
