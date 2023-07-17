@@ -5,8 +5,8 @@
     "tslib": "^2.0.0"
   },
   "peerDependencies": {
-    "@angular/common": "14.3.0",
-    "@angular/core": "14.3.0",
+    "@angular/common": "15.2.9",
+    "@angular/core": "15.2.9",
     "ngx-bootstrap": "^5.6.1"
   }
 }

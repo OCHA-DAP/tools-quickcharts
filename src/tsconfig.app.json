@@ -4,7 +4,7 @@
     "declaration": false,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "target": "es2020",
+    "target": "ES2022",
     "lib": [
       "es2016",
       "dom"
@@ -20,7 +20,8 @@
       "hxl-preview-ng-lib/*": [
         "../dist/hxl-preview-ng-lib/*"
       ]
-    }
+    },
+    "useDefineForClassFields": false
   },
   "files": [
     "main.ts",
