@@ -182,5 +182,8 @@
     "@schematics/angular:directive": {
       "prefix": "hxl"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
