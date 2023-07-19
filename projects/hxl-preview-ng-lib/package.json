@@ -1,12 +1,12 @@
 {
   "name": "hxl-preview-ng-lib",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "dependencies": {
     "tslib": "^2.0.0"
   },
   "peerDependencies": {
-    "@angular/common": "15.2.9",
-    "@angular/core": "15.2.9",
-    "ngx-bootstrap": "^5.6.1"
+    "@angular/common": "16.1.5",
+    "@angular/core": "16.1.5",
+    "ngx-bootstrap": "^11.0.2"
   }
 }
