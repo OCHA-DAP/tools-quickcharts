@@ -1,4 +1,4 @@
-FROM public.ecr.aws/unocha/nodejs-builder:14-alpine AS builder
+FROM public.ecr.aws/unocha/nodejs-builder:16-alpine AS builder
 
 ARG BASE_HREF=/tools/quickcharts
 ARG BUILD_ENV=production
