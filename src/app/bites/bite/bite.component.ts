@@ -221,7 +221,7 @@ export class BiteComponent implements OnInit, OnChanges {
   }
 
   createEmbedLink() {
-    const embedUrl = this.biteService.exportBitesToURL([this.bite], null, null, true);
+    const embedUrl = this.biteService.exportBitesToURL([this.bite], this.biteService.finalRecipeUrl, null, true);
     this.onEmbedUrlCreate.emit(embedUrl);
     this.analyticsService.trackEmbed(embedUrl, true);
   }
