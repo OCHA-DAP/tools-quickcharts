@@ -10,7 +10,7 @@ COPY . .
 RUN npm install -g npm@9.8.1 && \
     npm install -g @angular/cli@16.1 && \
     npm install
-#RUN ng build hxl-preview-ng-lib --configuration production
+RUN ng build hxl-preview-ng-lib --configuration production
 RUN ng build hxl-bites --configuration production --aot --base-href $BASE_HREF/
 
 FROM public.ecr.aws/unocha/nginx:stable
