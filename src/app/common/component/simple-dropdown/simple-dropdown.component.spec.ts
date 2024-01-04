@@ -9,10 +9,11 @@ describe('SimpleDropdownComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SimpleDropdownComponent ],
-      imports: [BsDropdownModule.forRoot()],
-      providers: []
-    })
+    declarations: [SimpleDropdownComponent],
+    imports: [BsDropdownModule.forRoot()],
+    providers: [],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

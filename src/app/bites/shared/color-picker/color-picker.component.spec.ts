@@ -8,8 +8,9 @@ describe('ColorPickerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ColorPickerComponent ]
-    })
+    declarations: [ColorPickerComponent],
+    teardown: { destroyAfterEach: false }
+})
     .compileComponents();
   }));
 

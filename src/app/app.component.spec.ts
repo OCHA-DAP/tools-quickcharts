@@ -6,10 +6,11 @@ import { AppComponent } from './app.component';
 describe('App: HxlBites', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [
+    declarations: [
         AppComponent
-      ],
-    });
+    ],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   // it('should create the app', async(() => {

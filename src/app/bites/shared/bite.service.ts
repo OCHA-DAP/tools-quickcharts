@@ -19,6 +19,7 @@ export class BiteService {
 
   public quickChartsTitle = 'Quick Charts';
   public url: string;
+  public finalRecipeUrl: string;
   private nextId = 0;
 
   private persistUtil: PersisUtil;
@@ -143,7 +144,7 @@ export class BiteService {
     const embeddedDate = encodeURIComponent(this.appConfigService.get('embeddedDate'));
     const embeddedTitle = encodeURIComponent(this.quickChartsTitle);
 
-    const httpRecipeUrl = this.appConfigService.get('recipeUrl');
+    const httpRecipeUrl = customCookbookUrl ? customCookbookUrl : this.appConfigService.get('recipeUrl');
     const recipeUrlParam = httpRecipeUrl ? `;recipeUrl=${encodeURIComponent(httpRecipeUrl)}` : '';
 
     let sample = '';
@@ -198,9 +199,9 @@ export class BiteService {
   public generateAvailableCookbooksAndBites(recipeUrl?: string, chosenCookbookName?: string):
             { biteObs: Observable<Bite>, cookbookAndTagsObs: Observable<CookbooksAndTags> } {
 
-    const finalRecipeUrl = recipeUrl ? recipeUrl : this.appConfigService.get('recipeUrl');
-    console.log('Recipe url is:' + finalRecipeUrl);
-    return this.cookBookService.load(this.url, finalRecipeUrl, chosenCookbookName);
+    this.finalRecipeUrl = recipeUrl ? recipeUrl : this.appConfigService.get('recipeUrl');
+    console.log('Recipe url is:' + this.finalRecipeUrl);
+    return this.cookBookService.load(this.url, this.finalRecipeUrl, chosenCookbookName);
   }
 
   public genereateAvailableBites(columnNames: string[], hxlTags: string[], recipes: BiteConfig[]): Observable<Bite> {

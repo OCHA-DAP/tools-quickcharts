@@ -3,9 +3,8 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es2015",
+    "target": "ES2022",
     "lib": [
       "es2016",
       "dom"
@@ -21,7 +20,8 @@
       "hxl-preview-ng-lib/*": [
         "../dist/hxl-preview-ng-lib/*"
       ]
-    }
+    },
+    "useDefineForClassFields": false
   },
   "files": [
     "main.ts",

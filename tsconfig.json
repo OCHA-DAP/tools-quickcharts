@@ -9,10 +9,9 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitReturns": true,
-    "target": "es2015",
+    "target": "ES2022",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -25,7 +24,8 @@
         "dist/hxl-preview-ng-lib/hxl-preview-ng-lib",
         "dist/hxl-preview-ng-lib"
       ]
-    }
+    },
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true

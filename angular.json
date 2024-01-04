@@ -11,7 +11,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "aot": true,
             "allowedCommonJsDependencies": ["core-js", "zone.js"],
             "outputPath": "dist/hdx-hxl-preview",
             "index": "src/index.html",
@@ -28,7 +27,13 @@
             "scripts": [
               "node_modules/d3/d3.min.js",
               "node_modules/c3/c3.min.js"
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "tools": {
@@ -42,7 +47,6 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -64,7 +68,6 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -74,13 +77,14 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
-            }
-          }
+            },
+            "development": {}
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "hxl-bites:build",
             "port": 4202,
             "host": "0.0.0.0"
           },
@@ -90,8 +94,12 @@
             },
             "production": {
               "browserTarget": "hxl-bites:build:production"
+            },
+            "development": {
+              "browserTarget": "hxl-bites:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -117,16 +125,6 @@
               "src/assets"
             ]
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": []
-          }
         }
       }
     },
@@ -140,16 +138,8 @@
           "options": {
             "protractorConfig": "./protractor.conf.js",
             "devServerTarget": "hxl-bites:serve"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
-            ],
-            "exclude": []
-          }
+          },
+          "configurations": {}
         }
       }
     },
@@ -168,8 +158,10 @@
           "configurations": {
             "production": {
               "tsConfig": "projects/hxl-preview-ng-lib/tsconfig.lib.prod.json"
-            }
-          }
+            },
+            "development": {}
+          },
+          "defaultConfiguration": "production"
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
@@ -178,23 +170,10 @@
             "tsConfig": "projects/hxl-preview-ng-lib/tsconfig.spec.json",
             "karmaConfig": "projects/hxl-preview-ng-lib/karma.conf.js"
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/hxl-preview-ng-lib/tsconfig.lib.json",
-              "projects/hxl-preview-ng-lib/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
         }
       }
     }
   },
-  "defaultProject": "hxl-bites",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "hxl",
@@ -203,5 +182,8 @@
     "@schematics/angular:directive": {
       "prefix": "hxl"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

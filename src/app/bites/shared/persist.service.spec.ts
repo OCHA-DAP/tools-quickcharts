@@ -6,8 +6,9 @@ import { PersistService } from './persist.service';
 describe('Service: Persist', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PersistService]
-    });
+    providers: [PersistService],
+    teardown: { destroyAfterEach: false }
+});
   });
 
   it('should ...', inject([PersistService], (service: PersistService) => {
