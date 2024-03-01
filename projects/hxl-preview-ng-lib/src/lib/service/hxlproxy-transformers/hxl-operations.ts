@@ -101,7 +101,8 @@ export class CountOperation extends AbstractOperation {
     if (aggColumns.length === 0) {
       aggColumns.push('#fake_column');
     }
-    const operations: string[] = valueCols.map(valueCol => `${operation}(${valueCol}!) as ${valueCol ? valueCol : '#meta+count'}`);
+    const extraOperator = operation == "sum" ? "!" : "";
+    const operations: string[] = valueCols.map(valueCol => `${operation}(${valueCol}${extraOperator}) as ${valueCol ? valueCol : '#meta+count'}`);
     super(new CountRecipe(aggColumns, operations));
   }
 
