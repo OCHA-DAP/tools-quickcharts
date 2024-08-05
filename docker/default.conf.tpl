@@ -2,6 +2,8 @@ server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
 
+  access_log /var/log/nginx/access.log logstash_internal;
+
 	# Everything is a 404
 	location / {
 		return 404;
@@ -18,4 +20,3 @@ server {
 		index index.html;
 	}
 }
-
