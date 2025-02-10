@@ -2,8 +2,8 @@
 
 import { TestBed, inject, waitForAsync } from '@angular/core/testing';
 import { HxlproxyService } from './hxlproxy.service';
-import {HttpClientModule, HttpRequest} from '@angular/common/http';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { HttpRequest, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('Service: Hxlproxy', () => {
   let service: HxlproxyService;
@@ -11,11 +11,8 @@ describe('Service: Hxlproxy', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-          HttpClientModule,
-          HttpClientTestingModule
-      ],
-      providers: [
+    imports: [],
+    providers: [
         HxlproxyService
         // BaseRequestOptions,
         // MockBackend,
@@ -27,8 +24,11 @@ describe('Service: Hxlproxy', () => {
         //     return new Http(backend, options);
         //   }
         // }
-      ]
-    });
+        ,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
   });
 
   beforeEach(inject([HxlproxyService, HttpTestingController], (_service: HxlproxyService, _backend: HttpTestingController) => {

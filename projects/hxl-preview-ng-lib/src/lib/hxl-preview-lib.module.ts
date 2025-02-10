@@ -5,22 +5,15 @@ import { AnalyticsService } from './service/analytics.service';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import {BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import { SimpleModalComponent } from './component/simple-modal.component';
-import {HttpClientModule} from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ComponentLoaderFactory } from 'ngx-bootstrap/component-loader';
 import { PositioningService } from 'ngx-bootstrap/positioning';
 
-@NgModule({
-  imports: [
-    HttpClientModule,
-    {
-        ngModule: ModalModule,
-        providers: [BsModalService, ComponentLoaderFactory, PositioningService]
-    }
-  ],
-  declarations: [SimpleModalComponent],
-  providers: [HxlproxyService, CookBookService, AnalyticsService, MyLogService],
-  exports: [
-    SimpleModalComponent
-  ]
-})
+@NgModule({ declarations: [SimpleModalComponent],
+    exports: [
+        SimpleModalComponent
+    ], imports: [{
+            ngModule: ModalModule,
+            providers: [BsModalService, ComponentLoaderFactory, PositioningService]
+        }], providers: [HxlproxyService, CookBookService, AnalyticsService, MyLogService, provideHttpClient(withInterceptorsFromDi())] })
 export class HxlPreviewLibModule {}

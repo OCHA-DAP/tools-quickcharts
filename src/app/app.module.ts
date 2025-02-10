@@ -9,7 +9,7 @@ import { AppConfigService } from './shared/app-config.service';
 import { DomEventsService } from './shared/dom-events.service';
 import { AnalyticsService } from './bites/shared/analytics.service';
 import { HttpService } from './shared/http.service';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 // Import the module and model classes.
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from '../environments/environment';
@@ -23,29 +23,23 @@ export const HTTP_SERVICE_PROVIDERS: any = {
   multi: true
 };
 
-@NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    BitesModule,
-    HxlBitesRoutingModule,
-    LoggerModule.forRoot({level: environment.production ? NgxLoggerLevel.WARN : NgxLoggerLevel.LOG}),
-    HxlPreviewLibModule
-  ],
-  providers: [
-    HttpEventsService,
-    HttpService,
-    HTTP_SERVICE_PROVIDERS,
-    AppConfigService,
-    AnalyticsService,
-    DomEventsService,
-    HxlproxyService,
-    RecipeService
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        FormsModule,
+        BitesModule,
+        HxlBitesRoutingModule,
+        LoggerModule.forRoot({ level: environment.production ? NgxLoggerLevel.WARN : NgxLoggerLevel.LOG }),
+        HxlPreviewLibModule], providers: [
+        HttpEventsService,
+        HttpService,
+        HTTP_SERVICE_PROVIDERS,
+        AppConfigService,
+        AnalyticsService,
+        DomEventsService,
+        HxlproxyService,
+        RecipeService,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }
