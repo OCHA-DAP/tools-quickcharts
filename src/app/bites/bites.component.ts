@@ -9,9 +9,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 
 @Component({
-  selector: 'hxl-bites',
-  templateUrl: './bites.component.html',
-  styleUrls: ['./bites.component.less']
+    selector: 'hxl-bites',
+    templateUrl: './bites.component.html',
+    styleUrls: ['./bites.component.less'],
+    standalone: false
 })
 export class BitesComponent implements OnInit {
 

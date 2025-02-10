@@ -28,9 +28,10 @@ import { AnalyticsService } from '../shared/analytics.service';
 import { MAX_LIMIT_VALUE } from 'hxl-preview-ng-lib';
 
 @Component({
-  selector: 'hxl-bite',
-  templateUrl: './bite.component.html',
-  styleUrls: ['./bite.component.less']
+    selector: 'hxl-bite',
+    templateUrl: './bite.component.html',
+    styleUrls: ['./bite.component.less'],
+    standalone: false
 })
 
 export class BiteComponent implements OnInit, OnChanges {

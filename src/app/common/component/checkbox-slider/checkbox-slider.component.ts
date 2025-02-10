@@ -1,9 +1,10 @@
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 
 @Component({
-  selector: 'hxl-checkbox-slider',
-  templateUrl: './checkbox-slider.component.html',
-  styleUrls: ['./checkbox-slider.component.less']
+    selector: 'hxl-checkbox-slider',
+    templateUrl: './checkbox-slider.component.html',
+    styleUrls: ['./checkbox-slider.component.less'],
+    standalone: false
 })
 export class CheckboxSliderComponent implements OnInit {
 

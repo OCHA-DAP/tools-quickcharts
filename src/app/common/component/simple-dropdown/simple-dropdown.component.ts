@@ -11,9 +11,10 @@ export interface SimpleDropdownItem {
 }
 
 @Component({
-  selector: 'hxl-simple-dropdown',
-  templateUrl: './simple-dropdown.component.html',
-  styleUrls: ['./simple-dropdown.component.less']
+    selector: 'hxl-simple-dropdown',
+    templateUrl: './simple-dropdown.component.html',
+    styleUrls: ['./simple-dropdown.component.less'],
+    standalone: false
 })
 export class SimpleDropdownComponent implements OnInit {
 

@@ -13,9 +13,10 @@ import { debounce, distinctUntilChanged, tap } from 'rxjs/operators';
 import { HttpEventsService } from '../../shared/http-events.service';
 
 @Component({
-  selector: 'hxl-bite-list',
-  templateUrl: './bite-list.component.html',
-  styleUrls: ['./bite-list.component.less']
+    selector: 'hxl-bite-list',
+    templateUrl: './bite-list.component.html',
+    styleUrls: ['./bite-list.component.less'],
+    standalone: false
 })
 export class BiteListComponent implements OnInit {
   biteList: Array<Bite>;

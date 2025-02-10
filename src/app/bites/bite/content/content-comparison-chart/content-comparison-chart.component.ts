@@ -4,9 +4,10 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ComparisonChartUIProperties } from 'hxl-preview-ng-lib';
 
 @Component({
-  selector: 'hxl-content-comparison-chart',
-  templateUrl: './content-comparison-chart.component.html',
-  styleUrls: ['./content-comparison-chart.component.less']
+    selector: 'hxl-content-comparison-chart',
+    templateUrl: './content-comparison-chart.component.html',
+    styleUrls: ['./content-comparison-chart.component.less'],
+    standalone: false
 })
 export class ContentComparisonChartComponent extends ContentChartComponent implements OnInit, AfterViewInit {
 

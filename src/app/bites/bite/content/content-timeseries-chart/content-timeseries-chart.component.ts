@@ -6,9 +6,10 @@ import { TimeseriesChartBiteLogic } from 'hxl-preview-ng-lib';
 // declare let c3: any;
 
 @Component({
-  selector: 'hxl-content-timeseries-chart',
-  templateUrl: './content-timeseries-chart.component.html',
-  styleUrls: ['./content-timeseries-chart.component.less']
+    selector: 'hxl-content-timeseries-chart',
+    templateUrl: './content-timeseries-chart.component.html',
+    styleUrls: ['./content-timeseries-chart.component.less'],
+    standalone: false
 })
 export class ContentTimeseriesChartComponent extends ContentChartComponent implements OnInit, AfterViewInit {
 

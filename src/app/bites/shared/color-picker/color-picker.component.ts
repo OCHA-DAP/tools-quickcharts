@@ -2,9 +2,10 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild }
 import { Bite, ChartBiteLogic } from 'hxl-preview-ng-lib';
 
 @Component({
-  selector: 'hxl-color-picker',
-  templateUrl: './color-picker.component.html',
-  styleUrls: ['./color-picker.component.less']
+    selector: 'hxl-color-picker',
+    templateUrl: './color-picker.component.html',
+    styleUrls: ['./color-picker.component.less'],
+    standalone: false
 })
 export class ColorPickerComponent implements OnInit {
 

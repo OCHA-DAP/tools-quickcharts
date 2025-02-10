@@ -2,9 +2,10 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
-  selector: 'hxl-simple-modal',
-  templateUrl: './simple-modal.component.html',
-  styleUrls: ['./simple-modal.component.less']
+    selector: 'hxl-simple-modal',
+    templateUrl: './simple-modal.component.html',
+    styleUrls: ['./simple-modal.component.less'],
+    standalone: false
 })
 export class SimpleModalComponent implements OnInit {
 

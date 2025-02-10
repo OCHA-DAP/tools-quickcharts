@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { CheckboxSliderComponent } from './checkbox-slider.component';
 
 @Component({
-  selector: 'hxl-checkbox-slider-only',
-  templateUrl: './checkbox-slider-only.component.html',
-  styleUrls: ['./checkbox-slider-only.component.less']
+    selector: 'hxl-checkbox-slider-only',
+    templateUrl: './checkbox-slider-only.component.html',
+    styleUrls: ['./checkbox-slider-only.component.less'],
+    standalone: false
 })
 export class CheckboxSliderOnlyComponent extends CheckboxSliderComponent  {
 

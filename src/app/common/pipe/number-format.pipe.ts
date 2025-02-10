@@ -2,7 +2,8 @@ import { UnitsUtil } from 'hxl-preview-ng-lib';
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'numberFormat'
+    name: 'numberFormat',
+    standalone: false
 })
 export class NumberFormatPipe implements PipeTransform {
 

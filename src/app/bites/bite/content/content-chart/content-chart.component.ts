@@ -13,9 +13,10 @@ declare const c3: any;
 declare const d3: any;
 
 @Component({
-  selector: 'hxl-content-chart',
-  templateUrl: './content-chart.component.html',
-  styleUrls: ['./content-chart.component.less']
+    selector: 'hxl-content-chart',
+    templateUrl: './content-chart.component.html',
+    styleUrls: ['./content-chart.component.less'],
+    standalone: false
 })
 export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
   @Input()

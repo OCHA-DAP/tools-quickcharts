@@ -3,9 +3,10 @@ import { Input } from '@angular/core';
 import { KeyFigureBite, KeyFigureBiteLogic, BiteLogicFactory } from 'hxl-preview-ng-lib';
 
 @Component({
-  selector: 'hxl-content-topline',
-  templateUrl: './content-topline.component.html',
-  styleUrls: ['./content-topline.component.less']
+    selector: 'hxl-content-topline',
+    templateUrl: './content-topline.component.html',
+    styleUrls: ['./content-topline.component.less'],
+    standalone: false
 })
 export class ContentToplineComponent implements OnInit, OnChanges {
   @Input()

@@ -8,10 +8,11 @@ const INLINE_EDIT_CONTROL_VALUE_ACCESSOR: any = {
 };
 
 @Component({
-  selector: 'hxl-inline-edit',
-  providers: [INLINE_EDIT_CONTROL_VALUE_ACCESSOR],
-  templateUrl: './inline-edit.component.html',
-  styleUrls: ['./inline-edit.component.less']
+    selector: 'hxl-inline-edit',
+    providers: [INLINE_EDIT_CONTROL_VALUE_ACCESSOR],
+    templateUrl: './inline-edit.component.html',
+    styleUrls: ['./inline-edit.component.less'],
+    standalone: false
 })
 export class InlineEditComponent implements OnInit, ControlValueAccessor {
   @ViewChild('editControl')
