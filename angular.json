@@ -11,7 +11,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "allowedCommonJsDependencies": ["core-js", "zone.js"],
+            "allowedCommonJsDependencies": [
+              "core-js",
+              "zone.js"
+            ],
             "outputPath": {
               "base": "dist/hdx-hxl-preview"
             },
@@ -119,6 +122,15 @@
             ],
             "assets": [
               "src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         }

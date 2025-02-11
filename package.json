@@ -5,7 +5,7 @@
   "angular-cli": {},
   "scripts": {
     "start": "ng serve",
-    "lint": "tslint \"src/**/*.ts\"",
+    "lint": "ng lint",
     "test": "ng test debug",
     "pree2e": "webndriver-manager update",
     "e2e": "protractor",
@@ -38,7 +38,8 @@
     "@angular/cli": "^19.1.6",
     "@angular/compiler-cli": "19.1.5",
     "@types/jasmine": "~3.6.0",
-    "codelyzer": "^6.0.0",
+    "angular-eslint": "19.1.0",
+    "eslint": "^9.20.0",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~6.3.16",
@@ -51,7 +52,7 @@
     "protractor": "~7.0.0",
     "rxjs-tslint": "^0.1.8",
     "ts-node": "~3.2.0",
-    "tslint": "~6.1.0",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "typescript-eslint": "8.23.0"
   }
 }
