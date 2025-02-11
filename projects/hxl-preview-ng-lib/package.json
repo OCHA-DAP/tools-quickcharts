@@ -2,7 +2,7 @@
   "name": "hxl-preview-ng-lib",
   "version": "3.3.0",
   "dependencies": {
-    "tslib": "~6.1.0"
+    "tslib": "^2.6.0"
   },
   "peerDependencies": {
     "@angular/common": "19.1.5",
