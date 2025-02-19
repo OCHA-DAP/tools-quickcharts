@@ -1,4 +1,4 @@
-FROM public.ecr.aws/unocha/nodejs-builder:20-alpine AS builder
+FROM public.ecr.aws/unocha/nodejs-builder:22-alpine AS builder
 
 ARG BASE_HREF=/tools/quickcharts
 ARG BUILD_ENV=production
@@ -8,7 +8,7 @@ WORKDIR /src
 COPY . .
 
 RUN npm install -g npm@9.8.1 && \
-    npm install -g @angular/cli@16.1 && \
+    npm install -g @angular/cli@19.1 && \
     npm install
 RUN ng build hxl-preview-ng-lib --configuration production
 RUN ng build hxl-bites --configuration production --aot --base-href $BASE_HREF/
