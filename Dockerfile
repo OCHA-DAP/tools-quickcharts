@@ -7,7 +7,7 @@ WORKDIR /src
 
 COPY . .
 
-RUN npm install -g npm@9.8.1 && \
+RUN npm install -g npm@10.9.2 && \
     npm install -g @angular/cli@19.1 && \
     npm install
 RUN ng build hxl-preview-ng-lib --configuration production
@@ -15,7 +15,7 @@ RUN ng build hxl-bites --configuration production --aot --base-href $BASE_HREF/
 
 FROM public.ecr.aws/unocha/nginx:stable
 
-COPY --from=builder /src/dist/hdx-hxl-preview /var/www
+COPY --from=builder /src/dist/hdx-hxl-preview/browser /var/www
 
 COPY docker/* /srv/
 
