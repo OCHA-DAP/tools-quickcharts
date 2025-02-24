@@ -7,7 +7,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class NumberFormatPipe implements PipeTransform {
 
-  transform(value: number, format: string, unit: string): string {
-    return UnitsUtil.transform(value, format, unit);
+  transform(value: number, decimals: number, unit: string): string {
+    return UnitsUtil.transform(value, decimals, unit);
   }
 }
