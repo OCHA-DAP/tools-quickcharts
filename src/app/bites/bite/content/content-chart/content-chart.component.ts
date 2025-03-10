@@ -60,17 +60,16 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
     }
   }
 
+  protected numberFormatterBuilder(decimals: number = 1) {
+    return (value) => {
+      const unit = UnitsUtil.computeBiteUnit(value);
+      const formattedValue = UnitsUtil.transform(value, decimals, unit);
+      return formattedValue + (unit ? ` ${unit}` : '');
+    }
+  }
+
   protected numberFormatter(value) {
-    const unit = UnitsUtil.computeBiteUnit(value);
-    const formattedValue = UnitsUtil.transform(value, null, unit);
-    return formattedValue + (unit ? ` ${unit}` : '');
-    // const formatter = d3.format('.2s');
-    // let string = formatter(value);
-    // string = string.replace('G', 'B'); // Billions at more than 6 digits :)
-    // if (string.endsWith('.0')) {
-    //   string = string.replace('.0', '');
-    // }
-    // return string;
+    return this.numberFormatterBuilder()(value);
   }
 
   // protected tooltipFormatter(d, defaultTitleFormat, defaultValueFormat, color) {
@@ -96,7 +95,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
       format: {
         title: x => categories[x],
         value: (value, ratio, id, index) => {
-          return this.numberFormatter(value);
+          return this.numberFormatterBuilder(this.bite.uiProperties.numberDecimals)(value);
         }
       },
       // contents: this.tooltipFormatter.bind(this)
@@ -158,7 +157,7 @@ export class ContentChartComponent implements OnInit, AfterViewInit, OnChanges {
       y: {
         tick: {
           rotate: 30,
-          format: this.numberFormatter
+          format: this.numberFormatterBuilder(this.bite.uiProperties.numberDecimals)
         }
       }
     };

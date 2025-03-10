@@ -380,6 +380,14 @@ class SettingsModel {
     timeseriesChartBiteLogic.uiProperties.dateFormat = value;
   }
 
+  get numberDecimals(): number {
+    return this.bite.uiProperties.numberDecimals;
+  }
+
+  set numberDecimals(value: number) {
+    this.bite.uiProperties.numberDecimals = value;
+  }
+
   // get filterZero(): boolean {
   //   return this.bite.filteredValues.indexOf(0) >= 0;
   // }

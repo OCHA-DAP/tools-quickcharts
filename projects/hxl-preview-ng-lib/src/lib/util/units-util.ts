@@ -11,10 +11,10 @@ export class UnitsUtil {
     return unit;
   }
 
-  public static transform(value: number, format: string, unit: string): string {
-    const modifiedValue = UnitsUtil.computeValueBasedOnUnit(value, unit);
-    if (format) {
-      return modifiedValue.toLocaleString(format);
+  public static transform(value: number, decimals: number, unit: string): string {
+    let modifiedValue = UnitsUtil.computeValueBasedOnUnit(value, unit);
+    if (decimals) {
+      modifiedValue = Math.round(modifiedValue * Math.pow(10, decimals)) / Math.pow(10, decimals);
     }
     return modifiedValue + '';
   }
@@ -34,13 +34,13 @@ export class UnitsUtil {
           break;
       }
       /* Keep only one decimal value  */
-      return Math.round(newValue * 10.0) / 10.0;
+      // return Math.round(newValue * 10.0) / 10.0;
     }
 
-    if (value % 1 !== 0) {
-      // number has decimals
-      return Math.round(value * 10.0) / 10.0;
-    }
+    // if (value % 1 !== 0) {
+    //   // number has decimals
+    //   return Math.round(value * 10.0) / 10.0;
+    // }
 
     return value;
   }

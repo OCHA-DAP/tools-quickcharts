@@ -257,6 +257,22 @@
             </div>
 
             <div class="element-group" *ngIf="bite.type == classTypes.TimeseriesChartBite">
+              <label for="number-decimals-{{uuid}}">
+                  Number of decimals
+              </label>
+              <select id="number-decimals-{{uuid}}" [(ngModel)]="settingsModel.numberDecimals" name="numberDecimals"
+                      (change)="renderContent();">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>                  
+                  <option value="4">4</option>                  
+                  <option value="5">5</option>                  
+              </select>
+            </div>
+
+
+            <div class="element-group" *ngIf="bite.type == classTypes.TimeseriesChartBite">
               <label for="date-format-{{uuid}}">
                   Date format
               </label>
