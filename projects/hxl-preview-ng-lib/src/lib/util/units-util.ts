@@ -33,15 +33,9 @@ export class UnitsUtil {
           newValue = newValue / 1000000000.0 ;
           break;
       }
-      /* Keep only one decimal value  */
-      // return Math.round(newValue * 10.0) / 10.0;
+      /* Return new computed value  */
+      return newValue;
     }
-
-    // if (value % 1 !== 0) {
-    //   // number has decimals
-    //   return Math.round(value * 10.0) / 10.0;
-    // }
-
     return value;
   }
 }
