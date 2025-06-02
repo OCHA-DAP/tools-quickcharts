@@ -119,13 +119,27 @@
             </div>
             <div class="element-group">
               <label for="decimals-{{uuid}}">
-                Decimals
+                Number Format
               </label>
-              <!--<input type="number" placeholder="Add custom value" [(ngModel)]="settingsModel.filterCustomValue" name="filterCustomValue">-->
               <select id="decimals-{{uuid}}" [(ngModel)]="settingsModel.numberFormat" name="numberFormat">
                 <option value=""> -- Select -- </option>
                 <option value="de">1.000,00</option>
                 <option value="us">1,000.00</option>
+              </select>
+            </div>
+            <div class="element-group" *ngIf="bite.type == classTypes.ToplineBite">
+              <label for="number-decimals-{{uuid}}">
+                Number of decimals {{settingsModel.numberDecimals}}
+              </label>
+              
+              <select id="number-decimals-{{uuid}}" [(ngModel)]="settingsModel.numberDecimals" name="numberDecimals"
+                      (change)="renderContent();">
+                  <option value="0">0</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>                  
+                  <option value="4">4</option>                  
+                  <option value="5">5</option>                  
               </select>
             </div>
             <hxl-checkbox-slider (checked)="settingsModel.abbreviateValues=$event;" name="abbreviate-values" [uuid]="uuid" title="Abbreviate values"

@@ -11,7 +11,7 @@
 
     <div class="col-xs-12">
       <div class="value">
-        {{ (biteLogic.value | numberFormat:biteLogic.numberFormat:biteLogic.unit) }}
+        {{ (biteLogic.value | numberFormat:biteLogic.numberFormat:biteLogic.unit:biteLogic.uiProperties.numberDecimals) }}
         <span *ngIf="biteLogic.unit && biteLogic.unit !== 'none'" class="unit">{{biteLogic.unit}}</span>
       </div>
     </div>

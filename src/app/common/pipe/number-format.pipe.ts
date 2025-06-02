@@ -7,7 +7,17 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class NumberFormatPipe implements PipeTransform {
 
-  transform(value: number, decimals: number, unit: string): string {
-    return UnitsUtil.transform(value, decimals, unit);
+  transform(value: number, format: string, unit: string, decimals?: number): string {
+    const newValue: number = +UnitsUtil.transform(value, decimals, unit);
+    if (format) {
+      const options: Intl.NumberFormatOptions = {};
+      if (decimals != null) {
+        options.minimumFractionDigits = decimals;
+        options.maximumFractionDigits = decimals;
+      }
+      return newValue.toLocaleString(format, options);
+    }
+
+    return newValue + '';
   }
 }
